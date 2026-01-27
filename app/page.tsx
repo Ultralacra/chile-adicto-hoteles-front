@@ -186,20 +186,36 @@ export default function Page() {
           ]);
 
         const jsonEsDesktop =
-          resEsDesktop && resEsDesktop.ok ? await resEsDesktop.json() : { items: [] };
+          resEsDesktop && resEsDesktop.ok
+            ? await resEsDesktop.json()
+            : { items: [] };
         const jsonEnDesktop =
-          resEnDesktop && resEnDesktop.ok ? await resEnDesktop.json() : { items: [] };
+          resEnDesktop && resEnDesktop.ok
+            ? await resEnDesktop.json()
+            : { items: [] };
         const jsonEsMobile =
-          resEsMobile && resEsMobile.ok ? await resEsMobile.json() : { items: [] };
+          resEsMobile && resEsMobile.ok
+            ? await resEsMobile.json()
+            : { items: [] };
         const jsonEnMobile =
-          resEnMobile && resEnMobile.ok ? await resEnMobile.json() : { items: [] };
+          resEnMobile && resEnMobile.ok
+            ? await resEnMobile.json()
+            : { items: [] };
 
         if (cancelled) return;
 
-        const itemsEsDesktop = Array.isArray(jsonEsDesktop?.items) ? jsonEsDesktop.items : [];
-        const itemsEnDesktop = Array.isArray(jsonEnDesktop?.items) ? jsonEnDesktop.items : [];
-        const itemsEsMobile = Array.isArray(jsonEsMobile?.items) ? jsonEsMobile.items : [];
-        const itemsEnMobile = Array.isArray(jsonEnMobile?.items) ? jsonEnMobile.items : [];
+        const itemsEsDesktop = Array.isArray(jsonEsDesktop?.items)
+          ? jsonEsDesktop.items
+          : [];
+        const itemsEnDesktop = Array.isArray(jsonEnDesktop?.items)
+          ? jsonEnDesktop.items
+          : [];
+        const itemsEsMobile = Array.isArray(jsonEsMobile?.items)
+          ? jsonEsMobile.items
+          : [];
+        const itemsEnMobile = Array.isArray(jsonEnMobile?.items)
+          ? jsonEnMobile.items
+          : [];
 
         if (itemsEsDesktop.length > 0) {
           const desktops = itemsEsDesktop
