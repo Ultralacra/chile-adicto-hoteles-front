@@ -1,0 +1,27 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "validar-galerias",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/validate-gallery-naming.mjs"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "crear-the-singular",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/create-the-singular.mjs"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}
