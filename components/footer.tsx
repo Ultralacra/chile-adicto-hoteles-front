@@ -150,8 +150,8 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
           {/* Left: Logo aligned to bottom */}
           <div className="flex-shrink-0 mt-32">
             <Image
-              src="/Santiago-adicto-Guia-blanco1.svg"
-              alt="Stgo adicto"
+              src="/Logo-best-espanol-blanco-footer.svg"
+              alt="Logo best español"
               width={300}
               height={84}
               className="h-20 w-auto"

@@ -8,6 +8,7 @@ import { useLanguage } from "@/contexts/language-context";
 import { CategoryNav } from "@/components/category-nav";
 import { useSiteApi } from "@/hooks/use-site-api";
 import { BottomHomeBanner } from "@/components/home-promo-banners";
+import { ComentaIcon } from "@/components/comenta-icon";
 
 interface LocationInfo {
   label?: string;
@@ -948,6 +949,22 @@ export function HotelDetail({ hotel }: HotelDetailProps) {
               </>
             )}
           </div>
+
+          {/* Ícono RESERVA – debajo de datos útiles */}
+          {hotel.reservationLink ? (
+            <a
+              href={hotel.reservationLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 mb-2 inline-block"
+            >
+              <ComentaIcon className="w-[100px] h-auto hover:opacity-80 transition-opacity" />
+            </a>
+          ) : (
+            <div className="mt-2 mb-2">
+              <ComentaIcon className="w-[100px] h-auto" />
+            </div>
+          )}
         </div>
       </main>
     </>
