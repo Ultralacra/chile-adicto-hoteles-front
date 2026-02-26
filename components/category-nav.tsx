@@ -151,6 +151,7 @@ export function CategoryNav({
 
   const hrefFor = (slug: string) => {
     if (slug === "todos") return "/";
+    if (slug === "nosotros") return "/nosotros";
     // Mantener URL bonita si existe rewrite; si no, usar /categoria/<slug>
     return prettySlugs.has(slug) ? `/${slug}` : `/categoria/${slug}`;
   };

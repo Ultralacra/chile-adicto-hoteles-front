@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import { useLanguage } from "@/contexts/language-context";
 import { useEffect, use, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { buildCardExcerpt } from "@/lib/utils";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/spinner";
@@ -32,8 +33,15 @@ type ApiCommuneRow = {
 export default function CategoryPage({ params }: { params: any }) {
   const resolvedParams = use(params as any) as ResolvedParams;
   const { slug } = resolvedParams;
+  const router = useRouter();
   const { language, t } = useLanguage();
   const { fetchWithSite } = useSiteApi();
+
+  useEffect(() => {
+    if (slug === "nosotros") {
+      router.replace("/nosotros");
+    }
+  }, [slug, router]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

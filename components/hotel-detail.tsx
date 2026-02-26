@@ -50,9 +50,15 @@ interface HotelDetailProps {
     galleryImages?: string[];
     categories?: string[];
   };
+  hideUsefulInfo?: boolean;
+  hideReservationIcon?: boolean;
 }
 
-export function HotelDetail({ hotel }: HotelDetailProps) {
+export function HotelDetail({
+  hotel,
+  hideUsefulInfo = false,
+  hideReservationIcon = false,
+}: HotelDetailProps) {
   const { t } = useLanguage();
   const { fetchWithSite } = useSiteApi();
 
@@ -633,8 +639,9 @@ export function HotelDetail({ hotel }: HotelDetailProps) {
               }}
             />
           </div>
-          <div className="mt-4 mb-4 font-neutra text-black text-[15px] leading-[22px]">
-            {hotel.infoHtmlNew ? (
+          {!hideUsefulInfo && (
+            <div className="mt-4 mb-4 font-neutra text-black text-[15px] leading-[22px]">
+              {hotel.infoHtmlNew ? (
               <>
                 <h3 className="font-neutra text-[15px] leading-[22px] font-[700] uppercase text-black mb-3">
                   {t("DATOS ÚTILES", "USEFUL INFORMATION")}
@@ -644,7 +651,7 @@ export function HotelDetail({ hotel }: HotelDetailProps) {
                   dangerouslySetInnerHTML={{ __html: infoHtmlNewSanitized }}
                 />
               </>
-            ) : hotel.infoHtml ? (
+              ) : hotel.infoHtml ? (
               <>
                 <h3 className="font-neutra text-[15px] leading-[22px] font-[700] uppercase text-black mb-3">
                   {t("DATOS ÚTILES", "USEFUL INFORMATION")}
@@ -654,7 +661,7 @@ export function HotelDetail({ hotel }: HotelDetailProps) {
                   dangerouslySetInnerHTML={{ __html: infoHtmlLegacySanitized }}
                 />
               </>
-            ) : (
+              ) : (
               <>
                 <h3 className="font-neutra text-[15px] leading-[22px] font-[700] uppercase text-black mb-3">
                   {t("DATOS ÚTILES", "USEFUL INFORMATION")}
@@ -948,22 +955,26 @@ export function HotelDetail({ hotel }: HotelDetailProps) {
                 )}
               </>
             )}
-          </div>
-
-          {/* Ícono RESERVA – debajo de datos útiles */}
-          {hotel.reservationLink ? (
-            <a
-              href={hotel.reservationLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 mb-2 inline-block"
-            >
-              <ComentaIcon className="w-[100px] h-auto hover:opacity-80 transition-opacity" />
-            </a>
-          ) : (
-            <div className="mt-2 mb-2">
-              <ComentaIcon className="w-[100px] h-auto" />
             </div>
+          )}
+
+          {!hideReservationIcon && (
+            <>
+              {hotel.reservationLink ? (
+                <a
+                  href={hotel.reservationLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 mb-2 inline-block"
+                >
+                  <ComentaIcon className="w-[100px] h-auto hover:opacity-80 transition-opacity" />
+                </a>
+              ) : (
+                <div className="mt-2 mb-2">
+                  <ComentaIcon className="w-[100px] h-auto" />
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>

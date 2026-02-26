@@ -126,6 +126,7 @@ export function MobileFooterContent({
 
   const hrefFor = (slug: string) => {
     if (slug === "todos") return "/";
+    if (slug === "nosotros") return "/nosotros";
     if (slug === "restaurantes") return "/restaurantes";
     return prettySlugs.has(slug) ? `/${slug}` : `/categoria/${slug}`;
   };

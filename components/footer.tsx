@@ -122,6 +122,7 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
 
   const hrefFor = (slug: string) => {
     if (slug === "todos") return "/";
+    if (slug === "nosotros") return "/nosotros";
     const prettySlugs = new Set([
       "iconos",
       "ninos",
