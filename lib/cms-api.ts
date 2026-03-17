@@ -25,6 +25,14 @@ function getCmsBaseUrl(): string | null {
   return trimmed.replace(/\/+$/, "");
 }
 
+export function getServerCmsBaseUrl(): string | null {
+  const raw = process.env.CMS_API_BASE_URL || process.env.NEXT_PUBLIC_CMS_API_BASE_URL;
+  if (!raw) return null;
+  const trimmed = String(raw).trim();
+  if (!trimmed) return null;
+  return trimmed.replace(/\/+$/, "");
+}
+
 function normalizeToApiPath(input: string): { pathname: string; search: string } {
   // Usamos un base dummy para parsear querystring de forma segura.
   const parsed = new URL(String(input || "").trim(), "http://local");
@@ -47,6 +55,7 @@ function normalizeToApiPath(input: string): { pathname: string; search: string }
  * Construye la URL final hacia el CMS:
  * - Prioriza `previewSite` desde URL; si no existe, usa `NEXT_PUBLIC_SITE_ID`; si no, `chileadicto`.
  * - Si `NEXT_PUBLIC_CMS_API_BASE_URL` existe, apunta al admin remoto (ej: https://cms.mi-dominio.com).
+ * - Si no existe, usa el proxy interno `/cms-api/...` para no depender de env pública en el browser.
  * - Siempre adjunta `previewSite=<site>`.
  */
 export function buildCmsApiUrl(inputUrl: string, previewSiteFromUrl?: MaybeSiteId): string {
@@ -61,13 +70,15 @@ export function buildCmsApiUrl(inputUrl: string, previewSiteFromUrl?: MaybeSiteI
 
   const { pathname, search } = normalizeToApiPath(absoluteOrRelative);
 
+  const proxyPath = pathname === "/api" ? "/cms-api" : pathname.replace(/^\/api/, "/cms-api");
+  const destination = `${proxyPath}${search}`;
+  const urlObj = new URL(destination, base || "http://local");
+  urlObj.searchParams.set("previewSite", siteId);
+
   if (!base) {
-    throw new Error("Falta NEXT_PUBLIC_CMS_API_BASE_URL para consumir el API externo");
+    return `${urlObj.pathname}${urlObj.search}`;
   }
 
-  const proxyPath = pathname === "/api" ? "/cms-api" : pathname.replace(/^\/api/, "/cms-api");
-  const urlObj = new URL(`${proxyPath}${search}`, "http://local");
-  urlObj.searchParams.set("previewSite", siteId);
   return `${urlObj.pathname}${urlObj.search}`;
 }
 

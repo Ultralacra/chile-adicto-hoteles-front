@@ -12,10 +12,12 @@ export function useAdminApi() {
   const fetchWithSite = useCallback(
     async (url: string, options?: RequestInit) => {
       const finalUrl = buildCmsApiUrl(url, currentSite);
-      const urlObj = new URL(finalUrl);
+      const urlObj = new URL(finalUrl, "http://local");
       urlObj.searchParams.set('adminSite', currentSite);
 
-      const targetUrl = urlObj.toString();
+      const targetUrl = /^https?:\/\//i.test(finalUrl)
+        ? urlObj.toString()
+        : `${urlObj.pathname}${urlObj.search}`;
       const response = await fetch(targetUrl, options);
       return normalizeCmsResponse(response, targetUrl, currentSite);
     },
