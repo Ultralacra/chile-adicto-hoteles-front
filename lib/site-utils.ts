@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import type { SiteId, SiteConfig } from './sites-config';
-import { getSiteById, DEFAULT_SITE } from './sites-config';
+import { getSiteById, DEFAULT_SITE, getConfiguredDefaultSite } from './sites-config';
 
 /**
  * Get the current site context from request headers
@@ -38,7 +38,7 @@ export async function getSiteContext(req?: Request): Promise<SiteConfig> {
     console.warn('Unable to get site context from headers, using default site');
   }
   
-  return getSiteById(DEFAULT_SITE);
+  return getSiteById(getConfiguredDefaultSite());
 }
 
 /**
@@ -56,7 +56,7 @@ export async function getCurrentSiteId(req?: Request): Promise<SiteId> {
  */
 export function getClientSiteId(): SiteId {
   if (typeof window === 'undefined') {
-    return DEFAULT_SITE;
+    return getConfiguredDefaultSite();
   }
   
   const hostname = window.location.hostname;
@@ -66,7 +66,7 @@ export function getClientSiteId(): SiteId {
     return 'chileadicto';
   }
   
-  return 'santiagoadicto';
+  return getConfiguredDefaultSite();
 }
 
 /**

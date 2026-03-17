@@ -66,6 +66,20 @@ export const SITES: Record<SiteId, SiteConfig> = {
 
 export const DEFAULT_SITE: SiteId = 'santiagoadicto';
 
+export function getConfiguredDefaultSite(): SiteId {
+  const envSite = process.env.NEXT_PUBLIC_SITE_ID;
+  if (envSite === 'santiagoadicto' || envSite === 'chileadicto') {
+    return envSite;
+  }
+
+  const localSite = process.env.NEXT_PUBLIC_LOCAL_SITE;
+  if (localSite === 'santiagoadicto' || localSite === 'chileadicto') {
+    return localSite;
+  }
+
+  return DEFAULT_SITE;
+}
+
 /**
  * Get site config by domain
  */
@@ -79,10 +93,7 @@ export function getSiteByDomain(domain: string): SiteConfig {
 
   // Handle localhost and local development
   if (normalizedDomain === 'localhost' || normalizedDomain === '127.0.0.1') {
-    // En desarrollo local, usar siempre Santiago Adicto por defecto
-    // Puedes cambiar esto editando la variable de entorno NEXT_PUBLIC_LOCAL_SITE
-    const localSite = process.env.NEXT_PUBLIC_LOCAL_SITE as SiteId | undefined;
-    return SITES[localSite || DEFAULT_SITE];
+    return SITES[getConfiguredDefaultSite()];
   }
 
   // Search for matching site
@@ -90,14 +101,14 @@ export function getSiteByDomain(domain: string): SiteConfig {
     normalizedDomain.includes(s.domain.replace(/^www\./, ''))
   );
 
-  return site || SITES[DEFAULT_SITE];
+  return site || SITES[getConfiguredDefaultSite()];
 }
 
 /**
  * Get site config by ID
  */
 export function getSiteById(siteId: SiteId): SiteConfig {
-  return SITES[siteId] || SITES[DEFAULT_SITE];
+  return SITES[siteId] || SITES[getConfiguredDefaultSite()];
 }
 
 /**

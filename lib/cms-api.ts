@@ -1,6 +1,4 @@
-import type { SiteId } from "@/lib/sites-config";
-
-const DEFAULT_SITE_ID: SiteId = "chileadicto";
+import { getConfiguredDefaultSite, type SiteId } from "@/lib/sites-config";
 
 type MaybeSiteId = string | null | undefined;
 
@@ -14,7 +12,7 @@ export function getEffectiveSiteId(previewSiteFromUrl?: MaybeSiteId): SiteId {
   const envSiteId = process.env.NEXT_PUBLIC_SITE_ID;
   if (isSiteId(envSiteId)) return envSiteId;
 
-  return DEFAULT_SITE_ID;
+  return getConfiguredDefaultSite();
 }
 
 function getCmsBaseUrl(): string | null {
