@@ -39,7 +39,9 @@ export default function SettingsPage() {
     setLoadingCats(true);
     setCatsError(null);
     try {
-      const res = await fetchWithSite("/api/categories?full=1", { cache: "no-store" });
+      const res = await fetchWithSite("/api/categories?full=1", {
+        cache: "no-store",
+      });
       const json = res.ok ? await res.json() : [];
       setCategories(Array.isArray(json) ? json : []);
     } catch (e: any) {
@@ -74,7 +76,6 @@ export default function SettingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-        }, [fetchWithSite]);
       const data = await res.json().catch(() => null);
       if (!res.ok || !data?.ok) {
         throw new Error(data?.message || `Error ${res.status}`);
