@@ -12,7 +12,7 @@ const nextConfig = {
     // - Posts sin prefijo: /mi-post -> /lugar/mi-post (evitando colisiones con rutas reservadas)
     const categoryPattern =
       ':slug(iconos|ninos|arquitectura|barrios|mercados|miradores|museos|palacios|parques|paseos-fuera-de-santiago|restaurantes|monumentos-nacionales|cafes)';
-    return [
+      const rules = [
       // Categorías sin prefijo
       {
         source: `/:${categoryPattern}`.replace('::', ':'),
@@ -21,10 +21,12 @@ const nextConfig = {
       // Posts sin prefijo (excluir rutas reservadas mediante negative lookahead)
       {
         source:
-          '/:slug((?!admin|api|categoria|lugar|_next|favicon\\.ico|robots\\.txt|sitemap\\.xml|imagenes-slider|slider-desktop|slider-movil|flags|public).+)',
+          '/:slug((?!admin|api|cms-api|categoria|lugar|_next|favicon\\.ico|robots\\.txt|sitemap\\.xml|imagenes-slider|slider-desktop|slider-movil|flags|public).+)',
         destination: '/lugar/:slug',
       },
     ];
+
+    return rules;
   },
 };
 

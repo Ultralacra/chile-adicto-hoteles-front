@@ -2,7 +2,11 @@
 
 import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import { buildCmsApiUrl, getEffectiveSiteId } from "@/lib/cms-api";
+import {
+  buildCmsApiUrl,
+  getEffectiveSiteId,
+  normalizeCmsResponse,
+} from "@/lib/cms-api";
 
 /**
  * Hook para realizar fetch al API desde el frontend con el parámetro previewSite.
@@ -22,9 +26,10 @@ export function useSiteApi() {
   const fetchWithSite = useCallback(
     async (url: string, options?: RequestInit) => {
       const finalUrl = buildCmsApiUrl(url, previewSiteFromUrl);
-      return fetch(finalUrl, options);
+      const response = await fetch(finalUrl, options);
+      return normalizeCmsResponse(response, finalUrl, effectiveSite);
     },
-    [previewSiteFromUrl]
+    [previewSiteFromUrl, effectiveSite]
   );
 
   return { fetchWithSite, previewSite: effectiveSite };

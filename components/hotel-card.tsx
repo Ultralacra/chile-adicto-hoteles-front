@@ -8,6 +8,7 @@ interface HotelCardProps {
   description: string;
   image: string;
   imageVariant?: "default" | "tall";
+  externalUrl?: string;
 }
 
 export function HotelCard({
@@ -17,12 +18,20 @@ export function HotelCard({
   description,
   image,
   imageVariant = "default",
+  externalUrl,
 }: HotelCardProps) {
   const imageContainerClass =
     imageVariant === "tall" ? "h-[500px]" : "aspect-[386/264]";
 
+  const href = externalUrl || `/${slug}`;
+  const isExternal = Boolean(externalUrl);
+
   return (
-    <Link href={`/${slug}`}>
+    <Link
+      href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+    >
       <article className="group cursor-pointer flex flex-col h-full gap-3">
         {/* Image Container */}
         <div className={`relative ${imageContainerClass} overflow-hidden`}>

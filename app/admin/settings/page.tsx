@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useAdminApi } from "@/hooks/use-admin-api";
 
 type CategoryRow = {
   slug: string;
@@ -10,6 +11,7 @@ type CategoryRow = {
 
 export default function SettingsPage() {
   const [categories, setCategories] = useState<CategoryRow[]>([]);
+  const { fetchWithSite } = useAdminApi();
   const [loadingCats, setLoadingCats] = useState(false);
   const [catsError, setCatsError] = useState<string | null>(null);
 
@@ -37,7 +39,7 @@ export default function SettingsPage() {
     setLoadingCats(true);
     setCatsError(null);
     try {
-      const res = await fetch("/api/categories?full=1", { cache: "no-store" });
+      const res = await fetchWithSite("/api/categories?full=1", { cache: "no-store" });
       const json = res.ok ? await res.json() : [];
       setCategories(Array.isArray(json) ? json : []);
     } catch (e: any) {
@@ -67,11 +69,12 @@ export default function SettingsPage() {
         label_es: labelEs.trim() || null,
         label_en: labelEn.trim() || null,
       };
-      const res = await fetch("/api/categories", {
+      const res = await fetchWithSite("/api/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+        }, [fetchWithSite]);
       const data = await res.json().catch(() => null);
       if (!res.ok || !data?.ok) {
         throw new Error(data?.message || `Error ${res.status}`);

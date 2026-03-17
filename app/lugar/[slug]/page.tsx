@@ -15,6 +15,31 @@ import { isHiddenFrontPost } from "@/lib/post-visibility";
 
 type ResolvedParams = { slug: string };
 
+function cleanRichDescriptionHtml(html: string): string {
+  return html
+    .replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, "")
+    .replace(/<li>(?:\s|&nbsp;|<br\s*\/?>)*<\/li>/gi, "")
+    .replace(/<ul>\s*<\/ul>/gi, "");
+}
+
+function buildRichDescriptionHtml(description: unknown): string {
+  if (!Array.isArray(description)) return "";
+
+  const html = description
+    .filter(
+      (block): block is string => typeof block === "string" && !!block.trim(),
+    )
+    .map((block) => {
+      const trimmedBlock = block.trim();
+      const startsWithHtmlTag = /^<[^>]+>/.test(trimmedBlock);
+
+      return startsWithHtmlTag ? trimmedBlock : `<p>${trimmedBlock}</p>`;
+    })
+    .join("");
+
+  return cleanRichDescriptionHtml(html);
+}
+
 export default function LugarPage(props: any) {
   const { language, t } = useLanguage();
   const { fetchWithSite } = useSiteApi();
@@ -80,7 +105,7 @@ export default function LugarPage(props: any) {
             <p className="text-xl text-[var(--color-brand-gray)] mb-8">
               {t(
                 "Este hotel aún está en proceso de migración. Por favor, vuelve pronto.",
-                "This hotel is still being migrated. Please check back soon."
+                "This hotel is still being migrated. Please check back soon.",
               )}
             </p>
             <a
@@ -110,13 +135,23 @@ export default function LugarPage(props: any) {
         excerpt:
           (source[language]?.description && source[language].description[0]) ||
           "",
-        fullContent: (source[language]?.description || [])
-          .filter(Boolean)
-          .map((p: string) => `<p>${p}</p>`)
-          .join(""),
+        fullContent: buildRichDescriptionHtml(source[language]?.description),
         infoHtml: source[language]?.infoHtml || "",
         infoHtmlNew: source[language]?.infoHtmlNew || "",
-        website: source.website || "",
+        website:
+          source.website ||
+          source.websitePublic ||
+          source.websitepublic ||
+          source.website_public ||
+          "",
+        websitePublic: source.websitePublic || "",
+        websitepublic: source.websitepublic || "",
+        website_public: source.website_public || "",
+        site: source.site || "",
+        publicationStatus: source.publicationStatus || "",
+        publishStartAt: source.publishStartAt || null,
+        publishEndAt: source.publishEndAt || null,
+        publicationEndsAt: source.publicationEndsAt || null,
         website_display: source.website_display || "",
         instagram: source.instagram || "",
         instagram_display: source.instagram_display || "",
@@ -129,6 +164,7 @@ export default function LugarPage(props: any) {
         reservationLink: source.reservationLink || "",
         reservationPolicy: source.reservationPolicy || "",
         interestingFact: source.interestingFact || "",
+        communes: Array.isArray(source.communes) ? source.communes : [],
         // Imagen destacada separada de la galería; si no viene, usamos la primera.
         // Además, evitamos duplicados comparando por nombre de archivo (ignorando query y mayúsculas).
         ...(() => {
@@ -325,7 +361,7 @@ export default function LugarPage(props: any) {
             <p className="text-xl text-[var(--color-brand-gray)] mb-8">
               {t(
                 "Este hotel aún está en proceso de migración. Por favor, vuelve pronto.",
-                "This hotel is still being migrated. Please check back soon."
+                "This hotel is still being migrated. Please check back soon.",
               )}
             </p>
             <a
@@ -360,7 +396,7 @@ export default function LugarPage(props: any) {
   }
 
   const activeCategorySlug = categoryToSlug(
-    (hotel?.categories && hotel.categories[0]) || "todos"
+    (hotel?.categories && hotel.categories[0]) || "todos",
   );
   const isRestaurantPost = activeCategorySlug === "restaurantes";
 

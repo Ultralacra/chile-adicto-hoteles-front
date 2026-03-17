@@ -383,31 +383,52 @@ export default function Page() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {hotels.map((hotel) => (
                   <div key={hotel.slug} className="col-span-1">
-                    <HotelCard
-                      slug={hotel.slug}
-                      name={
-                        hotel[language]?.name ||
-                        hotel.en?.name ||
-                        hotel.es?.name
-                      }
-                      subtitle={
-                        hotel[language]?.subtitle ||
-                        hotel.en?.subtitle ||
-                        hotel.es?.subtitle
-                      }
-                      description={(() => {
-                        const paras = Array.isArray(
-                          hotel[language]?.description,
-                        )
-                          ? hotel[language].description
-                          : Array.isArray(hotel.en?.description)
-                            ? hotel.en.description
-                            : [];
-                        return buildCardExcerpt(paras);
-                      })()}
-                      image={hotel.featuredImage || hotel.images?.[0] || ""}
-                      imageVariant="default"
-                    />
+                    {(() => {
+                      const categories = Array.isArray(hotel?.categories)
+                        ? hotel.categories.map((c: any) =>
+                            String(c || "").toUpperCase(),
+                          )
+                        : [];
+                      const isPrensa = categories.includes("PRENSA");
+                      const pressUrl =
+                        hotel?.websitePublic ||
+                        hotel?.websitepublic ||
+                        hotel?.website_public ||
+                        "";
+
+                      return (
+                        <HotelCard
+                          slug={hotel.slug}
+                          externalUrl={
+                            isPrensa && String(pressUrl).trim()
+                              ? String(pressUrl)
+                              : undefined
+                          }
+                          name={
+                            hotel[language]?.name ||
+                            hotel.en?.name ||
+                            hotel.es?.name
+                          }
+                          subtitle={
+                            hotel[language]?.subtitle ||
+                            hotel.en?.subtitle ||
+                            hotel.es?.subtitle
+                          }
+                          description={(() => {
+                            const paras = Array.isArray(
+                              hotel[language]?.description,
+                            )
+                              ? hotel[language].description
+                              : Array.isArray(hotel.en?.description)
+                                ? hotel.en.description
+                                : [];
+                            return buildCardExcerpt(paras);
+                          })()}
+                          image={hotel.featuredImage || hotel.images?.[0] || ""}
+                          imageVariant="default"
+                        />
+                      );
+                    })()}
                   </div>
                 ))}
               </div>

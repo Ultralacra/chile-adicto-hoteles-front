@@ -75,7 +75,7 @@ export default function NewPostPage() {
   const [loadingCommunes, setLoadingCommunes] = useState(true);
   const [communes, setCommunes] = useState<string[]>([]);
   const [autoDetectedCommunes, setAutoDetectedCommunes] = useState<string[]>(
-    []
+    [],
   );
   const normalizeComuna = (s: string) =>
     String(s || "")
@@ -168,11 +168,15 @@ export default function NewPostPage() {
     async function loadCommunes() {
       setLoadingCommunes(true);
       try {
-        const r = await fetchWithSite("/api/communes?full=1&includeHidden=1", { cache: "no-store" });
+        const r = await fetchWithSite("/api/communes?full=1&includeHidden=1", {
+          cache: "no-store",
+        });
         const data = r.ok ? await r.json() : [];
         if (!cancelled) {
           const communesList = Array.isArray(data)
-            ? data.map((c: any) => String(c.label || c.slug || "").trim()).filter(Boolean)
+            ? data
+                .map((c: any) => String(c.label || c.slug || "").trim())
+                .filter(Boolean)
             : [];
           setPossibleCommunes(communesList);
         }
@@ -222,7 +226,7 @@ export default function NewPostPage() {
     try {
       const form = new FormData();
       for (const f of arr) form.append("files", f);
-      const res = await fetch(`/api/media/upload`, {
+      const res = await fetchWithSite(`/api/media/upload`, {
         method: "POST",
         body: form,
       });
@@ -279,11 +283,11 @@ export default function NewPostPage() {
 
     const normalizedFeaturedIdx = Math.min(
       Math.max(0, featuredIndex || 0),
-      Math.max(0, images.length - 1)
+      Math.max(0, images.length - 1),
     );
     const finalFeatured = images[normalizedFeaturedIdx] || featuredImage || "";
     const galleryImages = images.filter(
-      (img, i) => img && img !== finalFeatured && i !== normalizedFeaturedIdx
+      (img, i) => img && img !== finalFeatured && i !== normalizedFeaturedIdx,
     );
 
     const sanitizePhone = (p: string) =>
@@ -324,7 +328,7 @@ export default function NewPostPage() {
       }
       // Colapsar repeticiones de protocolo (https://https://example) dejando solo uno
       v = v.replace(/^(https?:\/\/){2,}/i, (m) =>
-        m.substring(0, m.indexOf("//") + 2)
+        m.substring(0, m.indexOf("//") + 2),
       );
       // Arreglar ocurrencias internas de 'https//'
       v = v.replace(/https\/{2}(?=[^:])/gi, "https://");
@@ -373,7 +377,7 @@ export default function NewPostPage() {
         const display = (websiteDisplay || web).toUpperCase();
         const href = fixUrl(web);
         parts.push(
-          `<p><strong>WEB:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${display}</a></p>`
+          `<p><strong>WEB:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${display}</a></p>`,
         );
       }
       const ig = (instagram || "").trim();
@@ -381,7 +385,7 @@ export default function NewPostPage() {
         const display = (instagramDisplay || ig).toUpperCase();
         const href = igHref(ig);
         parts.push(
-          `<p><strong>INSTAGRAM:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${display}</a></p>`
+          `<p><strong>INSTAGRAM:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${display}</a></p>`,
         );
       }
       const hoursText = (hours || "").trim();
@@ -394,7 +398,7 @@ export default function NewPostPage() {
           const href = fixUrl(resLink);
           const text = (resPolicy || resLink).toString();
           parts.push(
-            `<p><strong>RESERVAS:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a></p>`
+            `<p><strong>RESERVAS:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a></p>`,
           );
         } else {
           parts.push(`<p><strong>RESERVAS:</strong> ${resPolicy}</p>`);
@@ -407,7 +411,7 @@ export default function NewPostPage() {
         const disp = tel.replace(/^tel:/i, "").toUpperCase();
         const href = telHref(tel);
         parts.push(
-          `<p><strong>TEL:</strong> <a href="${href}">${disp}</a></p>`
+          `<p><strong>TEL:</strong> <a href="${href}">${disp}</a></p>`,
         );
       }
       const mail = (email || "").trim();
@@ -415,13 +419,13 @@ export default function NewPostPage() {
         const disp = mail.replace(/^mailto:/i, "").toUpperCase();
         const href = mailHref(mail);
         parts.push(
-          `<p><strong>EMAIL:</strong> <a href="${href}">${disp}</a></p>`
+          `<p><strong>EMAIL:</strong> <a href="${href}">${disp}</a></p>`,
         );
       }
       const credit = (photosCredit || "").trim();
       if (credit)
         parts.push(
-          `<p><strong>FOTOGRAFÍAS:</strong> ${credit.toUpperCase()}</p>`
+          `<p><strong>FOTOGRAFÍAS:</strong> ${credit.toUpperCase()}</p>`,
         );
       return parts.join("");
     };
@@ -436,7 +440,7 @@ export default function NewPostPage() {
         const display = (websiteDisplay || web).toUpperCase();
         const href = fixUrl(web);
         parts.push(
-          `<p><strong>WEB:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${display}</a></p>`
+          `<p><strong>WEB:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${display}</a></p>`,
         );
       }
       const ig = (instagram || "").trim();
@@ -444,7 +448,7 @@ export default function NewPostPage() {
         const display = (instagramDisplay || ig).toUpperCase();
         const href = igHref(ig);
         parts.push(
-          `<p><strong>INSTAGRAM:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${display}</a></p>`
+          `<p><strong>INSTAGRAM:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${display}</a></p>`,
         );
       }
       const hoursText = (hours || "").trim();
@@ -456,7 +460,7 @@ export default function NewPostPage() {
           const href = fixUrl(resLink);
           const text = (resPolicy || resLink).toString();
           parts.push(
-            `<p><strong>RESERVATIONS:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a></p>`
+            `<p><strong>RESERVATIONS:</strong> <a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a></p>`,
           );
         } else {
           parts.push(`<p><strong>RESERVATIONS:</strong> ${resPolicy}</p>`);
@@ -469,7 +473,7 @@ export default function NewPostPage() {
         const disp = tel.replace(/^tel:/i, "").toUpperCase();
         const href = telHref(tel);
         parts.push(
-          `<p><strong>TEL:</strong> <a href="${href}">${disp}</a></p>`
+          `<p><strong>TEL:</strong> <a href="${href}">${disp}</a></p>`,
         );
       }
       const mail = (email || "").trim();
@@ -477,13 +481,13 @@ export default function NewPostPage() {
         const disp = mail.replace(/^mailto:/i, "").toUpperCase();
         const href = mailHref(mail);
         parts.push(
-          `<p><strong>EMAIL:</strong> <a href="${href}">${disp}</a></p>`
+          `<p><strong>EMAIL:</strong> <a href="${href}">${disp}</a></p>`,
         );
       }
       const credit = (photosCredit || "").trim();
       if (credit)
         parts.push(
-          `<p><strong>PHOTOGRAPHS:</strong> ${credit.toUpperCase()}</p>`
+          `<p><strong>PHOTOGRAPHS:</strong> ${credit.toUpperCase()}</p>`,
         );
       return parts.join("");
     };
@@ -557,7 +561,7 @@ export default function NewPostPage() {
     const { payloadToSend } = built;
     try {
       setPreviewJson(
-        JSON.stringify(payloadToSend, null, 2).replace(/\n/g, "\n")
+        JSON.stringify(payloadToSend, null, 2).replace(/\n/g, "\n"),
       );
     } catch {
       setPreviewJson("{" + '\n  "error": "No se pudo serializar"\n' + "}");
@@ -587,12 +591,12 @@ export default function NewPostPage() {
     if (!result.ok) {
       const first = result.issues?.[0];
       alert(
-        `Error de validación: ${first?.path || ""} - ${first?.message || ""}`
+        `Error de validación: ${first?.path || ""} - ${first?.message || ""}`,
       );
       return;
     }
     setCreating(true);
-    fetch(`/api/posts`, {
+    fetchWithSite(`/api/posts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payloadToSend),
@@ -770,7 +774,7 @@ export default function NewPostPage() {
                           setCommunes((prev) =>
                             prev.includes(com)
                               ? prev.filter((c) => c !== com)
-                              : [...prev, com]
+                              : [...prev, com],
                           )
                         }
                         className="sr-only"

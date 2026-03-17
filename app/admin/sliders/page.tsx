@@ -67,7 +67,7 @@ export default function AdminSlidersList() {
       "restaurants-mobile-es",
       "restaurants-mobile-en",
     ],
-    []
+    [],
   );
 
   const [dbKey, setDbKey] = useState<string>(dbKeys[0] || "home-desktop");
@@ -119,7 +119,9 @@ export default function AdminSlidersList() {
       setLoading(true);
       try {
         // Home: usa API existente
-        const rHome = await fetchWithSite("/api/slider-images", { cache: "no-store" });
+        const rHome = await fetchWithSite("/api/slider-images", {
+          cache: "no-store",
+        });
         const jHome = rHome.ok
           ? ((await rHome.json()) as HomeResp)
           : { desktop: [], mobile: [] };
@@ -136,13 +138,13 @@ export default function AdminSlidersList() {
             if (!cancelled) {
               setRestDesktopES(
                 j.map((s: string) =>
-                  s.startsWith("/") ? s : `/imagenes-slider/${s}`
-                )
+                  s.startsWith("/") ? s : `/imagenes-slider/${s}`,
+                ),
               );
               setRestDesktopEN(
                 j.map((s: string) =>
-                  s.startsWith("/") ? s : `/imagenes-slider/${s}`
-                )
+                  s.startsWith("/") ? s : `/imagenes-slider/${s}`,
+                ),
               );
             }
           } else if (j && typeof j === "object") {
@@ -151,13 +153,13 @@ export default function AdminSlidersList() {
             if (!cancelled) {
               setRestDesktopES(
                 es.map((s: string) =>
-                  s.startsWith("/") ? s : `/imagenes-slider/${s}`
-                )
+                  s.startsWith("/") ? s : `/imagenes-slider/${s}`,
+                ),
               );
               setRestDesktopEN(
                 en.map((s: string) =>
-                  s.startsWith("/") ? s : `/imagenes-slider/${s}`
-                )
+                  s.startsWith("/") ? s : `/imagenes-slider/${s}`,
+                ),
               );
             }
           }
@@ -181,9 +183,12 @@ export default function AdminSlidersList() {
 
         // Posts de restaurantes (para derivar href destino de cada imagen)
         try {
-          const rPosts = await fetchWithSite("/api/posts?categorySlug=restaurantes", {
-            cache: "no-store",
-          });
+          const rPosts = await fetchWithSite(
+            "/api/posts?categorySlug=restaurantes",
+            {
+              cache: "no-store",
+            },
+          );
           const rows = rPosts.ok ? await rPosts.json() : [];
           if (!cancelled && Array.isArray(rows)) setRestaurantsPosts(rows);
         } catch {
@@ -222,7 +227,7 @@ export default function AdminSlidersList() {
     let cancelled = false;
     const loadCategories = async () => {
       try {
-        const res = await fetch("/api/categories?full=1", {
+        const res = await fetchWithSite("/api/categories?full=1", {
           cache: "no-store",
         });
         const rows = res.ok ? await res.json() : [];
@@ -302,10 +307,13 @@ export default function AdminSlidersList() {
           loading: true,
           items: categoryMatches,
         }));
-        const res = await fetch(`/api/posts?q=${encodeURIComponent(q)}`, {
-          cache: "no-store",
-          signal: controller.signal,
-        });
+        const res = await fetchWithSite(
+          `/api/posts?q=${encodeURIComponent(q)}`,
+          {
+            cache: "no-store",
+            signal: controller.signal,
+          },
+        );
         const rows = res.ok ? await res.json() : [];
         const postMatches: HrefSuggestionItem[] = (
           Array.isArray(rows) ? rows : []
@@ -371,7 +379,7 @@ export default function AdminSlidersList() {
       qs.set("limit", String(MEDIA_PAGE_SIZE));
       qs.set("offset", String(offset));
       if (refresh) qs.set("refresh", "1");
-      const r = await fetch(`/api/media?${qs.toString()}`, {
+      const r = await fetchWithSite(`/api/media?${qs.toString()}`, {
         cache: "no-store",
       });
       const j = (r.ok ? await r.json() : null) as MediaListResp | null;
@@ -427,7 +435,7 @@ export default function AdminSlidersList() {
     try {
       const qs = new URLSearchParams();
       if (opts?.refresh) qs.set("refresh", "1");
-      const r = await fetch(`/api/media?${qs.toString()}`, {
+      const r = await fetchWithSite(`/api/media?${qs.toString()}`, {
         cache: "no-store",
       });
       const j = (r.ok ? await r.json() : null) as MediaListResp | null;
@@ -483,7 +491,7 @@ export default function AdminSlidersList() {
         root,
         rootMargin: "200px",
         threshold: 0.01,
-      }
+      },
     );
 
     obs.observe(target);
@@ -498,7 +506,7 @@ export default function AdminSlidersList() {
     try {
       const form = new FormData();
       for (const f of arr) form.append("files", f);
-      const res = await fetch(`/api/media/upload`, {
+      const res = await fetchWithSite(`/api/media/upload`, {
         method: "POST",
         body: form,
       });
@@ -522,9 +530,12 @@ export default function AdminSlidersList() {
   const loadDbSet = async (key: string) => {
     setDbLoading(true);
     try {
-      const res = await fetch(`/api/sliders/${encodeURIComponent(key)}?all=1`, {
-        cache: "no-store",
-      });
+      const res = await fetchWithSite(
+        `/api/sliders/${encodeURIComponent(key)}?all=1`,
+        {
+          cache: "no-store",
+        },
+      );
       const j = (res.ok ? await res.json() : null) as DbSliderResp | null;
       const items = Array.isArray(j?.items) ? j!.items : [];
       const normalized = items
@@ -552,7 +563,7 @@ export default function AdminSlidersList() {
 
   const updateDbItem = (idx: number, patch: Partial<DbSliderItem>) => {
     setDbItems((prev) =>
-      prev.map((it, i) => (i === idx ? { ...it, ...patch } : it))
+      prev.map((it, i) => (i === idx ? { ...it, ...patch } : it)),
     );
   };
 
@@ -649,8 +660,8 @@ export default function AdminSlidersList() {
       const inferredLang = dbKey.endsWith("-es")
         ? "es"
         : dbKey.endsWith("-en")
-        ? "en"
-        : null;
+          ? "en"
+          : null;
       const payload = {
         items: dbItems.map((it, idx) => ({
           image_url: String(it.image_url || "").trim(),
@@ -660,11 +671,14 @@ export default function AdminSlidersList() {
           lang: inferredLang || it.lang || null,
         })),
       };
-      const res = await fetch(`/api/sliders/${encodeURIComponent(dbKey)}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetchWithSite(
+        `/api/sliders/${encodeURIComponent(dbKey)}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      );
       if (!res.ok) throw new Error(await res.text());
       await loadDbSet(dbKey);
       alert("Slider guardado en la base de datos");
@@ -686,7 +700,7 @@ export default function AdminSlidersList() {
         .replace(/[\u0300-\u036f]/g, "")
         .toUpperCase();
     const name = norm(
-      (filenameOrUrl.split("/").pop() || filenameOrUrl).replace(/\.[^.]+$/, "")
+      (filenameOrUrl.split("/").pop() || filenameOrUrl).replace(/\.[^.]+$/, ""),
     );
     const has = (k: string) => name.includes(k);
     let key: string | null = null;
@@ -928,14 +942,14 @@ export default function AdminSlidersList() {
     try {
       // Home: PUT /api/slider-images
       if (home) {
-        await fetch("/api/slider-images", {
+        await fetchWithSite("/api/slider-images", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ desktop: home.desktop, mobile: home.mobile }),
         });
       }
       // Rest Desktop: PUT /api/imagenes-slider/manifest
-      await fetch("/api/imagenes-slider/manifest", {
+      await fetchWithSite("/api/imagenes-slider/manifest", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ es: restDesktopES, en: restDesktopEN }),
@@ -948,20 +962,20 @@ export default function AdminSlidersList() {
         .filter((u) => /-2\./i.test(u))
         .map((u) => u.split("/").pop());
       if (esOrder.length)
-        await fetch("/api/restaurant-slider-mobile", {
+        await fetchWithSite("/api/restaurant-slider-mobile", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ lang: "es", order: esOrder }),
         });
       if (enOrder.length)
-        await fetch("/api/restaurant-slider-mobile", {
+        await fetchWithSite("/api/restaurant-slider-mobile", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ lang: "en", order: enOrder }),
         });
 
       // Destinos overrides
-      await fetch("/api/slider-destinations", {
+      await fetchWithSite("/api/slider-destinations", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(destinations || {}),
@@ -1023,7 +1037,7 @@ export default function AdminSlidersList() {
             })),
           },
         ];
-        await fetch("/api/sliders/sync", {
+        await fetchWithSite("/api/sliders/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sets: setsPayload }),
@@ -1195,7 +1209,7 @@ export default function AdminSlidersList() {
                           onFocus={() => {
                             if (hrefSuggestBlurTimerRef.current != null) {
                               window.clearTimeout(
-                                hrefSuggestBlurTimerRef.current
+                                hrefSuggestBlurTimerRef.current,
                               );
                               hrefSuggestBlurTimerRef.current = null;
                             }
@@ -1208,7 +1222,7 @@ export default function AdminSlidersList() {
                           onBlur={() => {
                             if (hrefSuggestBlurTimerRef.current != null) {
                               window.clearTimeout(
-                                hrefSuggestBlurTimerRef.current
+                                hrefSuggestBlurTimerRef.current,
                               );
                             }
                             hrefSuggestBlurTimerRef.current = window.setTimeout(
@@ -1221,10 +1235,10 @@ export default function AdminSlidersList() {
                                         items: [],
                                         loading: false,
                                       }
-                                    : s
+                                    : s,
                                 );
                               },
-                              150
+                              150,
                             );
                           }}
                           onChange={(e) => {

@@ -58,7 +58,9 @@ export default function EditPostPage({
             cache: "no-store",
           }),
           fetchWithSite("/api/categories", { cache: "no-store" }),
-          fetchWithSite("/api/communes?full=1&includeHidden=1", { cache: "no-store" }),
+          fetchWithSite("/api/communes?full=1&includeHidden=1", {
+            cache: "no-store",
+          }),
         ]);
         const p = pRes.ok ? await pRes.json() : null;
         const c = cRes.ok ? await cRes.json() : [];
@@ -71,7 +73,9 @@ export default function EditPostPage({
           setHotel(p && p.slug ? p : null);
           setCategoriesApi(Array.isArray(c) ? c : []);
           const communesList = Array.isArray(comm)
-            ? comm.map((co: any) => String(co.label || co.slug || "").trim()).filter(Boolean)
+            ? comm
+                .map((co: any) => String(co.label || co.slug || "").trim())
+                .filter(Boolean)
             : [];
           setPossibleCommunes(communesList);
           setLoadingCommunes(false);
@@ -164,7 +168,7 @@ export default function EditPostPage({
   const [loadingCommunes, setLoadingCommunes] = useState(true);
   const [communes, setCommunes] = useState<string[]>([]);
   const [autoDetectedCommunes, setAutoDetectedCommunes] = useState<string[]>(
-    []
+    [],
   );
   const normalizeComuna = (s: string) =>
     String(s || "")
@@ -199,15 +203,21 @@ export default function EditPostPage({
     try {
       const form = new FormData();
       for (const f of arr) form.append("files", f);
-      const res = await fetch(`/api/posts/${encodeURIComponent(slug)}/images`, {
-        method: "POST",
-        body: form,
-      });
+      const res = await fetchWithSite(
+        `/api/posts/${encodeURIComponent(slug)}/images`,
+        {
+          method: "POST",
+          body: form,
+        },
+      );
       if (!res.ok) throw new Error(await res.text());
       // Refrescar datos del post para reconstruir la galería con orden correcto
-      const fresh = await fetch(`/api/posts/${encodeURIComponent(slug)}`, {
-        cache: "no-store",
-      }).then((r) => (r.ok ? r.json() : null));
+      const fresh = await fetchWithSite(
+        `/api/posts/${encodeURIComponent(slug)}`,
+        {
+          cache: "no-store",
+        },
+      ).then((r) => (r.ok ? r.json() : null));
       if (fresh) {
         let next: string[] = Array.isArray(fresh.images)
           ? fresh.images.slice()
@@ -248,7 +258,7 @@ export default function EditPostPage({
         v = "https://" + v.replace(/^\/+/, "");
       }
       v = v.replace(/^(https?:\/\/){2,}/i, (m) =>
-        m.substring(0, m.indexOf("//") + 2)
+        m.substring(0, m.indexOf("//") + 2),
       );
       v = v.replace(/https\/{2}(?=[^:])/gi, "https://");
       v = v.replace(/https:\/\/https\/\//i, "https://");
@@ -344,7 +354,7 @@ export default function EditPostPage({
       .filter(Boolean)
       .map((c) => c.toUpperCase());
     setCategories(
-      mergedCats.length > 0 ? Array.from(new Set(mergedCats)) : ["TODOS"]
+      mergedCats.length > 0 ? Array.from(new Set(mergedCats)) : ["TODOS"],
     );
     // locations existentes
     const locs = Array.isArray(hotel.locations) ? hotel.locations : [];
@@ -362,7 +372,7 @@ export default function EditPostPage({
         interestingFact: l?.interestingFact || "",
         email: l?.email || "",
         phone: String(l?.phone || "").replace(/^tel:/i, ""),
-      }))
+      })),
     );
 
     // Comunas: detección automática desde address/locations/descripciones
@@ -442,12 +452,12 @@ export default function EditPostPage({
     // Determinar featured final; si no hay imágenes mantener la previa
     const normalizedFeaturedIdx = Math.min(
       Math.max(0, featuredIndex || 0),
-      Math.max(0, images.length - 1)
+      Math.max(0, images.length - 1),
     );
     const finalFeatured = images[normalizedFeaturedIdx] || featuredImage || "";
     // Galería SIN la destacada (para no duplicarla en post_images)
     const galleryImages = images.filter(
-      (img, i) => img && img !== finalFeatured && i !== normalizedFeaturedIdx
+      (img, i) => img && img !== finalFeatured && i !== normalizedFeaturedIdx,
     );
 
     const sanitizePhone = (p: string) =>
@@ -540,7 +550,7 @@ export default function EditPostPage({
     const { payloadToSend } = built;
     try {
       setPreviewJson(
-        JSON.stringify(payloadToSend, null, 2).replace(/\n/g, "\n")
+        JSON.stringify(payloadToSend, null, 2).replace(/\n/g, "\n"),
       );
     } catch (e) {
       setPreviewJson('{\n  "error": "No se pudo serializar"\n}');
@@ -576,12 +586,12 @@ export default function EditPostPage({
       console.error("[Admin Edit] Validation errors:", result.issues);
       const first = result.issues?.[0];
       alert(
-        `Error de validación: ${first?.path || ""} - ${first?.message || ""}`
+        `Error de validación: ${first?.path || ""} - ${first?.message || ""}`,
       );
       return;
     }
     setSaving(true);
-    fetch(`/api/posts/${encodeURIComponent(slug)}`, {
+    fetchWithSite(`/api/posts/${encodeURIComponent(slug)}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payloadToSend),
@@ -598,7 +608,7 @@ export default function EditPostPage({
           // Después de guardar, reconstruir lista local combinando featured + galería
           const nextFeatured = normalized.featuredImage || finalFeatured;
           const nextGallery = normalized.images.filter(
-            (img: string) => img !== nextFeatured
+            (img: string) => img !== nextFeatured,
           );
           const rebuilt = nextFeatured
             ? [nextFeatured, ...nextGallery]
@@ -624,9 +634,9 @@ export default function EditPostPage({
           if (newSlug && newSlug !== slug) {
             router.replace(`/admin/posts/edit/${encodeURIComponent(newSlug)}`);
           }
-          const resp = await fetch(
+          const resp = await fetchWithSite(
             `/api/posts/${encodeURIComponent(newSlug)}`,
-            { cache: "no-store" }
+            { cache: "no-store" },
           );
           if (resp.ok) {
             const fresh = await resp.json();
@@ -814,7 +824,7 @@ export default function EditPostPage({
                           setCommunes((prev) =>
                             prev.includes(com)
                               ? prev.filter((c) => c !== com)
-                              : [...prev, com]
+                              : [...prev, com],
                           )
                         }
                         className="sr-only"
@@ -1165,7 +1175,7 @@ export default function EditPostPage({
 // Helpers para galería
 function moveImageFactory(
   images: string[],
-  setImages: (imgs: string[]) => void
+  setImages: (imgs: string[]) => void,
 ): (index: number, dir: -1 | 1) => void {
   return (index: number, dir: -1 | 1) => {
     const newIndex = index + dir;

@@ -1,5 +1,6 @@
 import { useSiteContext } from "@/contexts/site-context";
 import { useCallback } from "react";
+import { buildCmsApiUrl, normalizeCmsResponse } from "@/lib/cms-api";
 
 /**
  * Hook personalizado para hacer peticiones API desde el admin
@@ -10,11 +11,13 @@ export function useAdminApi() {
 
   const fetchWithSite = useCallback(
     async (url: string, options?: RequestInit) => {
-      // Agregar el parámetro adminSite a la URL
-      const urlObj = new URL(url, window.location.origin);
+      const finalUrl = buildCmsApiUrl(url, currentSite);
+      const urlObj = new URL(finalUrl);
       urlObj.searchParams.set('adminSite', currentSite);
-      
-      return fetch(urlObj.toString(), options);
+
+      const targetUrl = urlObj.toString();
+      const response = await fetch(targetUrl, options);
+      return normalizeCmsResponse(response, targetUrl, currentSite);
     },
     [currentSite]
   );
