@@ -1,8 +1,13 @@
-import {
-  getEffectiveSiteId,
-  getServerCmsBaseUrl,
-  normalizeCmsResponse,
-} from "@/lib/cms-api";
+import { getEffectiveSiteId, normalizeCmsResponse } from "@/lib/cms-api";
+
+function getCmsBaseUrl() {
+  const raw = process.env.NEXT_PUBLIC_CMS_API_BASE_URL;
+  const trimmed = String(raw || "").trim();
+  if (!trimmed) {
+    throw new Error("Falta NEXT_PUBLIC_CMS_API_BASE_URL");
+  }
+  return trimmed.replace(/\/+$/, "");
+}
 
 async function proxyRequest(
   req: Request,
@@ -11,10 +16,7 @@ async function proxyRequest(
   try {
     const { path = [] } = await ctx.params;
     const incoming = new URL(req.url);
-    const base = getServerCmsBaseUrl();
-    if (!base) {
-      throw new Error("Falta CMS_API_BASE_URL o NEXT_PUBLIC_CMS_API_BASE_URL");
-    }
+    const base = getCmsBaseUrl();
     const target = new URL(`/api/${path.join("/")}`, base);
 
     incoming.searchParams.forEach((value, key) => {

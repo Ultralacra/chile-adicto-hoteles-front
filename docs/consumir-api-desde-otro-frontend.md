@@ -18,9 +18,8 @@ En **otro dominio/otro repo**, lo más estable es **pasar siempre `previewSite=c
 
 En tu otro repo:
 
-- `CMS_API_BASE_URL=https://TU-DOMINIO-DEL-ADMIN`  
+- `NEXT_PUBLIC_CMS_API_BASE_URL=https://TU-DOMINIO-DEL-ADMIN`  
   Ej: `https://admin.mi-dominio.com`
-- `NEXT_PUBLIC_CMS_API_BASE_URL=https://TU-DOMINIO-DEL-ADMIN` solo si realmente vas a llamar el CMS directo desde el browser.
 - (opcional) `NEXT_PUBLIC_SITE_ID=chileadicto`
 
 ## Helper recomendado en el frontend externo
@@ -28,13 +27,11 @@ En tu otro repo:
 Crea un helper tipo `lib/cms-api.ts`:
 
 ```ts
-const CMS_BASE =
-  process.env.CMS_API_BASE_URL || process.env.NEXT_PUBLIC_CMS_API_BASE_URL;
+const CMS_BASE = process.env.NEXT_PUBLIC_CMS_API_BASE_URL;
 const SITE_ID = process.env.NEXT_PUBLIC_SITE_ID || "chileadicto";
 
 export async function fetchCms(path: string, init?: RequestInit) {
-  if (!CMS_BASE)
-    throw new Error("Falta CMS_API_BASE_URL o NEXT_PUBLIC_CMS_API_BASE_URL");
+  if (!CMS_BASE) throw new Error("Falta NEXT_PUBLIC_CMS_API_BASE_URL");
   const url = new URL(`/api/${path.replace(/^\/+/, "")}`, CMS_BASE);
   url.searchParams.set("previewSite", SITE_ID);
   return fetch(url.toString(), init);
@@ -65,6 +62,6 @@ Si necesitas llamar el API desde componentes client (`useEffect`, etc.), entonce
 ## Checklist rápida
 
 1. Despliega este repo (Admin/API) en una URL estable.
-2. En el repo frontend, configura `CMS_API_BASE_URL` y deja `NEXT_PUBLIC_CMS_API_BASE_URL` solo si necesitas llamadas directas desde cliente.
+2. En el repo frontend, configura `NEXT_PUBLIC_CMS_API_BASE_URL`.
 3. En el repo frontend, usa `fetchCms("posts")`, `fetchCms("categories")`, etc. (siempre con `previewSite=chileadicto`).
 4. (Opcional) Si requieres llamadas desde browser, agrega CORS en este repo.
