@@ -34,7 +34,7 @@ export function SiteProvider({ children }: { children: ReactNode }) {
 
   // Guardar cuando cambia
   const setSite = (siteId: SiteId) => {
-    if (siteId === currentSite) return; // No hacer nada si es el mismo sitio
+    if (siteId === currentSite) return; // No hacer nada si es el mismo sitio.
 
     setIsChanging(true);
     setCurrentSite(siteId);
