@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 interface HotelCardProps {
@@ -22,6 +21,7 @@ export function HotelCard({
 }: HotelCardProps) {
   const imageContainerClass =
     imageVariant === "tall" ? "h-[500px]" : "aspect-[386/264]";
+  const imageSrc = image || "/placeholder.svg";
 
   const href = externalUrl || `/${slug}`;
   const isExternal = Boolean(externalUrl);
@@ -35,11 +35,10 @@ export function HotelCard({
       <article className="group cursor-pointer flex flex-col h-full gap-3">
         {/* Image Container */}
         <div className={`relative ${imageContainerClass} overflow-hidden`}>
-          <Image
-            src={image || "/placeholder.svg"}
+          <img
+            src={imageSrc}
             alt={name}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>
 
