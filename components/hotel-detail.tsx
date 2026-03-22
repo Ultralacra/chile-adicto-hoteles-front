@@ -341,7 +341,7 @@ export function HotelDetail({
 
   // Sin autoplay: el slider avanza solo con flechas o swipe
 
-  // Limpiar contenido para remover duplicados de datos de contacto
+  // Extraer dirección del contenido (solo lectura) y mostrar contenido completo
   useEffect(() => {
     const html = hotel.fullContent || "";
     let foundAddress = normalizeAddressText(hotel.address || "");
@@ -361,45 +361,7 @@ export function HotelDetail({
       }
       return p;
     });
-    const contactPatterns = [
-      /^\s*(direcci[oó]n|address|ubicaci[oó]n)\s*[:\-]?/i,
-      /^\s*(web|website|sitio)\s*:?/i,
-      /^\s*(instagram)\s*:?/i,
-      /^\s*(tel[eé]fono|tel|phone)\s*:?/i,
-      /^\s*(email|mail)\s*:?/i,
-    ];
-    const norm = (s: string) =>
-      (s || "")
-        .replace(/<[^>]+>/g, " ")
-        .replace(/[\s\u00A0]+/g, " ")
-        .replace(/[\.,;:]+$/g, "")
-        .trim()
-        .toUpperCase();
-    const addressSet = new Set<string>();
-    if (foundAddress) addressSet.add(norm(foundAddress));
-    if (hotel.address) addressSet.add(norm(hotel.address));
-    (hotel.locations || []).forEach((l) => {
-      if (l?.address) addressSet.add(norm(l.address));
-    });
-    const processed = html.replace(/<p[^>]*>[\s\S]*?<\/p>/gi, (p) => {
-      const text = p
-        .replace(/<[^>]+>/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-      const isContactLabel = contactPatterns.some((re) => re.test(text));
-      const isAddressDuplicate = addressSet.has(norm(text));
-      const isContact = isContactLabel || isAddressDuplicate;
-      return isContact ? "" : p;
-    });
-    const inlineUrlRe = /https?:\/\/[^\s<>"']+/gi;
-    const inlineWwwRe = /\bwww\.[^\s<>"']+/gi;
-    const inlineEmailRe = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
-    const processed2 = processed
-      .replace(inlineUrlRe, " ")
-      .replace(inlineWwwRe, " ")
-      .replace(inlineEmailRe, " ")
-      .replace(/\s{2,}/g, " ");
-    setCleanedFullContent(processed2);
+    setCleanedFullContent(html);
     setAddress(foundAddress);
   }, [hotel.fullContent, hotel.address, hotel.locations]);
 
