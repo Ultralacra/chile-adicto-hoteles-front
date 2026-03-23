@@ -12,29 +12,36 @@ interface CategoryNavProps {
 
 const fallbackCategories = [
   { slug: "todos", labelEs: "TODOS", labelEn: "ALL" },
-  { slug: "arquitectura", labelEs: "ARQ", labelEn: "ARQ" },
-  { slug: "barrios", labelEs: "BARRIOS", labelEn: "Neighborhoods" },
-  { slug: "iconos", labelEs: "ICONOS", labelEn: "Icons" },
-  { slug: "mercados", labelEs: "MERCADOS", labelEn: "Markets" },
-  { slug: "miradores", labelEs: "MIRADORES", labelEn: "Viewpoints" },
-  // Display label in ES should be "CULTURA" though slug remains "museos"
-  { slug: "museos", labelEs: "CULTURA", labelEn: "Museums" },
-  { slug: "palacios", labelEs: "PALACIOS", labelEn: "Palaces" },
-  { slug: "parques", labelEs: "PARQUES", labelEn: "Parks" },
+  { slug: "norte", labelEs: "NORTE", labelEn: "NORTH" },
+  { slug: "centro", labelEs: "CENTRO", labelEn: "CENTER" },
+  { slug: "sur", labelEs: "SUR", labelEn: "SOUTH" },
   {
-    slug: "paseos-fuera-de-santiago",
-    // Display label in ES should be "FUERA DE STGO" though slug remains
-    labelEs: "FUERA DE STGO",
-    labelEn: "TRIPS OUTSIDE SANTIAGO",
+    slug: "isla-de-pascua",
+    labelEs: "ISLA DE PASCUA",
+    labelEn: "EASTER ISLAND",
   },
-  { slug: "ninos", labelEs: "NIÑOS", labelEn: "KIDS" },
+  { slug: "santiago", labelEs: "SANTIAGO", labelEn: "SANTIAGO" },
+  { slug: "guia-impresa", labelEs: "GUÍA IMPRESA", labelEn: "PRINT GUIDE" },
+  { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
+  { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
   {
-    slug: "monumentos-nacionales",
-    labelEs: "MONUMENTOS",
-    labelEn: "MONUMENTS",
+    slug: "exploraciones-tnf",
+    labelEs: "EXPLORACIONES TNF",
+    labelEn: "TNF EXPLORATIONS",
   },
-  { slug: "cafes", labelEs: "CAFÉS", labelEn: "CAFÉS" },
-  { slug: "restaurantes", labelEs: "RESTOS", labelEn: "REST" },
+];
+
+const fixedMenuOrder = [
+  "todos",
+  "norte",
+  "centro",
+  "sur",
+  "isla-de-pascua",
+  "santiago",
+  "guia-impresa",
+  "prensa",
+  "nosotros",
+  "exploraciones-tnf",
 ];
 
 type ApiCategoryRow = {
@@ -44,6 +51,8 @@ type ApiCategoryRow = {
   show_in_menu?: boolean | null;
   menu_order?: number | null;
 };
+
+const normalizeSlug = (value: string) => String(value).trim().toLowerCase();
 
 const prettySlugs = new Set([
   "iconos",
@@ -80,7 +89,7 @@ export function CategoryNav({
         const mapped = rows
           .filter((r) => r && r.slug)
           .map((r) => {
-            const slug = String(r.slug);
+            const slug = normalizeSlug(r.slug);
             const fallback = fallbackCategories.find((c) => c.slug === slug);
 
             // Overrides solo en front
@@ -99,28 +108,25 @@ export function CategoryNav({
             };
           });
 
-        // Asegurar orden estable:
-        // - "todos" primero
-        // - "restaurantes" cerca del final
-        // - "tienda/tiendas" siempre al final
-        const todos = mapped.find((x) => x.slug === "todos");
-        const rest = mapped.filter((x) => x.slug !== "todos");
-        const restaurants = rest.filter((x) => x.slug === "restaurantes");
-        const tienda = rest.filter(
-          (x) => x.slug === "tienda" || x.slug === "tiendas",
-        );
-        const others = rest.filter(
-          (x) =>
-            x.slug !== "restaurantes" &&
-            x.slug !== "tienda" &&
-            x.slug !== "tiendas",
-        );
-        const finalList = [
-          todos || fallbackCategories[0],
-          ...others,
-          ...restaurants,
-          ...tienda,
-        ];
+        const uniqueBySlug = new Map<string, (typeof mapped)[number]>();
+        for (const item of mapped) {
+          const key = normalizeSlug(item.slug);
+          if (!uniqueBySlug.has(key)) uniqueBySlug.set(key, item);
+        }
+
+        if (!uniqueBySlug.has("todos")) {
+          uniqueBySlug.set("todos", fallbackCategories[0]);
+        }
+
+        const finalList = fixedMenuOrder
+          .map((slug) => {
+            const fromApi = uniqueBySlug.get(slug);
+            const fallback = fallbackCategories.find((x) => x.slug === slug);
+            return fromApi || fallback;
+          })
+          .filter((item): item is (typeof fallbackCategories)[number] =>
+            Boolean(item),
+          );
 
         if (!cancelled) {
           if (finalList.length) {
@@ -150,10 +156,14 @@ export function CategoryNav({
   }, [fetchWithSite]);
 
   const hrefFor = (slug: string) => {
-    if (slug === "todos") return "/";
-    if (slug === "nosotros") return "/nosotros";
+    const normalizedSlug = normalizeSlug(slug);
+    if (normalizedSlug === "todos") return "/";
+    if (normalizedSlug === "nosotros") return "/nosotros";
+    if (normalizedSlug === "guia-impresa") return "/CHAH-2025-baja.pdf";
     // Mantener URL bonita si existe rewrite; si no, usar /categoria/<slug>
-    return prettySlugs.has(slug) ? `/${slug}` : `/categoria/${slug}`;
+    return prettySlugs.has(normalizedSlug)
+      ? `/${normalizedSlug}`
+      : `/categoria/${normalizedSlug}`;
   };
 
   return (
@@ -172,18 +182,36 @@ export function CategoryNav({
         <ul className="hidden lg:flex flex-nowrap items-center gap-2 text-sm font-medium whitespace-nowrap">
           {items.map((category, index) => (
             <li key={category.slug} className="flex items-center gap-2">
-              <Link
-                href={hrefFor(category.slug)}
-                className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[14px] leading-[19px] ${
-                  activeCategory === category.slug
-                    ? "text-[var(--color-brand-red)] font-normal"
-                    : "text-black font-normal"
-                }`}
-              >
-                {language === "es"
-                  ? category.labelEs
-                  : category.labelEn.toUpperCase()}
-              </Link>
+              {normalizeSlug(category.slug) === "guia-impresa" ? (
+                <a
+                  href={hrefFor(category.slug)}
+                  download
+                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[14px] leading-[19px] ${
+                    normalizeSlug(activeCategory) ===
+                    normalizeSlug(category.slug)
+                      ? "text-[var(--color-brand-red)] font-normal"
+                      : "text-black font-normal"
+                  }`}
+                >
+                  {language === "es"
+                    ? category.labelEs
+                    : category.labelEn.toUpperCase()}
+                </a>
+              ) : (
+                <Link
+                  href={hrefFor(category.slug)}
+                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[14px] leading-[19px] ${
+                    normalizeSlug(activeCategory) ===
+                    normalizeSlug(category.slug)
+                      ? "text-[var(--color-brand-red)] font-normal"
+                      : "text-black font-normal"
+                  }`}
+                >
+                  {language === "es"
+                    ? category.labelEs
+                    : category.labelEn.toUpperCase()}
+                </Link>
+              )}
               {index < items.length - 1 && (
                 <span className="text-black">•</span>
               )}

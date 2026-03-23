@@ -91,6 +91,7 @@ function mapRowToLegacy(row: any) {
     : [];
   return {
     slug: row.slug,
+    createdAt: row.created_at || null,
     site: row.site || null, // ¡Importante! Campo para multi-sitio
     featuredImage: row.featured_image || null,
     website: row.website || null,
@@ -140,7 +141,7 @@ export async function GET(req: Request) {
     console.log('🔍 [API /posts] Parámetros:', { q, category, categorySlug });
 
     const select =
-      "slug,featured_image,website,instagram,website_display,instagram_display,email,phone,photos_credit,address,hours,reservation_link,reservation_policy,interesting_fact,site,images:post_images(url,position),locations:post_locations(*),translations:post_translations(*),useful:post_useful_info(*),category_links:post_category_map(category:categories(slug,label_es,label_en))";
+      "slug,created_at,featured_image,website,instagram,website_display,instagram_display,email,phone,photos_credit,address,hours,reservation_link,reservation_policy,interesting_fact,site,images:post_images(url,position),locations:post_locations(*),translations:post_translations(*),useful:post_useful_info(*),category_links:post_category_map(category:categories(slug,label_es,label_en))";
     let rows: any[] | null = await fetchFromSupabase(
       `/posts?select=${encodeURIComponent(select)}&site=eq.${siteId}`
     );

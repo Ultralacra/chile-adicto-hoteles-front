@@ -16,6 +16,46 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
   const [footerCategories, setFooterCategories] = useState<any[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
+  const normalizeSlug = (value: string) => String(value).trim().toLowerCase();
+
+  const fallbackCategories = [
+    { slug: "todos", labelEs: "TODOS", labelEn: "ALL" },
+    { slug: "norte", labelEs: "NORTE", labelEn: "NORTH" },
+    { slug: "centro", labelEs: "CENTRO", labelEn: "CENTER" },
+    { slug: "sur", labelEs: "SUR", labelEn: "SOUTH" },
+    {
+      slug: "isla-de-pascua",
+      labelEs: "ISLA DE PASCUA",
+      labelEn: "EASTER ISLAND",
+    },
+    { slug: "santiago", labelEs: "SANTIAGO", labelEn: "SANTIAGO" },
+    {
+      slug: "guia-impresa",
+      labelEs: "GUÍA IMPRESA",
+      labelEn: "PRINT GUIDE",
+    },
+    { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
+    { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
+    {
+      slug: "exploraciones-tnf",
+      labelEs: "EXPLORACIONES TNF",
+      labelEn: "TNF EXPLORATIONS",
+    },
+  ];
+
+  const fixedMenuOrder = [
+    "todos",
+    "norte",
+    "centro",
+    "sur",
+    "isla-de-pascua",
+    "santiago",
+    "guia-impresa",
+    "prensa",
+    "nosotros",
+    "exploraciones-tnf",
+  ];
+
   useEffect(() => {
     let cancelled = false;
     async function load() {
@@ -26,53 +66,11 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
         const json = res.ok ? await res.json() : [];
         const rows = Array.isArray(json) ? json : [];
 
-        const fallbackCategories = [
-          { slug: "todos", labelEs: "TODOS", labelEn: "ALL" },
-          { slug: "arquitectura", labelEs: "ARQ", labelEn: "ARQ" },
-          { slug: "barrios", labelEs: "BARRIOS", labelEn: "Neighborhoods" },
-          { slug: "iconos", labelEs: "ICONOS", labelEn: "Icons" },
-          { slug: "mercados", labelEs: "MERCADOS", labelEn: "Markets" },
-          { slug: "miradores", labelEs: "MIRADORES", labelEn: "Viewpoints" },
-          { slug: "museos", labelEs: "CULTURA", labelEn: "Museums" },
-          { slug: "palacios", labelEs: "PALACIOS", labelEn: "Palaces" },
-          { slug: "parques", labelEs: "PARQUES", labelEn: "Parks" },
-          {
-            slug: "paseos-fuera-de-santiago",
-            labelEs: "FUERA DE STGO",
-            labelEn: "TRIPS OUTSIDE SANTIAGO",
-          },
-          { slug: "ninos", labelEs: "NIÑOS", labelEn: "KIDS" },
-          {
-            slug: "monumentos-nacionales",
-            labelEs: "MONUMENTOS",
-            labelEn: "MONUMENTS",
-          },
-          { slug: "cafes", labelEs: "CAFÉS", labelEn: "CAFÉS" },
-          { slug: "restaurantes", labelEs: "RESTOS", labelEn: "REST" },
-        ];
-
-        const prettySlugs = new Set([
-          "iconos",
-          "ninos",
-          "arquitectura",
-          "barrios",
-          "mercados",
-          "miradores",
-          "museos",
-          "palacios",
-          "parques",
-          "paseos-fuera-de-santiago",
-          "restaurantes",
-        ]);
-
         const mapped = rows
           .filter((r: any) => r && r.slug)
           .map((r: any) => {
-            const slug = String(r.slug);
+            const slug = normalizeSlug(r.slug);
             const fallback = fallbackCategories.find((c) => c.slug === slug);
-            if (slug === "restaurantes") {
-              return { slug, labelEs: "RESTOS", labelEn: "REST" };
-            }
             return {
               slug,
               labelEs: String(
@@ -84,24 +82,24 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
             };
           });
 
-        const todos = mapped.find((x: any) => x.slug === "todos");
-        const rest = mapped.filter((x: any) => x.slug !== "todos");
-        const restaurants = rest.filter((x: any) => x.slug === "restaurantes");
-        const tienda = rest.filter(
-          (x: any) => x.slug === "tienda" || x.slug === "tiendas",
-        );
-        const others = rest.filter(
-          (x: any) =>
-            x.slug !== "restaurantes" &&
-            x.slug !== "tienda" &&
-            x.slug !== "tiendas",
-        );
-        const finalList = [
-          todos || fallbackCategories[0],
-          ...others,
-          ...restaurants,
-          ...tienda,
-        ];
+        const uniqueBySlug = new Map<string, (typeof mapped)[number]>();
+        for (const item of mapped) {
+          if (!uniqueBySlug.has(item.slug)) uniqueBySlug.set(item.slug, item);
+        }
+
+        if (!uniqueBySlug.has("todos")) {
+          uniqueBySlug.set("todos", fallbackCategories[0]);
+        }
+
+        const finalList = fixedMenuOrder
+          .map((slug) => {
+            const fromApi = uniqueBySlug.get(slug);
+            const fallback = fallbackCategories.find((x) => x.slug === slug);
+            return fromApi || fallback;
+          })
+          .filter((item): item is (typeof fallbackCategories)[number] =>
+            Boolean(item),
+          );
 
         if (!cancelled) {
           setFooterCategories(finalList.filter(Boolean));
@@ -121,8 +119,10 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
   }, [fetchWithSite]);
 
   const hrefFor = (slug: string) => {
-    if (slug === "todos") return "/";
-    if (slug === "nosotros") return "/nosotros";
+    const normalizedSlug = normalizeSlug(slug);
+    if (normalizedSlug === "todos") return "/";
+    if (normalizedSlug === "nosotros") return "/nosotros";
+    if (normalizedSlug === "guia-impresa") return "/CHAH-2025-baja.pdf";
     const prettySlugs = new Set([
       "iconos",
       "ninos",
@@ -136,7 +136,9 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
       "paseos-fuera-de-santiago",
       "restaurantes",
     ]);
-    return prettySlugs.has(slug) ? `/${slug}` : `/categoria/${slug}`;
+    return prettySlugs.has(normalizedSlug)
+      ? `/${normalizedSlug}`
+      : `/categoria/${normalizedSlug}`;
   };
   return (
     <footer className="bg-black text-white pt-[60px] pb-[20px] mt-8">
@@ -166,8 +168,10 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
                   <a
                     key={category.slug}
                     href={hrefFor(category.slug)}
+                    download={normalizeSlug(category.slug) === "guia-impresa"}
                     className={`font-neutra-demi text-[15px] leading-[20px] font-[600] transition-colors duration-200 ease-in-out hover:text-[#FF0000] uppercase ${
-                      activeCategory === category.slug
+                      normalizeSlug(activeCategory) ===
+                      normalizeSlug(category.slug)
                         ? "text-[#FF0000]"
                         : "text-white"
                     }`}

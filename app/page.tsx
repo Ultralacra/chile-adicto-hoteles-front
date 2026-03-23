@@ -152,6 +152,58 @@ const HOME_SLIDER_DESKTOP_IMAGES_PROXY =
 const HOME_SLIDER_MOBILE_IMAGES_PROXY =
   HOME_SLIDER_MOBILE_IMAGES.map(proxyImageUrl);
 
+const HOME_RESERVED_POSTS = [
+  {
+    slug: "post-1-reservado",
+    es: {
+      name: "POST 1 RESERVADO",
+      subtitle: "ESPACIO RESERVADO HOME",
+      description:
+        "Este espacio esta reservado para un post fijo. Aqui ira contenido destacado y permanente en la primera fila del home.",
+    },
+    en: {
+      name: "RESERVED POST 1",
+      subtitle: "HOME RESERVED SLOT",
+      description:
+        "This slot is reserved for a fixed post. A permanent featured content will appear here in the first row of the home.",
+    },
+    image: "/placeholder.svg",
+  },
+  {
+    slug: "post-2-reservado",
+    es: {
+      name: "POST 2 RESERVADO",
+      subtitle: "ESPACIO RESERVADO HOME",
+      description:
+        "Este espacio esta reservado para un post fijo. Aqui ira contenido destacado y permanente en la primera fila del home.",
+    },
+    en: {
+      name: "RESERVED POST 2",
+      subtitle: "HOME RESERVED SLOT",
+      description:
+        "This slot is reserved for a fixed post. A permanent featured content will appear here in the first row of the home.",
+    },
+    image: "/placeholder.svg",
+  },
+  {
+    slug: "categoria/exploraciones-tnf",
+    es: {
+      name: "LAS MEJORES EXPLORACIONES",
+      subtitle: "DESDE LOS MEJORES HOTELES DE CHILE",
+      description:
+        "The North Face presenta una nueva e increíble seccion de chile adicto hoteles. Aquí la prestigiosa marca internacional outdoor, nos irá presentando las mejores exploraciones que se pueden hacer, desde los mejores hoteles destino de chile…",
+    },
+    en: {
+      name: "THE BEST EXPLORATIONS",
+      subtitle: "FROM CHILE'S FINEST HOTELS",
+      description:
+        "The North Face presents a new and incredible section of Chile Adicto Hoteles. Here, the prestigious international outdoor brand will showcase the best explorations available from Chile's top destination hotels…",
+    },
+    image:
+      "https://chileadictohoteles.cl/wp-content/uploads/2024/12/portada-north-face.webp",
+  },
+];
+
 export default function Page() {
   const { language } = useLanguage();
   const { fetchWithSite } = useSiteApi();
@@ -268,37 +320,62 @@ export default function Page() {
       .then((rows) => {
         if (cancelled) return;
         const list = Array.isArray(rows) ? rows : [];
+        const normalizeCategory = (value: unknown) =>
+          String(value || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toUpperCase()
+            .trim();
+
         const filtered = list.filter((h) => {
           if (isHiddenFrontPost(h)) return false;
           const cats = new Set<string>([
-            ...(h.categories || []).map((c: any) => String(c).toUpperCase()),
+            ...(h.categories || []).map((c: any) => normalizeCategory(c)),
           ]);
           const esCat = h.es?.category
-            ? String(h.es.category).toUpperCase()
+            ? normalizeCategory(h.es.category)
             : null;
           const enCat = h.en?.category
-            ? String(h.en.category).toUpperCase()
+            ? normalizeCategory(h.en.category)
             : null;
-          // Excluir restaurantes y el post w-santiago
-          if (String(h.slug) === "w-santiago") return false;
-          return !(
+
+          // Excluir categorías no-hotel del home
+          const hasBlockedCategory =
             cats.has("RESTAURANTES") ||
             cats.has("RESTAURANTS") ||
+            cats.has("PRENSA") ||
+            cats.has("EXPLORACIONES TNF") ||
+            cats.has("GUIA IMPRESA") ||
             esCat === "RESTAURANTES" ||
             enCat === "RESTAURANTS" ||
-            enCat === "RESTAURANTES"
-          );
+            enCat === "RESTAURANTES" ||
+            esCat === "PRENSA" ||
+            enCat === "PRENSA" ||
+            esCat === "EXPLORACIONES TNF" ||
+            enCat === "EXPLORACIONES TNF" ||
+            esCat === "GUIA IMPRESA" ||
+            enCat === "GUIA IMPRESA";
+
+          // Excluir w-santiago
+          if (String(h.slug) === "w-santiago") return false;
+          return !hasBlockedCategory;
         });
-        // Orden aleatorio en Home cada vez que se entra
-        const shuffled = (() => {
-          const arr = filtered.slice();
-          for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-          }
-          return arr;
-        })();
-        setHotels(shuffled);
+        const sortKey = (h: any) =>
+          String(h?.[language]?.name || h?.en?.name || h?.es?.name || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toUpperCase()
+            .trim();
+
+        const ordered = filtered.slice().sort((a, b) => {
+          const aKey = sortKey(a);
+          const bKey = sortKey(b);
+          if (aKey < bKey) return -1;
+          if (aKey > bKey) return 1;
+          return String(a?.slug || "").localeCompare(String(b?.slug || ""));
+        });
+
+        setHotels(ordered);
         setLoading(false);
       })
       .catch(() => {
@@ -310,7 +387,7 @@ export default function Page() {
     return () => {
       cancelled = true;
     };
-  }, [fetchWithSite]);
+  }, [fetchWithSite, language]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -381,6 +458,28 @@ export default function Page() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {HOME_RESERVED_POSTS.map((reserved) => (
+                  <div key={reserved.slug} className="col-span-1">
+                    <HotelCard
+                      slug={reserved.slug}
+                      name={
+                        language === "es" ? reserved.es.name : reserved.en.name
+                      }
+                      subtitle={
+                        language === "es"
+                          ? reserved.es.subtitle
+                          : reserved.en.subtitle
+                      }
+                      description={
+                        language === "es"
+                          ? reserved.es.description
+                          : reserved.en.description
+                      }
+                      image={reserved.image}
+                      imageVariant="default"
+                    />
+                  </div>
+                ))}
                 {hotels.map((hotel) => (
                   <div key={hotel.slug} className="col-span-1">
                     {(() => {

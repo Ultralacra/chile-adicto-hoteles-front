@@ -96,8 +96,14 @@ export default function CategoryPage({ params }: { params: any }) {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    // Algunos slugs de navegación no coinciden 1:1 con el slug en BD.
+    // Ejemplo: "exploraciones-tnf" (front) -> "exploraciones" (API).
+    const categorySlugForApi =
+      slug === "exploraciones-tnf" ? "exploraciones" : slug;
     // Preferimos filtrar por slug de categoría en el backend
-    fetchWithSite(`/api/posts?categorySlug=${encodeURIComponent(slug)}`)
+    fetchWithSite(
+      `/api/posts?categorySlug=${encodeURIComponent(categorySlugForApi)}`,
+    )
       .then((r) => (r.ok ? r.json() : []))
       .then((rows) => {
         if (cancelled) return;
@@ -112,6 +118,7 @@ export default function CategoryPage({ params }: { params: any }) {
   }, [slug, fetchWithSite]);
 
   const isRestaurantsPage = slug === "restaurantes";
+  const isPressPage = slug === "prensa";
 
   // Comunas dinámicas para restaurantes (derivadas de direcciones/locations y overrides)
   const possibleCommunes = [
@@ -769,16 +776,37 @@ export default function CategoryPage({ params }: { params: any }) {
       .toUpperCase()
       .trim();
 
+  const publicationTimestamp = (h: any) => {
+    const candidates = [
+      h?.publicationDate,
+      h?.publishedAt,
+      h?.publicationStartsAt,
+      h?.createdAt,
+      h?.created_at,
+      h?.date,
+    ];
+    for (const candidate of candidates) {
+      if (!candidate) continue;
+      const parsed = Date.parse(String(candidate));
+      if (!Number.isNaN(parsed)) return parsed;
+    }
+    return 0;
+  };
+
   const cleanedList = finalHotels.filter(
     (h: any) => String(h.slug) !== "w-santiago",
   );
-  const finalOrderedHotels = isRestaurantsPage
-    ? cleanedList
+  const finalOrderedHotels = isPressPage
+    ? cleanedList.slice().sort((a, b) => {
+        const diff = publicationTimestamp(b) - publicationTimestamp(a);
+        if (diff !== 0) return diff;
+        return sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0;
+      })
+    : cleanedList
         .slice()
         .sort((a, b) =>
           sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0,
-        )
-    : cleanedList;
+        );
 
   return (
     <Suspense

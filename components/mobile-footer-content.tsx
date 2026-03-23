@@ -28,6 +28,8 @@ export function MobileFooterContent({
     show_in_menu?: boolean | null;
   };
 
+  const normalizeSlug = (value: string) => String(value).trim().toLowerCase();
+
   type ApiCommuneRow = {
     slug: string;
     label: string | null;
@@ -85,22 +87,36 @@ export function MobileFooterContent({
   // Fallback hardcodeado (mismo orden histórico)
   const fallbackItems = [
     { slug: "todos", labelEs: "TODOS", labelEn: "ALL" },
-    { slug: "arquitectura", labelEs: "ARQ", labelEn: "ARQ" },
-    { slug: "barrios", labelEs: "BARRIOS", labelEn: "NEIGHBORHOODS" },
-    { slug: "iconos", labelEs: "ICONOS", labelEn: "ICONS" },
-    { slug: "mercados", labelEs: "MERCADOS", labelEn: "MARKETS" },
-    { slug: "miradores", labelEs: "MIRADORES", labelEn: "VIEWPOINTS" },
-    { slug: "museos", labelEs: "CULTURA", labelEn: "MUSEUMS" },
-    { slug: "palacios", labelEs: "PALACIOS", labelEn: "PALACES" },
-    { slug: "parques", labelEs: "PARQUES", labelEn: "PARKS" },
+    { slug: "norte", labelEs: "NORTE", labelEn: "NORTH" },
+    { slug: "centro", labelEs: "CENTRO", labelEn: "CENTER" },
+    { slug: "sur", labelEs: "SUR", labelEn: "SOUTH" },
     {
-      slug: "paseos-fuera-de-santiago",
-      labelEs: "FUERA DE STGO",
-      labelEn: "TRIPS OUTSIDE SANTIAGO",
+      slug: "isla-de-pascua",
+      labelEs: "ISLA DE PASCUA",
+      labelEn: "EASTER ISLAND",
     },
-    { slug: "ninos", labelEs: "NIÑOS", labelEn: "KIDS" },
-    // RESTAURANTES truncado en front
-    { slug: "restaurantes", labelEs: "RESTOS", labelEn: "REST" },
+    { slug: "santiago", labelEs: "SANTIAGO", labelEn: "SANTIAGO" },
+    { slug: "guia-impresa", labelEs: "GUÍA IMPRESA", labelEn: "PRINT GUIDE" },
+    { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
+    { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
+    {
+      slug: "exploraciones-tnf",
+      labelEs: "EXPLORACIONES TNF",
+      labelEn: "TNF EXPLORATIONS",
+    },
+  ];
+
+  const fixedMenuOrder = [
+    "todos",
+    "norte",
+    "centro",
+    "sur",
+    "isla-de-pascua",
+    "santiago",
+    "guia-impresa",
+    "prensa",
+    "nosotros",
+    "exploraciones-tnf",
   ];
 
   const [items, setItems] = useState<typeof fallbackItems>([]);
@@ -125,10 +141,14 @@ export function MobileFooterContent({
   );
 
   const hrefFor = (slug: string) => {
-    if (slug === "todos") return "/";
-    if (slug === "nosotros") return "/nosotros";
-    if (slug === "restaurantes") return "/restaurantes";
-    return prettySlugs.has(slug) ? `/${slug}` : `/categoria/${slug}`;
+    const normalizedSlug = normalizeSlug(slug);
+    if (normalizedSlug === "todos") return "/";
+    if (normalizedSlug === "nosotros") return "/nosotros";
+    if (normalizedSlug === "guia-impresa") return "/CHAH-2025-baja.pdf";
+    if (normalizedSlug === "restaurantes") return "/restaurantes";
+    return prettySlugs.has(normalizedSlug)
+      ? `/${normalizedSlug}`
+      : `/categoria/${normalizedSlug}`;
   };
 
   useEffect(() => {
@@ -145,7 +165,7 @@ export function MobileFooterContent({
         const mapped = rows
           .filter((r) => r && r.slug)
           .map((r) => {
-            const slug = String(r.slug);
+            const slug = normalizeSlug(r.slug);
             const fallback = fallbackItems.find((x) => x.slug === slug);
 
             // Overrides solo en front
@@ -162,24 +182,27 @@ export function MobileFooterContent({
             return { slug, labelEs, labelEn };
           })
           // nunca dependemos de que venga "todos" desde la BD
-          .filter((x) => x.slug !== "todos");
+          .filter((x) => normalizeSlug(x.slug) !== "todos");
 
-        const restaurants = mapped.filter((x) => x.slug === "restaurantes");
-        const tienda = mapped.filter(
-          (x) => x.slug === "tienda" || x.slug === "tiendas",
-        );
-        const others = mapped.filter(
-          (x) =>
-            x.slug !== "restaurantes" &&
-            x.slug !== "tienda" &&
-            x.slug !== "tiendas",
-        );
-        const finalList = [
-          fallbackItems[0],
-          ...others,
-          ...restaurants,
-          ...tienda,
-        ];
+        const uniqueBySlug = new Map<string, (typeof mapped)[number]>();
+        for (const item of mapped) {
+          const key = normalizeSlug(item.slug);
+          if (!uniqueBySlug.has(key)) uniqueBySlug.set(key, item);
+        }
+
+        if (!uniqueBySlug.has("todos")) {
+          uniqueBySlug.set("todos", fallbackItems[0]);
+        }
+
+        const finalList = fixedMenuOrder
+          .map((slug) => {
+            const fromApi = uniqueBySlug.get(slug);
+            const fallback = fallbackItems.find((x) => x.slug === slug);
+            return fromApi || fallback;
+          })
+          .filter((item): item is (typeof fallbackItems)[number] =>
+            Boolean(item),
+          );
 
         if (!cancelled) {
           if (finalList.length) {
@@ -272,13 +295,24 @@ export function MobileFooterContent({
             <ul className="space-y-4 text-center">
               {items.map((item) => (
                 <li key={item.slug}>
-                  <Link
-                    href={hrefFor(item.slug)}
-                    className="font-neutra-demi text-[14px] leading-[19px] font-[600] text-white hover:text-gray-300 transition-colors"
-                    onClick={() => onNavigate?.()}
-                  >
-                    {language === "es" ? item.labelEs : item.labelEn}
-                  </Link>
+                  {normalizeSlug(item.slug) === "guia-impresa" ? (
+                    <a
+                      href={hrefFor(item.slug)}
+                      download
+                      className="font-neutra-demi text-[14px] leading-[19px] font-[600] text-white hover:text-gray-300 transition-colors"
+                      onClick={() => onNavigate?.()}
+                    >
+                      {language === "es" ? item.labelEs : item.labelEn}
+                    </a>
+                  ) : (
+                    <Link
+                      href={hrefFor(item.slug)}
+                      className="font-neutra-demi text-[14px] leading-[19px] font-[600] text-white hover:text-gray-300 transition-colors"
+                      onClick={() => onNavigate?.()}
+                    >
+                      {language === "es" ? item.labelEs : item.labelEn}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
