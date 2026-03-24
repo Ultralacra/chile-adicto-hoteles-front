@@ -81,6 +81,12 @@ export function HotelDetail({
     ? hotel.categories.map((c) => toSlug(String(c || ""))).includes("cafes")
     : false;
 
+  const isExploracionesTnfPost = Array.isArray(hotel?.categories)
+    ? hotel.categories
+        .map((c) => toSlug(String(c || "")))
+        .includes("exploraciones-tnf")
+    : false;
+
   const showCategoryBanner = isMonumentosPost || isCafesPost;
   // La galería NO debe incluir la imagen de portada. Si hay imágenes de galería, usamos solo esas.
   // Si NO hay imágenes de galería, mostramos la portada como único slide.
@@ -930,7 +936,7 @@ export function HotelDetail({
             </div>
           )}
 
-          {!hideReservationIcon && (
+          {!hideReservationIcon && !isExploracionesTnfPost && (
             <>
               {hotel.reservationLink ? (
                 <a
