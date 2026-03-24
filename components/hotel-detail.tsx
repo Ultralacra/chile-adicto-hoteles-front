@@ -939,11 +939,11 @@ export function HotelDetail({
                   rel="noopener noreferrer"
                   className="mt-2 mb-2 inline-block"
                 >
-                  <ComentaIcon className="w-[100px] h-auto hover:opacity-80 transition-opacity" />
+                  <ComentaIcon className="w-[130px] h-auto hover:opacity-80 transition-opacity" />
                 </a>
               ) : (
                 <div className="mt-2 mb-2">
-                  <ComentaIcon className="w-[100px] h-auto" />
+                  <ComentaIcon className="w-[130px] h-auto" />
                 </div>
               )}
             </>

@@ -9,6 +9,7 @@
     "dev:chile": "cross-env NEXT_PUBLIC_LOCAL_SITE=chileadicto next dev --port 3001",
     "lint": "eslint .",
     "start": "next start",
+    "slider:home:print": "node scripts/print-home-sliders.mjs",
     "db:schema:apply": "node scripts/apply-schema.mjs",
     "db:migrate": "node scripts/migrate-supabase.mjs",
     "db:migrate:rest": "node scripts/migrate-supabase-http.mjs",

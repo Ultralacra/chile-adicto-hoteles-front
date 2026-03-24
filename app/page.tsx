@@ -154,36 +154,32 @@ const HOME_SLIDER_MOBILE_IMAGES_PROXY =
 
 const HOME_RESERVED_POSTS = [
   {
-    slug: "post-1-reservado",
+    slug: "categoria/lodges",
     es: {
-      name: "POST 1 RESERVADO",
-      subtitle: "ESPACIO RESERVADO HOME",
-      description:
-        "Este espacio esta reservado para un post fijo. Aqui ira contenido destacado y permanente en la primera fila del home.",
+      name: "LOS MEJORES LODGES",
+      subtitle: "",
+      description: "",
     },
     en: {
-      name: "RESERVED POST 1",
-      subtitle: "HOME RESERVED SLOT",
-      description:
-        "This slot is reserved for a fixed post. A permanent featured content will appear here in the first row of the home.",
+      name: "THE BEST LODGES",
+      subtitle: "",
+      description: "",
     },
-    image: "/placeholder.svg",
+    image: "/portadas/PORTADA-HOTEL-LODGES.png",
   },
   {
-    slug: "post-2-reservado",
+    slug: "categoria/hoteles-boutique",
     es: {
-      name: "POST 2 RESERVADO",
-      subtitle: "ESPACIO RESERVADO HOME",
-      description:
-        "Este espacio esta reservado para un post fijo. Aqui ira contenido destacado y permanente en la primera fila del home.",
+      name: "LOS MEJORES HOTELES BOUTIQUE",
+      subtitle: "",
+      description: "",
     },
     en: {
-      name: "RESERVED POST 2",
-      subtitle: "HOME RESERVED SLOT",
-      description:
-        "This slot is reserved for a fixed post. A permanent featured content will appear here in the first row of the home.",
+      name: "THE BEST BOUTIQUE HOTELS",
+      subtitle: "",
+      description: "",
     },
-    image: "/placeholder.svg",
+    image: "/portadas/PORTADA-HOTEL-BOUTIQUE.png",
   },
   {
     slug: "categoria/exploraciones-tnf",
@@ -268,6 +264,11 @@ export default function Page() {
         const itemsEnMobile = Array.isArray(jsonEnMobile?.items)
           ? jsonEnMobile.items
           : [];
+
+        console.log("home-desktop (ES):", itemsEsDesktop);
+        console.log("home-desktop-ingles (EN):", itemsEnDesktop);
+        console.log("home-movil-español (ES):", itemsEsMobile);
+        console.log("home-movil-ingles (EN):", itemsEnMobile);
 
         if (itemsEsDesktop.length > 0) {
           const desktops = itemsEsDesktop
