@@ -10,10 +10,15 @@ export function cn(...inputs: ClassValue[]) {
 // - targetMinChars: cantidad mínima aproximada para asegurar 5 líneas con line-clamp-5
 export function buildCardExcerpt(paragraphs: string[] | undefined, targetMinChars = 280): string {
   if (!Array.isArray(paragraphs) || paragraphs.length === 0) return "";
+
+  // Elimina todas las etiquetas HTML de un string
+  const stripHtml = (s: string) =>
+    s.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&nbsp;/g, " ");
+
   // Unir párrafos respetando espacios, limpiar whitespace extra
   let out = "";
   for (const p of paragraphs) {
-    const clean = String(p || "")
+    const clean = stripHtml(String(p || ""))
       .replace(/\s+/g, " ")
       .trim();
     if (!clean) continue;
@@ -23,7 +28,7 @@ export function buildCardExcerpt(paragraphs: string[] | undefined, targetMinChar
   // Si sigue corto, añade más párrafos si hay
   if (out.length < targetMinChars) {
     for (let i = 0; i < paragraphs.length; i++) {
-      const clean = String(paragraphs[i] || "")
+      const clean = stripHtml(String(paragraphs[i] || ""))
         .replace(/\s+/g, " ")
         .trim();
       if (!clean) continue;
