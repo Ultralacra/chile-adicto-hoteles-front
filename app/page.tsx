@@ -210,15 +210,23 @@ export default function Page() {
   const [sliderDesktopImagesEs, setSliderDesktopImagesEs] = useState<string[]>(
     HOME_SLIDER_DESKTOP_IMAGES_PROXY,
   );
+  const [sliderDesktopHrefsEs, setSliderDesktopHrefsEs] = useState<string[]>(
+    [],
+  );
   const [sliderMobileImagesEs, setSliderMobileImagesEs] = useState<string[]>(
     HOME_SLIDER_MOBILE_IMAGES_PROXY,
   );
+  const [sliderMobileHrefsEs, setSliderMobileHrefsEs] = useState<string[]>([]);
   const [sliderDesktopImagesEn, setSliderDesktopImagesEn] = useState<string[]>(
+    [],
+  );
+  const [sliderDesktopHrefsEn, setSliderDesktopHrefsEn] = useState<string[]>(
     [],
   );
   const [sliderMobileImagesEn, setSliderMobileImagesEn] = useState<string[]>(
     [],
   );
+  const [sliderMobileHrefsEn, setSliderMobileHrefsEn] = useState<string[]>([]);
   const [sliderLoading, setSliderLoading] = useState(true);
   const [hotels, setHotels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -278,14 +286,22 @@ export default function Page() {
           const desktops = itemsEsDesktop
             .map((it: any) => proxyImageUrl(it.image_url || ""))
             .filter(Boolean);
+          const hrefs = itemsEsDesktop.map((it: any) =>
+            it?.href ? String(it.href).trim() : "",
+          );
           if (desktops.length) setSliderDesktopImagesEs(desktops);
+          setSliderDesktopHrefsEs(hrefs);
         }
 
         if (itemsEnDesktop.length > 0) {
           const desktops = itemsEnDesktop
             .map((it: any) => proxyImageUrl(it.image_url || ""))
             .filter(Boolean);
+          const hrefs = itemsEnDesktop.map((it: any) =>
+            it?.href ? String(it.href).trim() : "",
+          );
           if (desktops.length) setSliderDesktopImagesEn(desktops);
+          setSliderDesktopHrefsEn(hrefs);
         }
 
         // Mobile-specific sets: prefer these for mobile images
@@ -293,14 +309,22 @@ export default function Page() {
           const mobiles = itemsEsMobile
             .map((it: any) => proxyImageUrl(it.image_url || ""))
             .filter(Boolean);
+          const hrefs = itemsEsMobile.map((it: any) =>
+            it?.href ? String(it.href).trim() : "",
+          );
           if (mobiles.length) setSliderMobileImagesEs(mobiles);
+          setSliderMobileHrefsEs(hrefs);
         }
 
         if (itemsEnMobile.length > 0) {
           const mobiles = itemsEnMobile
             .map((it: any) => proxyImageUrl(it.image_url || ""))
             .filter(Boolean);
+          const hrefs = itemsEnMobile.map((it: any) =>
+            it?.href ? String(it.href).trim() : "",
+          );
           if (mobiles.length) setSliderMobileImagesEn(mobiles);
+          setSliderMobileHrefsEn(hrefs);
         }
 
         // Fallback: if mobile sets are empty but desktop mobile fallbacks exist, keep them as-is
@@ -438,6 +462,16 @@ export default function Page() {
                   <HeroSlider
                     desktopImagesByLang={desktopByLang}
                     mobileImagesByLang={mobileByLang}
+                    slideHrefs={
+                      language === "en"
+                        ? sliderDesktopHrefsEn
+                        : sliderDesktopHrefsEs
+                    }
+                    slideHrefsMobile={
+                      language === "en"
+                        ? sliderMobileHrefsEn
+                        : sliderMobileHrefsEs
+                    }
                     language={language === "en" ? "en" : "es"}
                     desktopHeight={532}
                     mobileHeight={532}
