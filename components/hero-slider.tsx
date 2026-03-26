@@ -42,9 +42,6 @@ type HeroSliderProps = {
   objectPosition?: "center" | "top" | "bottom"; // alineación vertical/horizontal del objeto
   desktopHeight?: number; // alto del slide desktop en px (por defecto 437)
   mobileHeight?: number; // alto del slide mobile en px (por defecto 550)
-  dotActiveClass?: string; // clase tailwind para punto activo
-  dotInactiveClass?: string; // clase tailwind para punto inactivo
-  dotBottom?: number; // espacio en px desde el fondo para los dots (por defecto 16)
   slideHref?: string; // si se define, cada slide será un enlace a esta ruta
   slideHrefs?: string[]; // hrefs por slide; tiene prioridad sobre slideHref
   slideHrefsMobile?: string[]; // hrefs específicos para mobile; si no se provee, cae en slideHrefs
@@ -64,9 +61,6 @@ export function HeroSlider({
   objectPosition = "center",
   desktopHeight = 437,
   mobileHeight = 550,
-  dotActiveClass = "bg-[#E40E36] w-3 h-3",
-  dotInactiveClass = "bg-white w-2 h-2",
-  dotBottom = 28,
   slideHref,
   slideHrefs,
   slideHrefsMobile,
@@ -130,7 +124,6 @@ export function HeroSlider({
   const [emblaDesktopRef, emblaDesktopApi] = useEmblaCarousel({ loop: true });
   const [emblaMobileRef, emblaMobileApi] = useEmblaCarousel({ loop: true });
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
   // Detectar breakpoint activo (md: 768px)
@@ -276,24 +269,6 @@ export function HeroSlider({
     return propHref || apiHref;
   };
 
-  // Sincronizar selectedIndex solo con el carrusel visible
-  useEffect(() => {
-    const api = isMobile ? emblaMobileApi : emblaDesktopApi;
-    if (!api) return;
-    const onSelectActive = () => setSelectedIndex(api.selectedScrollSnap());
-    api.on("select", onSelectActive);
-    onSelectActive();
-    return () => {
-      api.off("select", onSelectActive);
-    };
-  }, [isMobile, emblaDesktopApi, emblaMobileApi]);
-
-  const goToSlide = (index: number) => {
-    const api = isMobile ? emblaMobileApi : emblaDesktopApi;
-    api?.scrollTo(index);
-    setSelectedIndex(index);
-  };
-
   return (
     <div className="relative w-full overflow-hidden">
       {/* Desktop Embla */}
@@ -431,25 +406,6 @@ export function HeroSlider({
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* dots: centered bottom */}
-      <div
-        className="absolute left-0 right-0 z-40 flex justify-center pointer-events-auto"
-        style={{ bottom: `${dotBottom}px` }}
-      >
-        <div className="flex gap-2">
-          {(isMobile ? mobile : desktop).map((_, dotIndex) => (
-            <button
-              key={`global-dot-${dotIndex}`}
-              onClick={() => goToSlide(dotIndex)}
-              className={`rounded-full transition-all focus:outline-none ${
-                dotIndex === selectedIndex ? dotActiveClass : dotInactiveClass
-              }`}
-              aria-label={`Go to slide ${dotIndex + 1}`}
-            />
-          ))}
         </div>
       </div>
     </div>

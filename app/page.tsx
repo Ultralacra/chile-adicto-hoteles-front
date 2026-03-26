@@ -24,134 +24,6 @@ function proxyImageUrl(input: string): string {
   return `https://images.weserv.nl/?url=${encodeURIComponent(withoutProtocol)}`;
 }
 
-const HOME_SLIDES: Array<{ desktop: string; mobile: string | null }> = [
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/EXPLORACIONES-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/4-INCREIBLES-EXPLORACIONES-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2026/01/SLD-REMANSO-1.webp",
-    mobile: null,
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/TERMAS-DE-CHILLAN-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/TERMAS-DE-CHILLAN-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/CORRALCO-HOTEL-SPA-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/CORRALCO-HOTEL-SPA-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2024/12/best.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2024/12/best-movil.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/THE-SINGULAR-PATAGONIA-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/THE-SINGULAR-PATAGONIA-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/TAKA-MATANZAS-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/TAKA-MATANZAS-MOVIL1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/AWA-PUERTO-VARAS-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/AWA-PUERTO-VARAS-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/CASA-REAL-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/CASA-REAL-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/DEBAINES-HOTEL-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/DEBAINES-HOTEL-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/CASA-ZAPALLAR-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/05/SLM-CASA-ZAPALLAR.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/CUMBRES-SAN-PEDRO-DE-ATACAMA-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/CUMBRES-SAN-PEDRO-DE-ATACAMA-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/NOI-INDIGO-PATAGONIA-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/NOI-INDIGO-PATAGONIA-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/OUR-HABITAS-ATACAMA-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/OUR-HABITAS-ATACAMA-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/TAWA-REFUGIO-PUELO-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/TAWA-REFUGIO-PUELO-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/CASAMOLLE-ELQUI-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/CASAMOLLE-ELQUI-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/NOI-PUMA-LODGE-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/NOI-PUMA-LODGE-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2026/01/VIVELO-ELQUI-1.webp",
-    mobile: null,
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/07/REMOTA-PATAGONIA-LODGE-1.webp",
-    mobile:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/08/REMOTA-PATAGONIA-LODGE-MOVIL-1.webp",
-  },
-  {
-    desktop:
-      "https://chileadictohoteles.cl/wp-content/uploads/2025/12/SLD-PUYUHUAPI-1.webp",
-    mobile: null,
-  },
-];
-
-const HOME_SLIDER_DESKTOP_IMAGES = HOME_SLIDES.map((s) => s.desktop);
-const HOME_SLIDER_MOBILE_IMAGES = HOME_SLIDES.map((s) => s.mobile ?? s.desktop);
-
-const HOME_SLIDER_DESKTOP_IMAGES_PROXY =
-  HOME_SLIDER_DESKTOP_IMAGES.map(proxyImageUrl);
-const HOME_SLIDER_MOBILE_IMAGES_PROXY =
-  HOME_SLIDER_MOBILE_IMAGES.map(proxyImageUrl);
-
 const HOME_RESERVED_POSTS = [
   {
     slug: "categoria/lodges",
@@ -208,13 +80,13 @@ export default function Page() {
   const { language } = useLanguage();
   const { fetchWithSite } = useSiteApi();
   const [sliderDesktopImagesEs, setSliderDesktopImagesEs] = useState<string[]>(
-    HOME_SLIDER_DESKTOP_IMAGES_PROXY,
+    [],
   );
   const [sliderDesktopHrefsEs, setSliderDesktopHrefsEs] = useState<string[]>(
     [],
   );
   const [sliderMobileImagesEs, setSliderMobileImagesEs] = useState<string[]>(
-    HOME_SLIDER_MOBILE_IMAGES_PROXY,
+    [],
   );
   const [sliderMobileHrefsEs, setSliderMobileHrefsEs] = useState<string[]>([]);
   const [sliderDesktopImagesEn, setSliderDesktopImagesEn] = useState<string[]>(
@@ -282,52 +154,48 @@ export default function Page() {
         console.log("home-movil-español (ES):", itemsEsMobile);
         console.log("home-movil-ingles (EN):", itemsEnMobile);
 
-        if (itemsEsDesktop.length > 0) {
-          const desktops = itemsEsDesktop
-            .map((it: any) => proxyImageUrl(it.image_url || ""))
-            .filter(Boolean);
-          const hrefs = itemsEsDesktop.map((it: any) =>
-            it?.href ? String(it.href).trim() : "",
-          );
-          if (desktops.length) setSliderDesktopImagesEs(desktops);
-          setSliderDesktopHrefsEs(hrefs);
-        }
+        const desktopEsImages = itemsEsDesktop
+          .map((it: any) => proxyImageUrl(it.image_url || ""))
+          .filter(Boolean);
+        const desktopEsHrefs = itemsEsDesktop.map((it: any) =>
+          it?.href ? String(it.href).trim() : "",
+        );
+        const desktopEnImages = itemsEnDesktop
+          .map((it: any) => proxyImageUrl(it.image_url || ""))
+          .filter(Boolean);
+        const desktopEnHrefs = itemsEnDesktop.map((it: any) =>
+          it?.href ? String(it.href).trim() : "",
+        );
+        const mobileEsImages = itemsEsMobile
+          .map((it: any) => proxyImageUrl(it.image_url || ""))
+          .filter(Boolean);
+        const mobileEsHrefs = itemsEsMobile.map((it: any) =>
+          it?.href ? String(it.href).trim() : "",
+        );
+        const mobileEnImages = itemsEnMobile
+          .map((it: any) => proxyImageUrl(it.image_url || ""))
+          .filter(Boolean);
+        const mobileEnHrefs = itemsEnMobile.map((it: any) =>
+          it?.href ? String(it.href).trim() : "",
+        );
 
-        if (itemsEnDesktop.length > 0) {
-          const desktops = itemsEnDesktop
-            .map((it: any) => proxyImageUrl(it.image_url || ""))
-            .filter(Boolean);
-          const hrefs = itemsEnDesktop.map((it: any) =>
-            it?.href ? String(it.href).trim() : "",
-          );
-          if (desktops.length) setSliderDesktopImagesEn(desktops);
-          setSliderDesktopHrefsEn(hrefs);
-        }
+        setSliderDesktopImagesEs(desktopEsImages);
+        setSliderDesktopHrefsEs(desktopEsHrefs);
+        setSliderDesktopImagesEn(desktopEnImages);
+        setSliderDesktopHrefsEn(desktopEnHrefs);
+        setSliderMobileImagesEs(
+          mobileEsImages.length > 0 ? mobileEsImages : desktopEsImages,
+        );
+        setSliderMobileHrefsEs(
+          mobileEsHrefs.length > 0 ? mobileEsHrefs : desktopEsHrefs,
+        );
+        setSliderMobileImagesEn(
+          mobileEnImages.length > 0 ? mobileEnImages : desktopEnImages,
+        );
+        setSliderMobileHrefsEn(
+          mobileEnHrefs.length > 0 ? mobileEnHrefs : desktopEnHrefs,
+        );
 
-        // Mobile-specific sets: prefer these for mobile images
-        if (itemsEsMobile.length > 0) {
-          const mobiles = itemsEsMobile
-            .map((it: any) => proxyImageUrl(it.image_url || ""))
-            .filter(Boolean);
-          const hrefs = itemsEsMobile.map((it: any) =>
-            it?.href ? String(it.href).trim() : "",
-          );
-          if (mobiles.length) setSliderMobileImagesEs(mobiles);
-          setSliderMobileHrefsEs(hrefs);
-        }
-
-        if (itemsEnMobile.length > 0) {
-          const mobiles = itemsEnMobile
-            .map((it: any) => proxyImageUrl(it.image_url || ""))
-            .filter(Boolean);
-          const hrefs = itemsEnMobile.map((it: any) =>
-            it?.href ? String(it.href).trim() : "",
-          );
-          if (mobiles.length) setSliderMobileImagesEn(mobiles);
-          setSliderMobileHrefsEn(hrefs);
-        }
-
-        // Fallback: if mobile sets are empty but desktop mobile fallbacks exist, keep them as-is
         setSliderLoading(false);
       } catch (e) {
         if (!cancelled) setSliderLoading(false);
@@ -433,10 +301,27 @@ export default function Page() {
             <div className="w-full h-[532px] overflow-visible">
               {/* Build combined arrays with same length so switching language doesn't re-mount slides */}
               {(() => {
+                if (sliderLoading) {
+                  return (
+                    <div className="w-full h-full grid place-items-center text-gray-500">
+                      <div className="flex items-center gap-2">
+                        <Spinner className="size-5" /> Cargando slider…
+                      </div>
+                    </div>
+                  );
+                }
+
                 const maxLen = Math.max(
                   sliderDesktopImagesEs.length,
                   sliderDesktopImagesEn.length,
+                  sliderMobileImagesEs.length,
+                  sliderMobileImagesEn.length,
                 );
+
+                if (maxLen === 0) {
+                  return null;
+                }
+
                 const desktopByLang: Array<{ es?: string; en?: string }> = [];
                 const mobileByLang: Array<{ es?: string; en?: string }> = [];
                 for (let i = 0; i < maxLen; i++) {
