@@ -3,6 +3,11 @@ type TravelSecurityBannerProps = {
   className?: string;
 };
 
+type BannerSource = {
+  desktop: string;
+  mobile: string;
+};
+
 function normalizeSlug(input: string): string {
   return String(input || "")
     .normalize("NFD")
@@ -13,15 +18,21 @@ function normalizeSlug(input: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-function getBannerSrc(categorySlug?: string | null): string | null {
+function getBannerSrc(categorySlug?: string | null): BannerSource | null {
   const slug = normalizeSlug(categorySlug || "");
 
   if (slug === "lodges") {
-    return "/banners/BANNER%20LODGES%20SECURITY.svg";
+    return {
+      desktop: "/banners/BANNER%20LODGES%20SECURITY.svg",
+      mobile: "/banners/BANNER%20LODGES%20SECURITY%20MOVIL.png",
+    };
   }
 
   if (slug === "boutique" || slug === "hoteles-boutique") {
-    return "/banners/BANNER%20BOUTIQUE%20SECURITY.svg";
+    return {
+      desktop: "/banners/BANNER%20BOUTIQUE%20SECURITY.svg",
+      mobile: "/banners/BANNER%20BOUTIQUE%20SECURITY%20MOVIL.png",
+    };
   }
 
   return null;
@@ -37,7 +48,14 @@ export function TravelSecurityBanner({
 
   return (
     <div className={className}>
-      <img src={src} alt="Travel Security" className="block w-full h-auto" />
+      <picture>
+        <source media="(max-width: 767.98px)" srcSet={src.mobile} />
+        <img
+          src={src.desktop}
+          alt="Travel Security"
+          className="block w-full h-auto"
+        />
+      </picture>
     </div>
   );
 }

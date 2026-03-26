@@ -54,8 +54,22 @@ export function PromoStackBanners() {
 }
 
 export function BottomHomeBanner() {
+  return <BottomHomeBannerLink href="/monumentos-nacionales" />;
+}
+
+type BottomHomeBannerLinkProps = {
+  href: string;
+  target?: "_blank" | "_self";
+  rel?: string;
+};
+
+export function BottomHomeBannerLink({
+  href,
+  target,
+  rel,
+}: BottomHomeBannerLinkProps) {
   return (
-    <Link href="/monumentos-nacionales" className="block w-full">
+    <Link href={href} target={target} rel={rel} className="block w-full">
       <img
         src="/BANNER-SA-ESPANOL-2048x256.webp"
         alt="Monumentos Nacionales"

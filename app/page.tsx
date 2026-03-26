@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useLanguage } from "@/contexts/language-context";
 import { useSiteApi } from "@/hooks/use-site-api";
-import { BottomHomeBanner } from "@/components/home-promo-banners";
+import { BottomHomeBannerLink } from "@/components/home-promo-banners";
 
 function proxyImageUrl(input: string): string {
   // chileadictohoteles.cl bloquea hotlink en <img> cross-site.
@@ -420,7 +420,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <Header showHomeSecurityBanner />
 
       <main className="site-inner py-4">
         <div className="hidden lg:block">
@@ -482,9 +482,21 @@ export default function Page() {
             </div>
           </div>
 
+          <div className="w-full mt-6 md:hidden">
+            <img
+              src="/banners/HEADER%20SECURITY%20MOVIL.png"
+              alt="Travel Security"
+              className="block w-full h-auto"
+            />
+          </div>
+
           {/* Banner debajo del slider */}
           <div className="w-full mt-6">
-            <BottomHomeBanner />
+            <BottomHomeBannerLink
+              href="https://www.santiagoadicto.cl/"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
           </div>
 
           {/* Cards section below - full width */}
