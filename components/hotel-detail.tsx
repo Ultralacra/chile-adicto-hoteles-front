@@ -9,6 +9,7 @@ import { CategoryNav } from "@/components/category-nav";
 import { useSiteApi } from "@/hooks/use-site-api";
 import { BottomHomeBanner } from "@/components/home-promo-banners";
 import { ComentaIcon } from "@/components/comenta-icon";
+import { TravelSecurityBanner } from "@/components/travel-security-banner";
 
 interface LocationInfo {
   label?: string;
@@ -86,6 +87,14 @@ export function HotelDetail({
         .map((c) => toSlug(String(c || "")))
         .includes("exploraciones-tnf")
     : false;
+
+  const travelSecurityCategory = Array.isArray(hotel?.categories)
+    ? hotel.categories
+        .map((c) => toSlug(String(c || "")))
+        .find((category) =>
+          ["lodges", "boutique", "hoteles-boutique"].includes(category),
+        ) || null
+    : null;
 
   const showCategoryBanner = isMonumentosPost || isCafesPost;
   // La galería NO debe incluir la imagen de portada. Si hay imágenes de galería, usamos solo esas.
@@ -417,6 +426,11 @@ export function HotelDetail({
       </div>
 
       <main className="site-inner pt-0 pb-4">
+        <TravelSecurityBanner
+          categorySlug={travelSecurityCategory}
+          className="w-full mb-4"
+        />
+
         {showCategoryBanner && (
           <div className="w-full mb-4">
             <BottomHomeBanner />

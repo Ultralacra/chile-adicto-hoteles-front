@@ -170,7 +170,7 @@ const HOME_RESERVED_POSTS = [
     image: "/portadas/PORTADA-HOTEL-LODGES.png",
   },
   {
-    slug: "categoria/hoteles-boutique",
+    slug: "categoria/boutique",
     es: {
       name: "Los mejores hoteles boutique de Chile",
       subtitle: "Presentados por Travel Security",

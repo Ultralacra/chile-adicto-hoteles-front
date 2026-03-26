@@ -17,6 +17,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useSiteApi } from "@/hooks/use-site-api";
 import { isHiddenFrontPost } from "@/lib/post-visibility";
 import { BottomHomeBanner } from "@/components/home-promo-banners";
+import { TravelSecurityBanner } from "@/components/travel-security-banner";
 
 // Antes se validaba contra una lista fija, pero ahora el menú y las categorías
 // se administran desde la BD. No hacemos 404 por slug desconocido.
@@ -883,6 +884,8 @@ export default function CategoryPage({ params }: { params: any }) {
               <CategoryNav activeCategory={slug} compact />
             </div>
           )}
+
+          <TravelSecurityBanner categorySlug={slug} className="w-full mt-2" />
 
           {/* En Monumentos Nacionales y Cafés: banner largo bajo el menú, luego posts */}
           {(slug === "monumentos-nacionales" || slug === "cafes") && (
