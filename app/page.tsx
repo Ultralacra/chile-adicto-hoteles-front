@@ -156,28 +156,32 @@ const HOME_RESERVED_POSTS = [
   {
     slug: "categoria/lodges",
     es: {
-      name: "LOS MEJORES LODGES",
-      subtitle: "",
-      description: "",
+      name: "Los mejores lodges de Chile",
+      subtitle: "Presentados por Travel Security",
+      description:
+        "Escaparse lejos, rodeado de naturaleza, con muchas exploraciones por hacer, y luego, después de un día entero de paseos, llegar a un lodge con todas las comodidades y excelente gastronomía para retomar fuerzas para el otro día. Si lo estás pensando, aquí tienes 3 alternativas top.",
     },
     en: {
-      name: "THE BEST LODGES",
-      subtitle: "",
-      description: "",
+      name: "The best lodges in Chile",
+      subtitle: "Presented by Travel Security",
+      description:
+        "Getting away, surrounded by nature, with plenty of explorations to enjoy, and then, after a full day of outings, returning to a lodge with every comfort and excellent cuisine to recharge for the next day. If that sounds like your plan, here are 3 top alternatives.",
     },
     image: "/portadas/PORTADA-HOTEL-LODGES.png",
   },
   {
     slug: "categoria/hoteles-boutique",
     es: {
-      name: "LOS MEJORES HOTELES BOUTIQUE",
-      subtitle: "",
-      description: "",
+      name: "Los mejores hoteles boutique de Chile",
+      subtitle: "Presentados por Travel Security",
+      description:
+        "Nada mejor que alojar en un hotel boutique, donde el servicio es personalizado y cada detalle está muy bien cuidado, además de destacar por su arquitectura, diseño y decoración. Aquí te presentamos 3 extraordinarios exponentes del concepto para que planees tu próxima escapada.",
     },
     en: {
-      name: "THE BEST BOUTIQUE HOTELS",
-      subtitle: "",
-      description: "",
+      name: "The best boutique hotels in Chile",
+      subtitle: "Presented by Travel Security",
+      description:
+        "There is nothing better than staying at a boutique hotel, where service is personalized and every detail is carefully considered, while also standing out for its architecture, design, and decor. Here are 3 extraordinary examples of the concept to help you plan your next getaway.",
     },
     image: "/portadas/PORTADA-HOTEL-BOUTIQUE.png",
   },
