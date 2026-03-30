@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -124,28 +124,6 @@ export function HeroSlider({
   // Embla for desktop and mobile instances
   const [emblaDesktopRef, emblaDesktopApi] = useEmblaCarousel({ loop: true });
   const [emblaMobileRef, emblaMobileApi] = useEmblaCarousel({ loop: true });
-
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Detectar breakpoint activo (md: 768px)
-  useEffect(() => {
-    const check = () => {
-      if (typeof window === "undefined") return;
-      const mq = window.matchMedia("(max-width: 767.98px)");
-      setIsMobile(mq.matches);
-    };
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  // Autoplay solo sobre el carrusel activo
-  useEffect(() => {
-    const api = isMobile ? emblaMobileApi : emblaDesktopApi;
-    if (!api) return;
-    const id = setInterval(() => api.scrollNext(), 5000);
-    return () => clearInterval(id);
-  }, [isMobile, emblaDesktopApi, emblaMobileApi]);
 
   // Cargar imágenes locales desde API si no se pasaron por props
   useEffect(() => {
@@ -274,7 +252,6 @@ export function HeroSlider({
     <div className="relative w-full overflow-hidden">
       {/* Desktop Embla */}
       <div className="hidden md:block relative">
-        {/* Flechas de navegación (comentadas por ahora)
         {desktop.length > 1 && (
           <>
             <button
@@ -295,7 +272,6 @@ export function HeroSlider({
             </button>
           </>
         )}
-        */}
         <div className="embla" ref={emblaDesktopRef as any}>
           <div className="embla__container flex">
             {desktop.map((image, index) => (
@@ -366,7 +342,6 @@ export function HeroSlider({
 
       {/* Mobile Embla */}
       <div className="md:hidden relative">
-        {/* Flechas de navegación (comentadas por ahora)
         {mobile.length > 1 && (
           <>
             <button
@@ -387,7 +362,6 @@ export function HeroSlider({
             </button>
           </>
         )}
-        */}
         <div className="embla" ref={emblaMobileRef as any}>
           <div className="embla__container flex">
             {mobile.map((image, index) => (
