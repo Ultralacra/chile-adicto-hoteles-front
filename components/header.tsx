@@ -82,14 +82,14 @@ export function Header({ showHomeSecurityBanner = false }: HeaderProps) {
             </div>
 
             {/* Desktop: Right side logos */}
-            <div className="hidden lg:flex items-end gap-6">
+            <div className="hidden lg:flex items-end ml-auto gap-6">
               <LanguageSwitcher />
               {showHomeSecurityBanner ? (
                 <div className="flex items-center">
                   <img
                     src="/banners/HEADER%20SECURITY.svg"
                     alt="Travel Security"
-                    className="w-[698px] h-[120px]"
+                    className="max-w-full h-[120px] object-contain object-right"
                   />
                 </div>
               ) : (

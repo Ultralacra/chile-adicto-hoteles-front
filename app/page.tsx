@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useLanguage } from "@/contexts/language-context";
 import { useSiteApi } from "@/hooks/use-site-api";
-import { BottomHomeBannerLink } from "@/components/home-promo-banners";
 
 function proxyImageUrl(input: string): string {
   // chileadictohoteles.cl bloquea hotlink en <img> cross-site.
@@ -298,7 +297,7 @@ export default function Page() {
         <div className="py-2">
           {/* Slider a ancho completo */}
           <div className="w-full">
-            <div className="w-full h-[532px] overflow-visible">
+            <div className="w-full overflow-visible">
               {/* Build combined arrays with same length so switching language doesn't re-mount slides */}
               {(() => {
                 if (sliderLoading) {
@@ -358,9 +357,7 @@ export default function Page() {
                         : sliderMobileHrefsEs
                     }
                     language={language === "en" ? "en" : "es"}
-                    desktopHeight={532}
-                    mobileHeight={532}
-                    dotBottom={24}
+                    autoHeight
                   />
                 );
               })()}
@@ -372,15 +369,6 @@ export default function Page() {
               src="/banners/HEADER%20SECURITY%20MOVIL.png"
               alt="Travel Security"
               className="block w-full h-auto"
-            />
-          </div>
-
-          {/* Banner debajo del slider */}
-          <div className="w-full mt-6">
-            <BottomHomeBannerLink
-              href="https://www.santiagoadicto.cl/"
-              target="_blank"
-              rel="noopener noreferrer"
             />
           </div>
 

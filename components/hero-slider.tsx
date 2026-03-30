@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSiteApi } from "@/hooks/use-site-api";
 
 // Reordenado: ICONOS debe ser el primer slide según solicitud.
@@ -272,7 +273,29 @@ export function HeroSlider({
   return (
     <div className="relative w-full overflow-hidden">
       {/* Desktop Embla */}
-      <div className="hidden md:block">
+      <div className="hidden md:block relative">
+        {/* Flechas de navegación (comentadas por ahora)
+        {desktop.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Imagen previa"
+              onClick={() => emblaDesktopApi?.scrollPrev()}
+              className="absolute left-2 md:left-3 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-2 md:p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-white/70"
+            >
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+            <button
+              type="button"
+              aria-label="Imagen siguiente"
+              onClick={() => emblaDesktopApi?.scrollNext()}
+              className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-2 md:p-3 rounded-full focus:outline-none focus:ring-2 focus:ring-white/70"
+            >
+              <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+          </>
+        )}
+        */}
         <div className="embla" ref={emblaDesktopRef as any}>
           <div className="embla__container flex">
             {desktop.map((image, index) => (
@@ -342,7 +365,29 @@ export function HeroSlider({
       </div>
 
       {/* Mobile Embla */}
-      <div className="md:hidden">
+      <div className="md:hidden relative">
+        {/* Flechas de navegación (comentadas por ahora)
+        {mobile.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Imagen previa"
+              onClick={() => emblaMobileApi?.scrollPrev()}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-white/70"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Imagen siguiente"
+              onClick={() => emblaMobileApi?.scrollNext()}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-white/70"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </>
+        )}
+        */}
         <div className="embla" ref={emblaMobileRef as any}>
           <div className="embla__container flex">
             {mobile.map((image, index) => (
