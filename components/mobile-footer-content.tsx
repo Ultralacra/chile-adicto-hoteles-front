@@ -237,10 +237,10 @@ export function MobileFooterContent({
       <div className="mb-8 flex justify-center">
         <div className="w-48">
           <Image
-            src="/Logo-best-espanol-blanco-footer.svg"
+            src="/logo-footer-blanco.svg"
             alt="Chile Adicto"
-            width={240}
-            height={72}
+            width={646}
+            height={182}
             className="w-full h-auto"
           />
         </div>
