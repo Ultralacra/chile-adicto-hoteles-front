@@ -121,6 +121,46 @@ export default function CategoryPage({ params }: { params: any }) {
   const isRestaurantsPage = slug === "restaurantes";
   const isPressPage = slug === "prensa";
 
+  // Mapa estático de URLs externas para posts de prensa (fallback)
+  const pressExternalUrls: Record<string, string> = {
+    "los-11-mejores-hoteles-en-torres-del-paine-segun-chileadicto-hoteles-ed-viajes":
+      "https://www.ed.cl/archivo/viajes/patagonia-imprescindible-nueve-alojamientos-para-vivir-el-extremo-sur-en-su-estado-mas-puro/",
+    "emol-lo-penso-lo-hizo-con-patricio-minano-y-chileadictohoteles":
+      "https://www.emol.com/noticias/Economia/2024/10/03/1144343/patricio-minano-chile-adicto-hoteles.html",
+    "ed-viajes-cuales-son-los-mejores-hoteles-de-chile":
+      "https://www.ed.cl/archivo/actualidad/cuales-son-los-mejores-hoteles-de-chile-esta-nueva-guia-con-la-firma-de-santiago-adicto-promete-entregar-la-respuesta/",
+    "columna-de-rodrigo-guendelman-la-tercera-sabado":
+      "https://www.latercera.com/la-tercera-sabado/noticia/columna-de-rodrigo-guendelman-chile-tierra-de-hoteles-destino/D6M2XI7MUJF2VLZD2VDLZIVT7M/",
+    "los-10-mejores-hoteles-del-sur-de-chile-segun-chile-adicto-hoteles-finde-la-tercera":
+      "https://finde.latercera.com/viajes/los-10-mejores-hoteles-de-lujo-del-sur-de-chile-chile-adicto-2025/",
+    "los-9-mejores-hoteles-del-norte-de-chile-segun-chile-adicto-hoteles-ed-viajes":
+      "https://www.ed.cl/archivo/viajes/nueve-hoteles-imperdibles-en-el-norte-de-chile-para-escaparse-y-reconectar/",
+    "santiagoadicto-en-radio-duna-tercera-parte-de-los-mejores-hoteles-destino-de-chile":
+      "https://www.duna.cl/podcasts/el-repaso-a-los-mejores-hoteles-de-chile/",
+    "chile-adicto-hoteles-the-singular-santiago-y-cumbres-lastarria-en-conde-nast-traveler":
+      "https://www.traveler.es/articulos/lastarria-barrio-santiago-de-chile",
+    "los-6-mejores-hoteles-del-santiago-segun-chile-adicto-hoteles-ed-viajes":
+      "https://www.ed.cl/archivo/actualidad/escapadas-urbanas-seis-hoteles-en-santiago-para-vivir-la-ciudad/",
+    "santiagoadicto-en-radio-duna-segunda-parte-de-los-mejores-hoteles-destino-de-chile":
+      "https://www.duna.cl/podcasts/el-repaso-a-los-mejores-hoteles-de-chile/",
+    "chile-adicto-hoteles-casamolle-elqui-en-conde-nast-traveler":
+      "https://www.traveler.es/articulos/valle-del-elqui-experiencias-bajo-las-estrellas-en-chile",
+    "chile-adicto-hoteles-mari-mari-natural-reserve-en-conde-nast-traveler":
+      "https://www.traveler.es/hotels/los-muermos-los-lagos/hotel-mari-mari-reserva-natural-patagonia-chile",
+    "santiagoadicto-en-radio-duna-primera-parte-los-mejores-hoteles-destino-de-chile":
+      "https://www.duna.cl/podcasts/los-mejores-hoteles-destino-de-chile/",
+    "los-13-mejores-hoteles-en-el-centro-de-chile-segun-chile-adicto-hoteles-ed-viajes":
+      "https://www.ed.cl/archivo/viajes/hoteles-en-el-centro-de-chile-para-desconectar-entre-vinas-mar-y-montana/",
+    "patricio-minano-en-money-talks-2":
+      "https://www.latercera.com/videopodcast/money-talks/los-imperdibles-tesoros-hoteleros-del-norte-de-chile/",
+    "los-14-mejores-hoteles-en-el-sur-de-chile-segun-chile-adicto-hoteles-ed-viajes":
+      "https://www.ed.cl/archivo/viajes/hoteles-en-el-sur-de-chile-para-reconectar-entre-lagos-bosques-y-paisajes-inolvidables/",
+    "santiagoadicto-en-radio-duna-cuarta-parte-de-los-mejores-hoteles-destino-de-chile":
+      "https://www.ed.cl/archivo/viajes/patagonia-imprescindible-nueve-alojamientos-para-vivir-el-extremo-sur-en-su-estado-mas-puro/",
+    "patricio-minano-en-money-talks-seis-de-los-mejores-hoteles-que-ofrece-la-patagonia-chilena":
+      "https://www.latercera.com/videopodcast/money-talks/guide-desk-los-seis-mejores-hoteles-que-ofrece-la-patagonia-chilena/",
+  };
+
   // Comunas dinámicas para restaurantes (derivadas de direcciones/locations y overrides)
   const possibleCommunes = [
     "Santiago",
@@ -974,6 +1014,14 @@ export default function CategoryPage({ params }: { params: any }) {
                       slug === "monumentos-nacionales" || slug === "cafes"
                         ? "tall"
                         : "default"
+                    }
+                    externalUrl={
+                      isPressPage
+                        ? hotel.website_public ||
+                          hotel.websitePublic ||
+                          pressExternalUrls[hotel.slug] ||
+                          undefined
+                        : undefined
                     }
                   />
                 ))
