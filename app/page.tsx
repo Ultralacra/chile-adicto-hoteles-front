@@ -180,8 +180,8 @@ export default function Page() {
 
         setSliderDesktopImagesEs(desktopEsImages);
         setSliderDesktopHrefsEs(desktopEsHrefs);
-        setSliderDesktopImagesEn(desktopEnImages);
-        setSliderDesktopHrefsEn(desktopEnHrefs);
+        setSliderDesktopImagesEn(desktopEsImages);
+        setSliderDesktopHrefsEn(desktopEsHrefs);
         setSliderMobileImagesEs(
           mobileEsImages.length > 0 ? mobileEsImages : desktopEsImages,
         );
@@ -189,10 +189,10 @@ export default function Page() {
           mobileEsHrefs.length > 0 ? mobileEsHrefs : desktopEsHrefs,
         );
         setSliderMobileImagesEn(
-          mobileEnImages.length > 0 ? mobileEnImages : desktopEnImages,
+          mobileEsImages.length > 0 ? mobileEsImages : desktopEsImages,
         );
         setSliderMobileHrefsEn(
-          mobileEnHrefs.length > 0 ? mobileEnHrefs : desktopEnHrefs,
+          mobileEsHrefs.length > 0 ? mobileEsHrefs : desktopEsHrefs,
         );
 
         setSliderLoading(false);
