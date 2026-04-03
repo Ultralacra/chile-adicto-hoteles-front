@@ -11,7 +11,7 @@ type HeaderProps = {
   showHomeSecurityBanner?: boolean;
 };
 
-export function Header({ showHomeSecurityBanner = false }: HeaderProps) {
+export function Header({ showHomeSecurityBanner = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { t } = useLanguage();
 

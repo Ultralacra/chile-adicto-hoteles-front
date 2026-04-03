@@ -853,7 +853,9 @@ export default function CategoryPage({ params }: { params: any }) {
     <Suspense
       fallback={
         <div className="min-h-screen bg-white">
-          <Header />
+          <Header
+            showHomeSecurityBanner={slug !== "lodges" && slug !== "boutique"}
+          />
           <main className="site-inner py-4">
             <div className="w-full py-16 grid place-items-center text-gray-500">
               Cargando…
@@ -864,7 +866,9 @@ export default function CategoryPage({ params }: { params: any }) {
       }
     >
       <div className="min-h-screen bg-white">
-        <Header />
+        <Header
+          showHomeSecurityBanner={slug !== "lodges" && slug !== "boutique"}
+        />
 
         <main className="site-inner py-4">
           {isRestaurantsPage ? (

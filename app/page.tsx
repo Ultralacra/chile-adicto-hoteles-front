@@ -70,8 +70,7 @@ const HOME_RESERVED_POSTS = [
       description:
         "The North Face presents a new and incredible section of Chile Adicto Hoteles. Here, the prestigious international outdoor brand will showcase the best explorations available from Chile's top destination hotels…",
     },
-    image:
-      "https://chileadictohoteles.cl/wp-content/uploads/2024/12/portada-north-face.webp",
+    image: "/portadas/portada-north-face.webp",
   },
 ];
 
@@ -287,7 +286,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header showHomeSecurityBanner />
+      <Header />
 
       <main className="site-inner py-4">
         <div className="hidden lg:block">
