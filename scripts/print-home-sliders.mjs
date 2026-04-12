@@ -202,9 +202,9 @@ async function run() {
   const site = process.argv[2] || process.env.NEXT_PUBLIC_SITE_ID || 'chileadicto';
   const sets = [
     ['Home desktop ES', 'home-desktop', '/api/sliders/home-desktop'],
-    ['Home desktop EN', 'home-desktop-ingles', '/api/sliders/home-desktop-ingles'],
-    ['Home mobile ES', 'home-movil-español', '/api/sliders/home-movil-español'],
-    ['Home mobile EN', 'home-movil-ingles', '/api/sliders/home-movil-ingles'],
+    ['Home desktop EN', 'HOME INGLES DESKTOP', '/api/sliders/HOME%20INGLES%20DESKTOP'],
+    ['Home mobile ES', 'HOME MOVIL ESPAÑOL', '/api/sliders/HOME%20MOVIL%20ESPA%C3%91OL'],
+    ['Home mobile EN', 'HOME MOVIL INGLES', '/api/sliders/HOME%20MOVIL%20INGLES'],
   ];
 
   const config = getSupabaseConfig();

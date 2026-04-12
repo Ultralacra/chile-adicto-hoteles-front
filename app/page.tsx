@@ -110,9 +110,15 @@ export default function Page() {
         const [resEsDesktop, resEnDesktop, resEsMobile, resEnMobile] =
           await Promise.all([
             fetchWithSite("/api/sliders/home-desktop"),
-            fetchWithSite("/api/sliders/home-desktop-ingles"),
-            fetchWithSite("/api/sliders/home-movil-español"),
-            fetchWithSite("/api/sliders/home-movil-ingles"),
+            fetchWithSite(
+              `/api/sliders/${encodeURIComponent("HOME INGLES DESKTOP")}`,
+            ),
+            fetchWithSite(
+              `/api/sliders/${encodeURIComponent("HOME MOVIL ESPAÑOL")}`,
+            ),
+            fetchWithSite(
+              `/api/sliders/${encodeURIComponent("HOME MOVIL INGLES")}`,
+            ),
           ]);
 
         const jsonEsDesktop =
@@ -148,9 +154,9 @@ export default function Page() {
           : [];
 
         console.log("home-desktop (ES):", itemsEsDesktop);
-        console.log("home-desktop-ingles (EN):", itemsEnDesktop);
-        console.log("home-movil-español (ES):", itemsEsMobile);
-        console.log("home-movil-ingles (EN):", itemsEnMobile);
+        console.log("HOME INGLES DESKTOP (EN):", itemsEnDesktop);
+        console.log("HOME MOVIL ESPAÑOL (ES):", itemsEsMobile);
+        console.log("HOME MOVIL INGLES (EN):", itemsEnMobile);
 
         const desktopEsImages = itemsEsDesktop
           .map((it: any) => proxyImageUrl(it.image_url || ""))
@@ -179,8 +185,12 @@ export default function Page() {
 
         setSliderDesktopImagesEs(desktopEsImages);
         setSliderDesktopHrefsEs(desktopEsHrefs);
-        setSliderDesktopImagesEn(desktopEsImages);
-        setSliderDesktopHrefsEn(desktopEsHrefs);
+        setSliderDesktopImagesEn(
+          desktopEnImages.length > 0 ? desktopEnImages : desktopEsImages,
+        );
+        setSliderDesktopHrefsEn(
+          desktopEnImages.length > 0 ? desktopEnHrefs : desktopEsHrefs,
+        );
         setSliderMobileImagesEs(
           mobileEsImages.length > 0 ? mobileEsImages : desktopEsImages,
         );
@@ -188,10 +198,18 @@ export default function Page() {
           mobileEsHrefs.length > 0 ? mobileEsHrefs : desktopEsHrefs,
         );
         setSliderMobileImagesEn(
-          mobileEsImages.length > 0 ? mobileEsImages : desktopEsImages,
+          mobileEnImages.length > 0
+            ? mobileEnImages
+            : desktopEnImages.length > 0
+              ? desktopEnImages
+              : desktopEsImages,
         );
         setSliderMobileHrefsEn(
-          mobileEsHrefs.length > 0 ? mobileEsHrefs : desktopEsHrefs,
+          mobileEnImages.length > 0
+            ? mobileEnHrefs
+            : desktopEnImages.length > 0
+              ? desktopEnHrefs
+              : desktopEsHrefs,
         );
 
         setSliderLoading(false);
