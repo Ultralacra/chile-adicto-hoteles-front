@@ -60,6 +60,7 @@ export function HotelDetail({
   hideUsefulInfo = false,
   hideReservationIcon = false,
 }: HotelDetailProps) {
+  const TRAVEL_SECURITY_URL = "https://www.travelsecurity.cl/";
   const { t } = useLanguage();
   const { fetchWithSite } = useSiteApi();
 
@@ -951,22 +952,15 @@ export function HotelDetail({
           )}
 
           {!hideReservationIcon && !isExploracionesTnfPost && (
-            <>
-              {hotel.reservationLink ? (
-                <a
-                  href={hotel.reservationLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 mb-2 inline-block"
-                >
-                  <ComentaIcon className="w-[130px] h-auto hover:opacity-80 transition-opacity" />
-                </a>
-              ) : (
-                <div className="mt-2 mb-2">
-                  <ComentaIcon className="w-[130px] h-auto" />
-                </div>
-              )}
-            </>
+            <a
+              href={TRAVEL_SECURITY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 mb-2 inline-block"
+            >
+              {/* href={hotel.reservationLink} */}
+              <ComentaIcon className="w-[130px] h-auto hover:opacity-80 transition-opacity" />
+            </a>
           )}
         </div>
       </main>

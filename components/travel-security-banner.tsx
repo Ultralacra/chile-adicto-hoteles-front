@@ -48,14 +48,21 @@ export function TravelSecurityBanner({
 
   return (
     <div className={className}>
-      <picture>
-        <source media="(max-width: 767.98px)" srcSet={src.mobile} />
-        <img
-          src={src.desktop}
-          alt="Travel Security"
-          className="block w-full h-auto"
-        />
-      </picture>
+      <a
+        href="https://www.travelsecurity.cl/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block"
+      >
+        <picture>
+          <source media="(max-width: 767.98px)" srcSet={src.mobile} />
+          <img
+            src={src.desktop}
+            alt="Travel Security"
+            className="block w-full h-auto"
+          />
+        </picture>
+      </a>
     </div>
   );
 }

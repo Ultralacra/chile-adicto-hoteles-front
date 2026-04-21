@@ -86,11 +86,18 @@ export function Header({ showHomeSecurityBanner = true }: HeaderProps) {
               <LanguageSwitcher />
               {showHomeSecurityBanner ? (
                 <div className="flex items-center">
-                  <img
-                    src="/banners/HEADER%20SECURITY.svg"
-                    alt="Travel Security"
-                    className="max-w-full h-[120px] object-contain object-right"
-                  />
+                  <a
+                    href="https://www.travelsecurity.cl/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <img
+                      src="/banners/HEADER%20SECURITY.svg"
+                      alt="Travel Security"
+                      className="max-w-full h-[120px] object-contain object-right"
+                    />
+                  </a>
                 </div>
               ) : (
                 <>

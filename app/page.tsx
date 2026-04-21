@@ -382,11 +382,18 @@ export default function Page() {
           </div>
 
           <div className="w-full mt-6 md:hidden">
-            <img
-              src="/banners/HEADER%20SECURITY%20MOVIL.png"
-              alt="Travel Security"
-              className="block w-full h-auto"
-            />
+            <a
+              href="https://www.travelsecurity.cl/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <img
+                src="/banners/HEADER%20SECURITY%20MOVIL.png"
+                alt="Travel Security"
+                className="block w-full h-auto"
+              />
+            </a>
           </div>
 
           {/* Cards section below - full width */}
