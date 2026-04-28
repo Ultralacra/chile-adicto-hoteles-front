@@ -36,11 +36,6 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
     },
     { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
     { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
-    {
-      slug: "exploraciones-tnf",
-      labelEs: "EXPLORACIONES TNF",
-      labelEn: "TNF EXPLORATIONS",
-    },
   ];
 
   const fixedMenuOrder = [

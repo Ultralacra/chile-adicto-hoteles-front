@@ -99,11 +99,6 @@ export function MobileFooterContent({
     { slug: "guia-impresa", labelEs: "GUÍA IMPRESA", labelEn: "PRINT GUIDE" },
     { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
     { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
-    {
-      slug: "exploraciones-tnf",
-      labelEs: "EXPLORACIONES TNF",
-      labelEn: "TNF EXPLORATIONS",
-    },
   ];
 
   const fixedMenuOrder = [

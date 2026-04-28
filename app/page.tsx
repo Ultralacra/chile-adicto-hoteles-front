@@ -406,7 +406,10 @@ export default function Page() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {HOME_RESERVED_POSTS.map((reserved) => (
+                {HOME_RESERVED_POSTS.filter(
+                  (reserved) =>
+                    reserved.es.name !== "LAS MEJORES EXPLORACIONES",
+                ).map((reserved) => (
                   <div key={reserved.slug} className="col-span-1">
                     <HotelCard
                       slug={reserved.slug}
