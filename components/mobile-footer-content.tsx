@@ -98,6 +98,11 @@ export function MobileFooterContent({
     { slug: "santiago", labelEs: "SANTIAGO", labelEn: "SANTIAGO" },
     { slug: "guia-impresa", labelEs: "GUÍA IMPRESA", labelEn: "PRINT GUIDE" },
     { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
+    {
+      slug: "exploraciones-tnf",
+      labelEs: "EXPLORACIONES TNF",
+      labelEn: "TNF EXPLORATIONS",
+    },
     { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
   ];
 

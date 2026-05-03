@@ -125,6 +125,7 @@ export default function LugarPage(props: any) {
 
   const hotel = source
     ? {
+        slug: source.slug || resolvedParams.slug || "",
         name:
           source[language]?.name || source.en?.name || source.es?.name || "",
         subtitle:

@@ -28,6 +28,7 @@ interface LocationInfo {
 
 interface HotelDetailProps {
   hotel: {
+    slug?: string;
     name: string;
     subtitle: string;
     excerpt: string;
@@ -88,6 +89,9 @@ export function HotelDetail({
         .map((c) => toSlug(String(c || "")))
         .includes("exploraciones-tnf")
     : false;
+
+  const isColumbiaIconPost =
+    toSlug(String(hotel?.slug || "")) === "arte-rupestre-y-cuevas";
 
   const travelSecurityCategory = Array.isArray(hotel?.categories)
     ? hotel.categories
@@ -951,17 +955,30 @@ export function HotelDetail({
             </div>
           )}
 
-          {!hideReservationIcon && !isExploracionesTnfPost && (
-            <a
-              href={TRAVEL_SECURITY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 mb-2 inline-block"
-            >
-              {/* href={hotel.reservationLink} */}
-              <ComentaIcon className="w-[130px] h-auto hover:opacity-80 transition-opacity" />
-            </a>
-          )}
+          {!hideReservationIcon &&
+            (!isExploracionesTnfPost || isColumbiaIconPost) && (
+              <a
+                href={TRAVEL_SECURITY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 mb-2 inline-block"
+              >
+                {isColumbiaIconPost ? (
+                  <Image
+                    src="/portadas/columbia.png"
+                    alt="Columbia"
+                    width={130}
+                    height={40}
+                    className="w-[130px] h-auto hover:opacity-80 transition-opacity"
+                  />
+                ) : (
+                  <>
+                    {/* href={hotel.reservationLink} */}
+                    <ComentaIcon className="w-[130px] h-auto hover:opacity-80 transition-opacity" />
+                  </>
+                )}
+              </a>
+            )}
         </div>
       </main>
     </>

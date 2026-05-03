@@ -70,7 +70,7 @@ const HOME_RESERVED_POSTS = [
       description:
         "The North Face presents a new and incredible section of Chile Adicto Hoteles. Here, the prestigious international outdoor brand will showcase the best explorations available from Chile's top destination hotels…",
     },
-    image: "/portadas/portada-north-face.webp",
+    image: "/portadas/columbia-portada.png",
   },
 ];
 

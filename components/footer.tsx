@@ -35,6 +35,11 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
       labelEn: "PRINT GUIDE",
     },
     { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
+    {
+      slug: "exploraciones-tnf",
+      labelEs: "EXPLORACIONES TNF",
+      labelEn: "TNF EXPLORATIONS",
+    },
     { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
   ];
 
