@@ -25,8 +25,8 @@ const fallbackCategories = [
   { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
   {
     slug: "exploraciones-tnf",
-    labelEs: "EXPLORACIONES TNF",
-    labelEn: "TNF EXPLORATIONS",
+    labelEs: "COLUMBIA TNF",
+    labelEn: "COLUMBIA TNF",
   },
   { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
 ];
