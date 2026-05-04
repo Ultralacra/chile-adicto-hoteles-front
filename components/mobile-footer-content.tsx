@@ -100,8 +100,8 @@ export function MobileFooterContent({
     { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
     {
       slug: "exploraciones-tnf",
-      labelEs: "COLUMBIA TNF",
-      labelEn: "COLUMBIA TNF",
+      labelEs: "EXPLORACIONES COLUMBIA",
+      labelEn: "COLUMBIA EXPLORATIONS",
     },
     { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
   ];
