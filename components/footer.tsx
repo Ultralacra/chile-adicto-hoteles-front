@@ -36,7 +36,7 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
     },
     { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
     {
-      slug: "exploraciones-tnf",
+      slug: "exploraciones",
       labelEs: "EXPLORACIONES COLUMBIA",
       labelEn: "COLUMBIA EXPLORATIONS",
     },
@@ -53,7 +53,7 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
     "guia-impresa",
     "prensa",
     "nosotros",
-    "exploraciones-tnf",
+    "exploraciones",
   ];
 
   useEffect(() => {

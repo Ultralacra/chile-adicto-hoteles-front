@@ -24,7 +24,7 @@ const fallbackCategories = [
   { slug: "guia-impresa", labelEs: "GUÍA IMPRESA", labelEn: "PRINT GUIDE" },
   { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
   {
-    slug: "exploraciones-tnf",
+    slug: "exploraciones",
     labelEs: "EXPLORACIONES COLUMBIA",
     labelEn: "COLUMBIA EXPLORATIONS",
   },
@@ -41,7 +41,7 @@ const fixedMenuOrder = [
   "guia-impresa",
   "prensa",
   "nosotros",
-  "exploraciones-tnf",
+  "exploraciones",
 ];
 
 type ApiCategoryRow = {

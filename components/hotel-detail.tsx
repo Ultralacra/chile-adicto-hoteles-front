@@ -87,7 +87,7 @@ export function HotelDetail({
   const isExploracionesTnfPost = Array.isArray(hotel?.categories)
     ? hotel.categories
         .map((c) => toSlug(String(c || "")))
-        .includes("exploraciones-tnf")
+        .includes("exploraciones")
     : false;
 
   const isColumbiaIconPost =

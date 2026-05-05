@@ -57,7 +57,7 @@ const HOME_RESERVED_POSTS = [
     image: "/portadas/PORTADA-HOTEL-BOUTIQUE.png",
   },
   {
-    slug: "categoria/exploraciones-tnf",
+    slug: "categoria/exploraciones",
     es: {
       name: "LAS MEJORES EXPLORACIONES",
       subtitle: "DESDE LOS MEJORES HOTELES DE CHILE",

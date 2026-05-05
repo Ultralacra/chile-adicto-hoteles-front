@@ -54,7 +54,7 @@ export default function CategoryPage({ params }: { params: any }) {
     sur: "SUR",
     "isla-de-pascua": "ISLA DE PASCUA",
     santiago: "SANTIAGO",
-    "exploraciones-tnf": "EXPLORACIONES TNF",
+    exploraciones: "EXPLORACIONES TNF",
     // new category name mappings
     ninos: "NIÑOS",
     arquitectura: "ARQ",
@@ -97,10 +97,7 @@ export default function CategoryPage({ params }: { params: any }) {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    // Algunos slugs de navegación no coinciden 1:1 con el slug en BD.
-    // Ejemplo: "exploraciones-tnf" (front) -> "exploraciones" (API).
-    const categorySlugForApi =
-      slug === "exploraciones-tnf" ? "exploraciones" : slug;
+    const categorySlugForApi = slug;
     // Preferimos filtrar por slug de categoría en el backend
     fetchWithSite(
       `/api/posts?categorySlug=${encodeURIComponent(categorySlugForApi)}`,

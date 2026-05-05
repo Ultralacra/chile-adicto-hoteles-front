@@ -99,7 +99,7 @@ export function MobileFooterContent({
     { slug: "guia-impresa", labelEs: "GUÍA IMPRESA", labelEn: "PRINT GUIDE" },
     { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
     {
-      slug: "exploraciones-tnf",
+      slug: "exploraciones",
       labelEs: "EXPLORACIONES COLUMBIA",
       labelEn: "COLUMBIA EXPLORATIONS",
     },
@@ -116,7 +116,7 @@ export function MobileFooterContent({
     "guia-impresa",
     "prensa",
     "nosotros",
-    "exploraciones-tnf",
+    "exploraciones",
   ];
 
   const [items, setItems] = useState<typeof fallbackItems>([]);
