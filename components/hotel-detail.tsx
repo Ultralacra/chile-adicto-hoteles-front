@@ -93,6 +93,15 @@ export function HotelDetail({
   const isColumbiaIconPost =
     toSlug(String(hotel?.slug || "")) === "arte-rupestre-y-cuevas";
 
+  const reservationIconHref = isColumbiaIconPost
+    ? TRAVEL_SECURITY_URL
+    : hotel.reservationLink?.trim() || null;
+
+  const shouldShowReservationIcon =
+    !hideReservationIcon &&
+    (!isExploracionesTnfPost || isColumbiaIconPost) &&
+    Boolean(reservationIconHref);
+
   const travelSecurityCategory = Array.isArray(hotel?.categories)
     ? hotel.categories
         .map((c) => toSlug(String(c || "")))
@@ -955,30 +964,29 @@ export function HotelDetail({
             </div>
           )}
 
-          {!hideReservationIcon &&
-            (!isExploracionesTnfPost || isColumbiaIconPost) && (
-              <a
-                href={TRAVEL_SECURITY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 mb-2 inline-block"
-              >
-                {isColumbiaIconPost ? (
-                  <Image
-                    src="/portadas/columbia.png"
-                    alt="Columbia"
-                    width={130}
-                    height={40}
-                    className="w-[130px] h-auto hover:opacity-80 transition-opacity"
-                  />
-                ) : (
-                  <>
-                    {/* href={hotel.reservationLink} */}
-                    <ComentaIcon className="w-[130px] h-auto hover:opacity-80 transition-opacity" />
-                  </>
-                )}
-              </a>
-            )}
+          {shouldShowReservationIcon && (
+            <a
+              href={reservationIconHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 mb-2 inline-block"
+            >
+              {isColumbiaIconPost ? (
+                <Image
+                  src="/portadas/columbia.png"
+                  alt="Columbia"
+                  width={130}
+                  height={40}
+                  className="w-[130px] h-auto hover:opacity-80 transition-opacity"
+                />
+              ) : (
+                <>
+                  {/* href={hotel.reservationLink} */}
+                  <ComentaIcon className="w-[130px] h-auto hover:opacity-80 transition-opacity" />
+                </>
+              )}
+            </a>
+          )}
         </div>
       </main>
     </>
