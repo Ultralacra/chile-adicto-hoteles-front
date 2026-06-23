@@ -96,6 +96,7 @@ export function MobileFooterContent({
       labelEn: "EASTER ISLAND",
     },
     { slug: "santiago", labelEs: "SANTIAGO", labelEn: "SANTIAGO" },
+    { slug: "votacion", labelEs: "VOTACIÓN", labelEn: "VOTING" },
     { slug: "guia-impresa", labelEs: "GUÍA IMPRESA", labelEn: "PRINT GUIDE" },
     { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
     {
@@ -113,6 +114,7 @@ export function MobileFooterContent({
     "sur",
     "isla-de-pascua",
     "santiago",
+    "votacion",
     "guia-impresa",
     "prensa",
     "nosotros",
@@ -146,6 +148,7 @@ export function MobileFooterContent({
     if (normalizedSlug === "nosotros") return "/nosotros";
     if (normalizedSlug === "guia-impresa") return "/CHAH-2025-baja.pdf";
     if (normalizedSlug === "restaurantes") return "/restaurantes";
+    if (normalizedSlug === "votacion") return "/votacion";
     return prettySlugs.has(normalizedSlug)
       ? `/${normalizedSlug}`
       : `/categoria/${normalizedSlug}`;

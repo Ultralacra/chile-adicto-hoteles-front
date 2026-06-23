@@ -18,6 +18,52 @@ import { useSiteApi } from "@/hooks/use-site-api";
 import { isHiddenFrontPost } from "@/lib/post-visibility";
 import { BottomHomeBanner } from "@/components/home-promo-banners";
 import { TravelSecurityBanner } from "@/components/travel-security-banner";
+import Image from "next/image";
+import {
+  isVotingCategory,
+  getHotelHearts,
+  getVotingHotelsForCategory,
+} from "@/lib/voting-config";
+import { VotingHotelCard } from "@/components/voting-hotel-card";
+
+const CATEGORY_BANNERS: Record<string, { desktop: string; mobile: string }> = {
+  norte: {
+    desktop: "/imaganescategorias/banner-internos-categorias/DESKTOP-NORTE 5 CORAZONES.webp",
+    mobile: "/imaganescategorias/banner-internos-categorias/MOVIL-NORTE 5 CORAZONES.webp",
+  },
+  centro: {
+    desktop: "/imaganescategorias/banner-internos-categorias/DESKTOP-CENTRO 5 CORAZONES.webp",
+    mobile: "/imaganescategorias/banner-internos-categorias/MOVIL-CENTRO 5 CORAZONES.webp",
+  },
+  sur: {
+    desktop: "/imaganescategorias/banner-internos-categorias/DESKTOP-SUR 5 CORAZONES.webp",
+    mobile: "/imaganescategorias/banner-internos-categorias/MOVIL-SUR 4 CORAZONES.webp",
+  },
+  santiago: {
+    desktop: "/imaganescategorias/banner-internos-categorias/DESKTOP-SANTIAGO 5 CORAZONES.webp",
+    mobile: "/imaganescategorias/banner-internos-categorias/MOVIL-SANTIAGO 5 CORAZONES.webp",
+  },
+  "isla-de-pascua": {
+    desktop: "/imaganescategorias/banner-internos-categorias/DESKTOP-ISLA DE PASCUA .webp",
+    mobile: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES ISLA DE PASCUA .webp",
+  },
+  viñ: {
+    desktop: "/imaganescategorias/banner-internos-categorias/DESKTOP-HOTELES DE VIÑA.webp",
+    mobile: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES DE VIÑA.webp",
+  },
+  ski: {
+    desktop: "/imaganescategorias/banner-internos-categorias/DESKTOP-HOTELES DE NIEVE.webp",
+    mobile: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES DE NIEVE.webp",
+  },
+  "torres-del-paine": {
+    desktop: "/imaganescategorias/banner-internos-categorias/DESKTOP-TORRES DEL PAINE 5 CORAZONES.webp",
+    mobile: "/imaganescategorias/banner-internos-categorias/MOVIL-TORRES DEL PAINE 5 CORAZONES.webp",
+  },
+  "joyas-unicas": {
+    desktop: "/imaganescategorias/banner-internos-categorias/DESKTOP-JOYAS UNICAS.webp",
+    mobile: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES JOYAS ÚNICAS.webp",
+  },
+};
 
 // Antes se validaba contra una lista fija, pero ahora el menú y las categorías
 // se administran desde la BD. No hacemos 404 por slug desconocido.
@@ -94,22 +140,90 @@ export default function CategoryPage({ params }: { params: any }) {
 
   const [filteredHotels, setFilteredHotels] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  // Normalizar nombre para comparación
+  const normalizeName = (name: string) =>
+    name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase()
+      .replace(/\s+/g, " ")
+      .trim();
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
     const categorySlugForApi = slug;
-    // Preferimos filtrar por slug de categoría en el backend
-    fetchWithSite(
-      `/api/posts?categorySlug=${encodeURIComponent(categorySlugForApi)}`,
-    )
-      .then((r) => (r.ok ? r.json() : []))
-      .then((rows) => {
-        if (cancelled) return;
-        const list = Array.isArray(rows) ? rows : [];
-        setFilteredHotels(list.filter((p) => !isHiddenFrontPost(p)));
-      })
-      .catch(() => !cancelled && setFilteredHotels([]))
-      .finally(() => !cancelled && setLoading(false));
+
+    async function loadHotels() {
+      try {
+        // 1. Fetch posts de la categoría
+        const res = await fetchWithSite(
+          `/api/posts?categorySlug=${encodeURIComponent(categorySlugForApi)}`,
+        );
+        const rows = res.ok ? await res.json() : [];
+        let list = Array.isArray(rows) ? rows : [];
+        list = list.filter((p: any) => !isHiddenFrontPost(p));
+
+        // 2. Si es categoría de votación, filtrar y buscar faltantes
+        if (isVotingCategory(slug) && !cancelled) {
+          const allowedNames = getVotingHotelsForCategory(slug);
+          const normalizedAllowed = new Set(allowedNames.map(normalizeName));
+
+          // Filtrar posts que coincidan con nombres permitidos
+          let votingHotels = list.filter((h: any) => {
+            const esName = normalizeName(h?.es?.name || "");
+            const enName = normalizeName(h?.en?.name || "");
+            return normalizedAllowed.has(esName) || normalizedAllowed.has(enName);
+          });
+
+          // Verificar qué nombres faltan
+          const foundNames = new Set(
+            votingHotels.map((h: any) => normalizeName(h?.es?.name || h?.en?.name || "")),
+          );
+          const missingNames = allowedNames.filter(
+            (name) => !foundNames.has(normalizeName(name)),
+          );
+
+          // 3. Si faltan hoteles, buscar en todos los posts
+          if (missingNames.length > 0 && !cancelled) {
+            try {
+              const allRes = await fetchWithSite("/api/posts");
+              const allRows = allRes.ok ? await allRes.json() : [];
+              const allList = Array.isArray(allRows) ? allRows : [];
+
+              for (const missing of missingNames) {
+                const normalizedMissing = normalizeName(missing);
+                const found = allList.find((h: any) => {
+                  const esName = normalizeName(h?.es?.name || "");
+                  const enName = normalizeName(h?.en?.name || "");
+                  return esName === normalizedMissing || enName === normalizedMissing;
+                });
+                if (found && !votingHotels.some((h: any) => h.slug === found.slug)) {
+                  votingHotels.push(found);
+                }
+              }
+            } catch {
+              // Ignorar error de fallback
+            }
+          }
+
+          list = votingHotels;
+        }
+
+        if (!cancelled) {
+          setFilteredHotels(list);
+          setLoading(false);
+        }
+      } catch {
+        if (!cancelled) {
+          setFilteredHotels([]);
+          setLoading(false);
+        }
+      }
+    }
+
+    loadHotels();
     return () => {
       cancelled = true;
     };
@@ -834,17 +948,28 @@ export default function CategoryPage({ params }: { params: any }) {
   const cleanedList = finalHotels.filter(
     (h: any) => String(h.slug) !== "w-santiago",
   );
+
+  // Para categorías de votación, ordenar por corazones (5 primero, luego 4) y luego alfabéticamente
+  const heartsKey = (h: any) => {
+    if (!isVotingCategory(slug)) return 0;
+    const name = String(h?.es?.name || h?.en?.name || "");
+    return getHotelHearts(slug, name) || 0;
+  };
+
   const finalOrderedHotels = isPressPage
     ? cleanedList.slice().sort((a, b) => {
         const diff = publicationTimestamp(b) - publicationTimestamp(a);
         if (diff !== 0) return diff;
         return sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0;
       })
-    : cleanedList
-        .slice()
-        .sort((a, b) =>
-          sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0,
-        );
+    : cleanedList.slice().sort((a, b) => {
+        // Si es categoría de votación, ordenar por corazones primero
+        if (isVotingCategory(slug)) {
+          const heartsDiff = heartsKey(b) - heartsKey(a);
+          if (heartsDiff !== 0) return heartsDiff;
+        }
+        return sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0;
+      });
 
   return (
     <Suspense
@@ -928,6 +1053,32 @@ export default function CategoryPage({ params }: { params: any }) {
 
           <TravelSecurityBanner categorySlug={slug} className="w-full mt-2" />
 
+          {/* Banner interno de categoría para votacion */}
+          {CATEGORY_BANNERS[slug] && (
+            <>
+              <div className="hidden md:block w-full mt-4">
+                <Image
+                  src={CATEGORY_BANNERS[slug].desktop}
+                  alt={slug}
+                  width={1920}
+                  height={400}
+                  className="w-full h-auto"
+                  priority
+                />
+              </div>
+              <div className="md:hidden w-full mt-4">
+                <Image
+                  src={CATEGORY_BANNERS[slug].mobile}
+                  alt={slug}
+                  width={750}
+                  height={400}
+                  className="w-full h-auto"
+                  priority
+                />
+              </div>
+            </>
+          )}
+
           {/* En Monumentos Nacionales y Cafés: banner largo bajo el menú, luego posts */}
           {(slug === "monumentos-nacionales" || slug === "cafes") && (
             <div className="w-full mt-2">
@@ -1003,29 +1154,58 @@ export default function CategoryPage({ params }: { params: any }) {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-4">
               {finalOrderedHotels.length > 0 ? (
-                finalOrderedHotels.map((hotel) => (
-                  <HotelCard
-                    key={hotel.slug}
-                    slug={hotel.slug}
-                    name={hotel[language].name}
-                    subtitle={hotel[language].subtitle}
-                    description={buildCardExcerpt(hotel[language].description)}
-                    image={hotel.featuredImage || hotel.images?.[0] || ""}
-                    imageVariant={
-                      slug === "monumentos-nacionales" || slug === "cafes"
-                        ? "tall"
-                        : "default"
-                    }
-                    externalUrl={
-                      isPressPage
-                        ? hotel.website_public ||
-                          hotel.websitePublic ||
-                          pressExternalUrls[hotel.slug] ||
-                          undefined
-                        : undefined
-                    }
-                  />
-                ))
+                finalOrderedHotels.map((hotel) => {
+                  const hotelHearts = isVotingCategory(slug)
+                    ? getHotelHearts(slug, hotel?.es?.name || hotel?.en?.name || "")
+                    : null;
+
+                  // Si es categoría de votación, usar VotingHotelCard (todo clickeable para votar)
+                  if (hotelHearts) {
+                    return (
+                      <VotingHotelCard
+                        key={hotel.slug}
+                        slug={hotel.slug}
+                        name={hotel[language].name}
+                        subtitle={hotel[language].subtitle}
+                        description={buildCardExcerpt(hotel[language].description)}
+                        image={hotel.featuredImage || hotel.images?.[0] || ""}
+                        imageVariant={
+                          slug === "monumentos-nacionales" || slug === "cafes"
+                            ? "tall"
+                            : "default"
+                        }
+                        hotelName={hotel[language]?.name || hotel?.es?.name || ""}
+                        hotelSlug={hotel.slug}
+                        categorySlug={slug}
+                      />
+                    );
+                  }
+
+                  // Para posts normales, usar HotelCard con link
+                  return (
+                    <HotelCard
+                      key={hotel.slug}
+                      slug={hotel.slug}
+                      name={hotel[language].name}
+                      subtitle={hotel[language].subtitle}
+                      description={buildCardExcerpt(hotel[language].description)}
+                      image={hotel.featuredImage || hotel.images?.[0] || ""}
+                      imageVariant={
+                        slug === "monumentos-nacionales" || slug === "cafes"
+                          ? "tall"
+                          : "default"
+                      }
+                      externalUrl={
+                        isPressPage
+                          ? hotel.website_public ||
+                            hotel.websitePublic ||
+                            pressExternalUrls[hotel.slug] ||
+                            undefined
+                          : undefined
+                      }
+                    />
+                  );
+                })
               ) : (
                 <div className="col-span-full text-center py-12 text-gray-500">
                   <p>

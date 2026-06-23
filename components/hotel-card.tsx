@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ReactNode } from "react";
 
 interface HotelCardProps {
   slug: string;
@@ -8,6 +9,8 @@ interface HotelCardProps {
   image: string;
   imageVariant?: "default" | "tall";
   externalUrl?: string;
+  voteElement?: ReactNode;
+  asDiv?: boolean;
 }
 
 export function HotelCard({
@@ -18,6 +21,8 @@ export function HotelCard({
   image,
   imageVariant = "default",
   externalUrl,
+  voteElement,
+  asDiv = false,
 }: HotelCardProps) {
   const imageContainerClass =
     imageVariant === "tall" ? "h-[500px]" : "aspect-[386/264]";
@@ -26,13 +31,8 @@ export function HotelCard({
   const href = externalUrl || `/${slug}`;
   const isExternal = Boolean(externalUrl);
 
-  return (
-    <Link
-      href={href}
-      target={isExternal ? "_blank" : undefined}
-      rel={isExternal ? "noopener noreferrer" : undefined}
-    >
-      <article className="group cursor-pointer flex flex-col h-full gap-3">
+  const content = (
+    <article className="group cursor-pointer flex flex-col h-full gap-3">
         {/* Image Container */}
         <div className={`relative ${imageContainerClass} overflow-hidden`}>
           <img
@@ -47,16 +47,25 @@ export function HotelCard({
           {/* Heart Icon and Title */}
           <div className="flex items-start gap-[10px]">
             <div className="flex-shrink-0">
-              <div
-                className="flex items-center justify-center"
-                style={{ width: 41, height: 50 }}
-              >
-                <img
-                  src="/favicon.svg"
-                  alt="icon"
+              {voteElement ? (
+                <div
+                  className="flex items-center justify-center"
+                  style={{ width: 50, height: 60 }}
+                >
+                  {voteElement}
+                </div>
+              ) : (
+                <div
+                  className="flex items-center justify-center"
                   style={{ width: 41, height: 50 }}
-                />
-              </div>
+                >
+                  <img
+                    src="/favicon.svg"
+                    alt="icon"
+                    style={{ width: 41, height: 50 }}
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex-1">
@@ -80,6 +89,19 @@ export function HotelCard({
           <div className="mx-auto h-[1px] w-3/4 bg-[#b4b4b8]" />
         </div>
       </article>
+  );
+
+  if (asDiv) {
+    return content;
+  }
+
+  return (
+    <Link
+      href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+    >
+      {content}
     </Link>
   );
 }

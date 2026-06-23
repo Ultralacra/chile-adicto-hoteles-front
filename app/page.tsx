@@ -1,7 +1,6 @@
 "use client";
 
 import { Header } from "@/components/header";
-import { HeroSlider } from "@/components/hero-slider";
 import { HotelCard } from "@/components/hotel-card";
 import { Footer } from "@/components/footer";
 import { CategoryNav } from "@/components/category-nav";
@@ -11,17 +10,7 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useLanguage } from "@/contexts/language-context";
 import { useSiteApi } from "@/hooks/use-site-api";
-
-function proxyImageUrl(input: string): string {
-  // chileadictohoteles.cl bloquea hotlink en <img> cross-site.
-  // Weserv lo vuelve a servir como imagen embebible.
-  const raw = String(input || "").trim();
-  if (!raw) return raw;
-
-  // Weserv espera normalmente el host/path sin protocolo.
-  const withoutProtocol = raw.replace(/^https?:\/\//i, "");
-  return `https://images.weserv.nl/?url=${encodeURIComponent(withoutProtocol)}`;
-}
+import Image from "next/image";
 
 const HOME_RESERVED_POSTS = [
   {
@@ -74,156 +63,14 @@ const HOME_RESERVED_POSTS = [
   },
 ];
 
+const DESKTOP_BANNER = "/imaganescategorias/banner-home-votacion/BANER HOME.webp";
+const MOBILE_BANNER = "/imaganescategorias/banner-home-votacion/MOVIL-BANER HOME.webp";
+
 export default function Page() {
   const { language } = useLanguage();
   const { fetchWithSite } = useSiteApi();
-  const [sliderDesktopImagesEs, setSliderDesktopImagesEs] = useState<string[]>(
-    [],
-  );
-  const [sliderDesktopHrefsEs, setSliderDesktopHrefsEs] = useState<string[]>(
-    [],
-  );
-  const [sliderMobileImagesEs, setSliderMobileImagesEs] = useState<string[]>(
-    [],
-  );
-  const [sliderMobileHrefsEs, setSliderMobileHrefsEs] = useState<string[]>([]);
-  const [sliderDesktopImagesEn, setSliderDesktopImagesEn] = useState<string[]>(
-    [],
-  );
-  const [sliderDesktopHrefsEn, setSliderDesktopHrefsEn] = useState<string[]>(
-    [],
-  );
-  const [sliderMobileImagesEn, setSliderMobileImagesEn] = useState<string[]>(
-    [],
-  );
-  const [sliderMobileHrefsEn, setSliderMobileHrefsEn] = useState<string[]>([]);
-  const [sliderLoading, setSliderLoading] = useState(true);
   const [hotels, setHotels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    setSliderLoading(true);
-
-    async function loadBoth() {
-      try {
-        const [resEsDesktop, resEnDesktop, resEsMobile, resEnMobile] =
-          await Promise.all([
-            fetchWithSite("/api/sliders/home-desktop"),
-            fetchWithSite(
-              `/api/sliders/${encodeURIComponent("HOME INGLES DESKTOP")}`,
-            ),
-            fetchWithSite(
-              `/api/sliders/${encodeURIComponent("HOME MOVIL ESPAÑOL")}`,
-            ),
-            fetchWithSite(
-              `/api/sliders/${encodeURIComponent("HOME MOVIL INGLES")}`,
-            ),
-          ]);
-
-        const jsonEsDesktop =
-          resEsDesktop && resEsDesktop.ok
-            ? await resEsDesktop.json()
-            : { items: [] };
-        const jsonEnDesktop =
-          resEnDesktop && resEnDesktop.ok
-            ? await resEnDesktop.json()
-            : { items: [] };
-        const jsonEsMobile =
-          resEsMobile && resEsMobile.ok
-            ? await resEsMobile.json()
-            : { items: [] };
-        const jsonEnMobile =
-          resEnMobile && resEnMobile.ok
-            ? await resEnMobile.json()
-            : { items: [] };
-
-        if (cancelled) return;
-
-        const itemsEsDesktop = Array.isArray(jsonEsDesktop?.items)
-          ? jsonEsDesktop.items
-          : [];
-        const itemsEnDesktop = Array.isArray(jsonEnDesktop?.items)
-          ? jsonEnDesktop.items
-          : [];
-        const itemsEsMobile = Array.isArray(jsonEsMobile?.items)
-          ? jsonEsMobile.items
-          : [];
-        const itemsEnMobile = Array.isArray(jsonEnMobile?.items)
-          ? jsonEnMobile.items
-          : [];
-
-        console.log("home-desktop (ES):", itemsEsDesktop);
-        console.log("HOME INGLES DESKTOP (EN):", itemsEnDesktop);
-        console.log("HOME MOVIL ESPAÑOL (ES):", itemsEsMobile);
-        console.log("HOME MOVIL INGLES (EN):", itemsEnMobile);
-
-        const desktopEsImages = itemsEsDesktop
-          .map((it: any) => proxyImageUrl(it.image_url || ""))
-          .filter(Boolean);
-        const desktopEsHrefs = itemsEsDesktop.map((it: any) =>
-          it?.href ? String(it.href).trim() : "",
-        );
-        const desktopEnImages = itemsEnDesktop
-          .map((it: any) => proxyImageUrl(it.image_url || ""))
-          .filter(Boolean);
-        const desktopEnHrefs = itemsEnDesktop.map((it: any) =>
-          it?.href ? String(it.href).trim() : "",
-        );
-        const mobileEsImages = itemsEsMobile
-          .map((it: any) => proxyImageUrl(it.image_url || ""))
-          .filter(Boolean);
-        const mobileEsHrefs = itemsEsMobile.map((it: any) =>
-          it?.href ? String(it.href).trim() : "",
-        );
-        const mobileEnImages = itemsEnMobile
-          .map((it: any) => proxyImageUrl(it.image_url || ""))
-          .filter(Boolean);
-        const mobileEnHrefs = itemsEnMobile.map((it: any) =>
-          it?.href ? String(it.href).trim() : "",
-        );
-
-        setSliderDesktopImagesEs(desktopEsImages);
-        setSliderDesktopHrefsEs(desktopEsHrefs);
-        setSliderDesktopImagesEn(
-          desktopEnImages.length > 0 ? desktopEnImages : desktopEsImages,
-        );
-        setSliderDesktopHrefsEn(
-          desktopEnImages.length > 0 ? desktopEnHrefs : desktopEsHrefs,
-        );
-        setSliderMobileImagesEs(
-          mobileEsImages.length > 0 ? mobileEsImages : desktopEsImages,
-        );
-        setSliderMobileHrefsEs(
-          mobileEsHrefs.length > 0 ? mobileEsHrefs : desktopEsHrefs,
-        );
-        setSliderMobileImagesEn(
-          mobileEnImages.length > 0
-            ? mobileEnImages
-            : desktopEnImages.length > 0
-              ? desktopEnImages
-              : desktopEsImages,
-        );
-        setSliderMobileHrefsEn(
-          mobileEnImages.length > 0
-            ? mobileEnHrefs
-            : desktopEnImages.length > 0
-              ? desktopEnHrefs
-              : desktopEsHrefs,
-        );
-
-        setSliderLoading(false);
-      } catch (e) {
-        if (!cancelled) setSliderLoading(false);
-      }
-    }
-
-    loadBoth();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [fetchWithSite]);
 
   useEffect(() => {
     let cancelled = false;
@@ -312,86 +159,30 @@ export default function Page() {
         </div>
 
         <div className="py-2">
-          {/* Slider a ancho completo */}
-          <div className="w-full">
-            <div className="w-full overflow-visible">
-              {/* Build combined arrays with same length so switching language doesn't re-mount slides */}
-              {(() => {
-                if (sliderLoading) {
-                  return (
-                    <div className="w-full h-full grid place-items-center text-gray-500">
-                      <div className="flex items-center gap-2">
-                        <Spinner className="size-5" /> Cargando slider…
-                      </div>
-                    </div>
-                  );
-                }
-
-                const maxLen = Math.max(
-                  sliderDesktopImagesEs.length,
-                  sliderDesktopImagesEn.length,
-                  sliderMobileImagesEs.length,
-                  sliderMobileImagesEn.length,
-                );
-
-                if (maxLen === 0) {
-                  return null;
-                }
-
-                const desktopByLang: Array<{ es?: string; en?: string }> = [];
-                const mobileByLang: Array<{ es?: string; en?: string }> = [];
-                for (let i = 0; i < maxLen; i++) {
-                  desktopByLang.push({
-                    es:
-                      sliderDesktopImagesEs[i] ||
-                      sliderDesktopImagesEs[0] ||
-                      "",
-                    en:
-                      sliderDesktopImagesEn[i] ||
-                      sliderDesktopImagesEn[0] ||
-                      "",
-                  });
-                  mobileByLang.push({
-                    es:
-                      sliderMobileImagesEs[i] || sliderMobileImagesEs[0] || "",
-                    en:
-                      sliderMobileImagesEn[i] || sliderMobileImagesEn[0] || "",
-                  });
-                }
-
-                return (
-                  <HeroSlider
-                    desktopImagesByLang={desktopByLang}
-                    mobileImagesByLang={mobileByLang}
-                    slideHrefs={
-                      language === "en"
-                        ? sliderDesktopHrefsEn
-                        : sliderDesktopHrefsEs
-                    }
-                    slideHrefsMobile={
-                      language === "en"
-                        ? sliderMobileHrefsEn
-                        : sliderMobileHrefsEs
-                    }
-                    language={language === "en" ? "en" : "es"}
-                    autoHeight
-                  />
-                );
-              })()}
-            </div>
+          {/* Banner de votacion - desktop */}
+          <div className="hidden md:block w-full">
+            <a href="/votacion" className="block w-full relative">
+              <Image
+                src={DESKTOP_BANNER}
+                alt="Votación"
+                width={1920}
+                height={800}
+                className="w-full h-auto"
+                priority
+              />
+            </a>
           </div>
 
-          <div className="w-full mt-6 md:hidden">
-            <a
-              href="https://www.travelsecurity.cl/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-            >
-              <img
-                src="/banners/HEADER%20SECURITY%20MOVIL.png"
-                alt="Travel Security"
-                className="block w-full h-auto"
+          {/* Banner de votacion - mobile */}
+          <div className="md:hidden w-full">
+            <a href="/votacion" className="block w-full relative">
+              <Image
+                src={MOBILE_BANNER}
+                alt="Votación"
+                width={750}
+                height={1000}
+                className="w-full h-auto"
+                priority
               />
             </a>
           </div>
