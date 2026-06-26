@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getCurrentSiteId } from "@/lib/site-utils";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,10 +36,11 @@ export async function GET(req: Request) {
   const q = String(url.searchParams.get("q") || "").trim().toLowerCase();
   const limit = Math.min(Math.max(Number(url.searchParams.get("limit") || 30) || 30, 5), 100);
 
+  const siteId = await getCurrentSiteId(req);
+
   const select = "slug,featured_image,translations:post_translations(lang,name)";
 
-  // Sin q: devolver algunos posts (orden por slug)
-  const basePath = `/posts?select=${encodeURIComponent(select)}&order=slug.asc&limit=${limit}`;
+  const basePath = `/posts?select=${encodeURIComponent(select)}&site=eq.${siteId}&order=slug.asc&limit=${limit}`;
 
   const result = await anonRest(basePath);
   if (!result) return NextResponse.json({ items: [] }, { status: 200 });

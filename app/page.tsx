@@ -45,22 +45,6 @@ const HOME_RESERVED_POSTS = [
     },
     image: "/portadas/PORTADA-HOTEL-BOUTIQUE.png",
   },
-  {
-    slug: "categoria/exploraciones",
-    es: {
-      name: "LAS MEJORES EXPLORACIONES",
-      subtitle: "DESDE LOS MEJORES HOTELES DE CHILE",
-      description:
-        "Columbia presenta una nueva e increíble seccion de chile adicto hoteles. Aquí la prestigiosa marca internacional outdoor, nos irá presentando las mejores exploraciones que se pueden hacer, desde los mejores hoteles destino de chile…",
-    },
-    en: {
-      name: "THE BEST EXPLORATIONS",
-      subtitle: "FROM CHILE'S FINEST HOTELS",
-      description:
-        "Columbia presents a new and incredible section of Chile Adicto Hoteles. Here, the prestigious international outdoor brand will showcase the best explorations available from Chile's top destination hotels…",
-    },
-    image: "/portadas/columbia-portada.png",
-  },
 ];
 
 const DESKTOP_BANNER = "/imaganescategorias/banner-home-votacion/BANER HOME.webp";

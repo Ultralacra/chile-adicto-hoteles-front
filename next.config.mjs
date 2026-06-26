@@ -28,7 +28,7 @@ const nextConfig = {
       // Posts sin prefijo (excluir rutas reservadas mediante negative lookahead)
       {
         source:
-          '/:slug((?!admin|api|cms-api|categoria|lugar|_next|favicon\\.ico|robots\\.txt|sitemap\\.xml|imagenes-slider|slider-desktop|slider-movil|flags|public).+)',
+          '/:slug((?!admin|api|cms-api|categoria|votacion|lugar|_next|favicon\\.ico|robots\\.txt|sitemap\\.xml|imagenes-slider|slider-desktop|slider-movil|flags|public).+)',
         destination: '/lugar/:slug',
       },
     ];

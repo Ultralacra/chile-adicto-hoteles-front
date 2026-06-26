@@ -10,6 +10,7 @@ import { useSiteApi } from "@/hooks/use-site-api";
 import { BottomHomeBanner } from "@/components/home-promo-banners";
 import { ComentaIcon } from "@/components/comenta-icon";
 import { TravelSecurityBanner } from "@/components/travel-security-banner";
+import { BackButton } from "@/components/back-button";
 
 interface LocationInfo {
   label?: string;
@@ -440,6 +441,8 @@ export function HotelDetail({
       </div>
 
       <main className="site-inner pt-0 pb-4">
+        {/* <div className="px-4 py-4"><BackButton /></div> */}
+
         <TravelSecurityBanner
           categorySlug={travelSecurityCategory}
           className="w-full mb-4"

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MobileMenu } from "./mobile-menu";
 import { LanguageSwitcher } from "./language-switcher";
+import { RealTimeSearch } from "./real-time-search";
 import { useLanguage } from "@/contexts/language-context";
 
 type HeaderProps = {
@@ -68,7 +69,7 @@ export function Header({ showHomeSecurityBanner = true }: HeaderProps) {
             </div>
 
             {/* Desktop: Logo on left */}
-            <div className="hidden lg:flex items-center">
+            <div className="hidden lg:flex flex-col items-center">
               <Link href="/" aria-label={t("Ir al inicio", "Go to home")}>
                 <Image
                   src="/logo-best-espanol.svg"
@@ -79,6 +80,9 @@ export function Header({ showHomeSecurityBanner = true }: HeaderProps) {
                   priority
                 />
               </Link>
+              <div className="w-full mt-3">
+                <RealTimeSearch className="w-full" />
+              </div>
             </div>
 
             {/* Desktop: Right side logos */}

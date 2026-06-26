@@ -112,11 +112,11 @@ export const VOTING_CATEGORIES: Record<string, CategoryVoteConfig> = {
     ],
     hotels4: [],
   },
-  ski: {
+  "hoteles-de-nieve": {
     hotels5: ["TERMAS CHILLAN", "CORRALCO", "PORTILLO"],
     hotels4: [],
   },
-  viñ: {
+  "hoteles-de-vina": {
     hotels5: ["MATETIC", "VIBO WINE", "SANTA CRUZ", "BOUCHON", "CLOS APALTA RESIDENCE", "CASA REAL"],
     hotels4: [],
   },

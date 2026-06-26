@@ -296,6 +296,17 @@ export function MobileFooterContent({
             </ul>
           ) : (
             <ul className="space-y-4 text-center">
+              {/* <li>
+                <button
+                  onClick={() => {
+                    onNavigate?.();
+                    window.history.back();
+                  }}
+                  className="font-neutra-demi text-[14px] leading-[19px] font-[600] text-white hover:text-gray-300 transition-colors"
+                >
+                  ← {language === "es" ? "VOLVER" : "BACK"}
+                </button>
+              </li> */}
               {items.map((item) => (
                 <li key={item.slug}>
                   {normalizeSlug(item.slug) === "guia-impresa" ? (

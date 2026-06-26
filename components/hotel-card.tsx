@@ -100,6 +100,12 @@ export function HotelCard({
       href={href}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
+      onClick={() => {
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("scroll:position", String(window.scrollY));
+          sessionStorage.setItem("scroll:path", window.location.pathname);
+        }
+      }}
     >
       {content}
     </Link>
