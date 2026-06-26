@@ -21,10 +21,10 @@ import { notFound } from "next/navigation";
 
 const CATEGORY_BANNERS: Record<string, { desktop4?: string; mobile4?: string; desktop5: string; mobile5: string }> = {
   norte: {
-    desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-NORTE 4 CORAZONES.webp",
-    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL-NORTE 5 CORAZONES.webp",
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-NORTE 5 CORAZONES.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-NORTE 5 CORAZONES.webp",
+    desktop4: "/imaganescategorias/banner-internos-categorias/NORTE 4 CORAZONES.webp",
+    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - NORTE 4 CORAZONES.webp",
+    desktop5: "/imaganescategorias/banner-internos-categorias/NORTE 5 CORAZONES.webp",
+    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - NORTE 5 CORAZONES.webp",
   },
   centro: {
     desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-CENTRO 4 CORAZONES.webp",
@@ -33,10 +33,10 @@ const CATEGORY_BANNERS: Record<string, { desktop4?: string; mobile4?: string; de
     mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-CENTRO 5 CORAZONES.webp",
   },
   sur: {
-    desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-SUR 4 CORAZONES.webp",
-    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL-SUR 4 CORAZONES.webp",
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-SUR 5 CORAZONES.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-SUR 5 CORAZONES.webp",
+    desktop4: "/imaganescategorias/banner-internos-categorias/SUR 4 CORAZONES.webp",
+    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - SUR 4 CORAZONES.webp",
+    desktop5: "/imaganescategorias/banner-internos-categorias/SUR 5 CORAZONES.webp",
+    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - SUR 5 CORAZONES.webp",
   },
   santiago: {
     desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-SANTIAGO 4 CORAZONES.webp",
