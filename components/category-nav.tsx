@@ -23,11 +23,11 @@ const fallbackCategories = [
   { slug: "santiago", labelEs: "SANTIAGO", labelEn: "SANTIAGO" },
   { slug: "guia-impresa", labelEs: "GUÍA IMPRESA", labelEn: "PRINT GUIDE" },
   { slug: "prensa", labelEs: "PRENSA", labelEn: "PRESS" },
-  {
-    slug: "exploraciones",
-    labelEs: "EXPLORACIONES COLUMBIA",
-    labelEn: "COLUMBIA EXPLORATIONS",
-  },
+  // {
+  //   slug: "exploraciones",
+  //   labelEs: "EXPLORACIONES COLUMBIA",
+  //   labelEn: "COLUMBIA EXPLORATIONS",
+  // },
   { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
 ];
 
@@ -41,7 +41,7 @@ const fixedMenuOrder = [
   "guia-impresa",
   "prensa",
   "nosotros",
-  "exploraciones",
+  // "exploraciones",
 ];
 
 type ApiCategoryRow = {
