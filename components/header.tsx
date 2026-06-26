@@ -80,9 +80,9 @@ export function Header({ showHomeSecurityBanner = true }: HeaderProps) {
                   priority
                 />
               </Link>
-              <div className="w-full mt-3">
+              {/* <div className="w-full mt-3">
                 <RealTimeSearch className="w-full" />
-              </div>
+              </div> */}
             </div>
 
             {/* Desktop: Right side logos */}

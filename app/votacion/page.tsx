@@ -33,7 +33,7 @@ export default function VotacionPage() {
           <CategoryNav activeCategory="votacion" />
         </div>
 
-        <div className="container mx-auto px-4">
+        <div className="w-full">
           <div className="hidden md:block w-full mb-6">
             <a href="/votacion" className="block w-full relative">
               <Image
@@ -73,11 +73,6 @@ export default function VotacionPage() {
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <h2 className="font-neutra-demi text-xl md:text-2xl text-white text-center uppercase tracking-wide drop-shadow-lg">
-                    {category.name}
-                  </h2>
-                </div>
               </a>
             ))}
           </div>

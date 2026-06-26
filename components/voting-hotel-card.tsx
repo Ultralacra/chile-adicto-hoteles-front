@@ -12,6 +12,7 @@ interface VoteButtonProps {
   subtitle: string;
   description: string;
   image: string;
+  images?: string[];
   imageVariant?: "default" | "tall";
 }
 
@@ -24,6 +25,7 @@ export function VotingHotelCard({
   subtitle,
   description,
   image,
+  images,
   imageVariant = "default",
 }: VoteButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,7 +92,7 @@ export function VotingHotelCard({
 
   // Icono del corazón que se muestra a la izquierda del nombre
   const heartIcon = (
-    <svg width="50" height="60" viewBox="0 0 246 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="60" height="72" viewBox="0 0 246 300" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M169.188 27.0078C139.814 27.0078 129.792 42.2223 112.6 64.2282C95.4071 42.2223 85.3687 27.0078 56.0114 27.0078C24.4948 27.0078 3.70898 50.217 3.70898 85.0472C3.70898 96.7507 6.42881 109.212 12.297 121.674V161.977C12.297 165.224 14.9343 167.845 18.1651 167.845C21.3959 167.845 24.0333 165.224 24.0333 161.977V140.861C26.1596 143.631 28.4508 146.383 30.9069 149.12L54.907 175.791V224.747C54.907 227.995 57.5279 230.616 60.7751 230.616C64.0224 230.616 66.6433 227.995 66.6433 224.747V188.846L112.6 239.978L133.204 217.082V261.704C133.204 264.935 135.858 267.572 139.089 267.572C142.319 267.572 144.973 264.951 144.973 261.704V204.027L175.369 170.153V212.418C175.369 215.648 177.99 218.286 181.237 218.286C184.484 218.286 187.105 215.665 187.105 212.418V157.098L194.259 149.136C213.248 128.317 221.474 105.487 221.474 85.0802C221.474 50.2499 200.704 27.0408 169.171 27.0408" fill="#E4032C"/>
       <path d="M41.7367 190.412C41.7367 185.302 37.5828 181.148 32.4729 181.148C27.363 181.148 23.2256 185.286 23.2256 190.412C23.2256 195.539 27.363 199.676 32.4729 199.676C37.5828 199.676 41.7367 195.539 41.7367 190.412Z" fill="#E4032C"/>
       <path d="M205.434 162.047C202.187 162.047 199.55 164.701 199.55 167.931C199.55 171.162 202.187 173.816 205.434 173.816C208.682 173.816 211.336 171.179 211.336 167.931C211.336 164.684 208.682 162.047 205.434 162.047Z" fill="#E4032C"/>
@@ -121,9 +123,12 @@ export function VotingHotelCard({
           subtitle={subtitle}
           description={description}
           image={image}
+          images={images}
           imageVariant={imageVariant}
           voteElement={heartIcon}
           asDiv
+          hideDescription
+          voteIconSize="large"
         />
       </div>
 
