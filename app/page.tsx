@@ -11,6 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useLanguage } from "@/contexts/language-context";
 import { useSiteApi } from "@/hooks/use-site-api";
 import Image from "next/image";
+import { HeroSlider } from "@/components/hero-slider";
 
 const HOME_RESERVED_POSTS = [
   {
@@ -144,7 +145,7 @@ export default function Page() {
 
         <div className="py-2">
           {/* Banner de votacion - desktop */}
-          <div className="hidden md:block w-full">
+          {/* <div className="hidden md:block w-full">
             <a href="/votacion" className="block w-full relative">
               <Image
                 src={DESKTOP_BANNER}
@@ -155,10 +156,10 @@ export default function Page() {
                 priority
               />
             </a>
-          </div>
+          </div> */}
 
           {/* Banner de votacion - mobile */}
-          <div className="md:hidden w-full">
+          {/* <div className="md:hidden w-full">
             <a href="/votacion" className="block w-full relative">
               <Image
                 src={MOBILE_BANNER}
@@ -169,6 +170,18 @@ export default function Page() {
                 priority
               />
             </a>
+          </div> */}
+
+          {/* Slider principal */}
+          <div className="w-full">
+            <HeroSlider
+              autoHeight
+              objectFit="contain"
+              objectPosition="center"
+              preferApiHrefs
+              sliderKeyDesktop="home-desktop"
+              sliderKeyMobile="home-mobile"
+            />
           </div>
 
           {/* Cards section below - full width */}
