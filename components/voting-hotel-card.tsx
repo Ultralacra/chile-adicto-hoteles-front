@@ -34,17 +34,30 @@ export function VotingHotelCard({
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [alreadyVoted, setAlreadyVoted] = useState(false);
+  const [currentHotel, setCurrentHotel] = useState("");
+  const [wantToChange, setWantToChange] = useState(false);
 
   const openModal = () => {
     setIsOpen(true);
     setSubmitted(false);
     setError("");
+    setAlreadyVoted(false);
+    setCurrentHotel("");
+    setWantToChange(false);
     setVoterName("");
     setEmail("");
   };
 
   const closeModal = () => {
     setIsOpen(false);
+  };
+
+  const formatHotelName = (slug: string) => {
+    return slug
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,26 +78,63 @@ export function VotingHotelCard({
     setLoading(true);
 
     try {
+      // Enviar voto (con change_vote si ya confirmó)
       const res = await fetch("/api/votes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: voterName.trim(),
-          email: email.trim(),
-          hotelSlug,
-          hotelName,
-          categorySlug,
+          hotel_slug: hotelSlug,
+          voter_name: voterName.trim(),
+          voter_email: email.toLowerCase().trim(),
+          site: "chileadicto",
+          change_vote: wantToChange,
         }),
       });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSubmitted(true);
+      } else if (res.status === 409 && data.already_voted && data.can_change) {
+        // Ya votó, mostrar opción de cambiar
+        setAlreadyVoted(true);
+        setCurrentHotel(data.current_hotel);
+      } else {
+        setError(data.error || "Error al enviar el voto");
+      }
+    } catch {
+      setError("Error al enviar el voto");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangeVote = async () => {
+    setWantToChange(true);
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/votes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          hotel_slug: hotelSlug,
+          voter_name: voterName.trim(),
+          voter_email: email.toLowerCase().trim(),
+          site: "chileadicto",
+          change_vote: true,
+        }),
+      });
+
+      const data = await res.json();
 
       if (res.ok) {
         setSubmitted(true);
       } else {
-        const data = await res.json();
-        setError(data.message || "Error al enviar el voto");
+        setError(data.error || "Error al cambiar el voto");
       }
     } catch {
-      setError("Error al enviar el voto");
+      setError("Error al cambiar el voto");
     } finally {
       setLoading(false);
     }
@@ -164,10 +214,9 @@ export function VotingHotelCard({
                       type="text"
                       value={voterName}
                       onChange={(e) => setVoterName(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#E4032C] focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#E4032C] focus:border-transparent"
                       placeholder="Tu nombre"
                       required
-                      disabled
                     />
                   </div>
 
@@ -177,15 +226,43 @@ export function VotingHotelCard({
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#E4032C] focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#E4032C] focus:border-transparent"
                       placeholder="tu@correo.com"
                       required
-                      disabled
                     />
                   </div>
 
                   {error && (
                     <p className="text-red-500 text-sm text-center font-medium">{error}</p>
+                  )}
+
+                  {/* Mensaje de ya votó con opción de cambiar */}
+                  {alreadyVoted && (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                      <p className="text-yellow-800 text-sm mb-3">
+                        Este correo ya votó por <strong>{formatHotelName(currentHotel)}</strong>.
+                      </p>
+                      <p className="text-yellow-700 text-xs mb-3">
+                        ¿Quieres cambiar tu voto a <strong>{hotelName}</strong>?
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setAlreadyVoted(false)}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleChangeVote}
+                          disabled={loading}
+                          className="flex-1 px-3 py-2 bg-[#E4032C] text-white rounded text-sm hover:bg-[#c00224] transition-colors disabled:opacity-50"
+                        >
+                          {loading ? "Cambiando..." : "Cambiar voto"}
+                        </button>
+                      </div>
+                    </div>
                   )}
 
                   <div className="flex gap-3 pt-2">
@@ -198,10 +275,10 @@ export function VotingHotelCard({
                     </button>
                     <button
                       type="submit"
-                      disabled={true}
+                      disabled={loading || alreadyVoted}
                       className="flex-1 px-4 py-2 bg-[#E4032C] text-white rounded hover:bg-[#c00224] transition-colors disabled:opacity-50 font-medium"
                     >
-                      Votar
+                      {loading ? "Enviando..." : "Votar"}
                     </button>
                   </div>
                 </form>
