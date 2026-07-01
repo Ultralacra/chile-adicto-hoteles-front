@@ -43,14 +43,13 @@ export function VoteButton({
   // Verificar si el email ya votó
   const checkEmail = async (emailToCheck: string): Promise<boolean> => {
     try {
-      const res = await fetch(
-        `/api/votes/check?email=${encodeURIComponent(emailToCheck)}&site=${site}`
-      );
+      const url = `/api/votes/check?email=${encodeURIComponent(emailToCheck)}&site=${site}`;
+      const res = await fetch(url);
       const data = await res.json();
 
       if (data.has_voted) {
         setAlreadyVoted(true);
-        setVotedHotel(data.hotel_slug);
+        setVotedHotel(data.votes?.[0]?.hotel_slug || "");
         return true;
       }
       return false;

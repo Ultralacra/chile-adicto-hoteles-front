@@ -18,12 +18,27 @@ function getHeaders() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { hotel_slug, voter_name, voter_email, site = "chileadicto", change_vote = false } = body;
+    const {
+      hotel_slug,
+      voter_name,
+      voter_email,
+      site = "chileadicto",
+      change_vote = false,
+      category,
+      hearts,
+    } = body;
 
     // Validaciones
     if (!hotel_slug || !voter_name || !voter_email) {
       return NextResponse.json(
         { error: "hotel_slug, voter_name y voter_email son requeridos" },
+        { status: 400 }
+      );
+    }
+
+    if (!category || (hearts !== 4 && hearts !== 5)) {
+      return NextResponse.json(
+        { error: "category y hearts (4 o 5) son requeridos" },
         { status: 400 }
       );
     }
@@ -39,9 +54,9 @@ export async function POST(req: Request) {
 
     const normalizedEmail = voter_email.toLowerCase().trim();
 
-    // Verificar si ya votó en este sitio
+    // Verificar si ya votó en esta categoría + corazones
     const checkRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/votes?voter_email=eq.${encodeURIComponent(normalizedEmail)}&site=eq.${site}&select=id,hotel_slug`,
+      `${SUPABASE_URL}/rest/v1/votes?voter_email=eq.${encodeURIComponent(normalizedEmail)}&site=eq.${site}&category=eq.${encodeURIComponent(category)}&hearts=eq.${hearts}&select=id,hotel_slug`,
       { headers: getHeaders() }
     );
 
@@ -52,11 +67,11 @@ export async function POST(req: Request) {
     const existing = await checkRes.json();
 
     if (existing.length > 0) {
-      // Si ya votó y NO pidió cambiar voto, informar
+      // Si ya votó en esta categoría+corazones y NO pidió cambiar voto, informar
       if (!change_vote) {
         return NextResponse.json(
           {
-            error: "Ya has votado anteriormente",
+            error: "Ya has votado en esta categoría",
             already_voted: true,
             current_hotel: existing[0].hotel_slug,
             can_change: true,
@@ -88,6 +103,8 @@ export async function POST(req: Request) {
         voter_name: voter_name.trim(),
         voter_email: normalizedEmail,
         site,
+        category,
+        hearts,
       }),
     });
 

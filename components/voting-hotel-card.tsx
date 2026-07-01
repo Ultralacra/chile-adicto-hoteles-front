@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { HotelCard } from "./hotel-card";
+import { getHotelHearts } from "@/lib/voting-config";
 
 interface VoteButtonProps {
   hotelName: string;
@@ -79,6 +80,7 @@ export function VotingHotelCard({
 
     try {
       // Enviar voto (con change_vote si ya confirmó)
+      const hearts = getHotelHearts(categorySlug, hotelName);
       const res = await fetch("/api/votes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -88,6 +90,8 @@ export function VotingHotelCard({
           voter_email: email.toLowerCase().trim(),
           site: "chileadicto",
           change_vote: wantToChange,
+          category: categorySlug,
+          hearts,
         }),
       });
 
@@ -114,6 +118,7 @@ export function VotingHotelCard({
     setLoading(true);
 
     try {
+      const hearts = getHotelHearts(categorySlug, hotelName);
       const res = await fetch("/api/votes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -123,6 +128,8 @@ export function VotingHotelCard({
           voter_email: email.toLowerCase().trim(),
           site: "chileadicto",
           change_vote: true,
+          category: categorySlug,
+          hearts,
         }),
       });
 

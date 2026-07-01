@@ -234,56 +234,9 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
             </div>
           ) : (
             <>
-              {/* Sección 4 corazones */}
-              {hotels4.length > 0 && banner && (banner.desktop4 || banner.mobile4) && (
-                <section className="mb-8">
-                  {banner.desktop4 && (
-                    <div className="hidden md:block w-full">
-                      <Image
-                        src={banner.desktop4}
-                        alt={`${category} 4 estrellas`}
-                        width={1920}
-                        height={400}
-                        className="w-full h-auto"
-                        priority
-                      />
-                    </div>
-                  )}
-                  {banner.mobile4 && (
-                    <div className="md:hidden w-full">
-                      <Image
-                        src={banner.mobile4}
-                        alt={`${category} 4 estrellas`}
-                        width={750}
-                        height={400}
-                        className="w-full h-auto"
-                        priority
-                      />
-                    </div>
-                  )}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-4">
-                    {hotels4.map((hotel) => (
-                      <VotingHotelCard
-                        key={hotel.slug}
-                        slug={hotel.slug}
-                        name={hotel[language]?.name || hotel.en?.name || hotel.es?.name}
-                        subtitle={hotel[language]?.subtitle || hotel.en?.subtitle || hotel.es?.subtitle}
-                        description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
-                        image={hotel.featuredImage || hotel.images?.[0] || ""}
-                        images={[hotel.featuredImage, ...(hotel.images || [])].filter(Boolean)}
-                        imageVariant="default"
-                        hotelName={hotel[language]?.name || hotel?.es?.name || ""}
-                        hotelSlug={hotel.slug}
-                        categorySlug={category}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )}
-
               {/* Sección 5 corazones */}
               {banner && (
-                <section>
+                <section className="mb-8">
                   {banner.desktop5 && (
                     <div className="hidden md:block w-full">
                       <Image
@@ -327,6 +280,53 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
                       ))}
                     </div>
                   )}
+                </section>
+              )}
+
+              {/* Sección 4 corazones */}
+              {hotels4.length > 0 && banner && (banner.desktop4 || banner.mobile4) && (
+                <section>
+                  {banner.desktop4 && (
+                    <div className="hidden md:block w-full">
+                      <Image
+                        src={banner.desktop4}
+                        alt={`${category} 4 estrellas`}
+                        width={1920}
+                        height={400}
+                        className="w-full h-auto"
+                        priority
+                      />
+                    </div>
+                  )}
+                  {banner.mobile4 && (
+                    <div className="md:hidden w-full">
+                      <Image
+                        src={banner.mobile4}
+                        alt={`${category} 4 estrellas`}
+                        width={750}
+                        height={400}
+                        className="w-full h-auto"
+                        priority
+                      />
+                    </div>
+                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-4">
+                    {hotels4.map((hotel) => (
+                      <VotingHotelCard
+                        key={hotel.slug}
+                        slug={hotel.slug}
+                        name={hotel[language]?.name || hotel.en?.name || hotel.es?.name}
+                        subtitle={hotel[language]?.subtitle || hotel.en?.subtitle || hotel.es?.subtitle}
+                        description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
+                        image={hotel.featuredImage || hotel.images?.[0] || ""}
+                        images={[hotel.featuredImage, ...(hotel.images || [])].filter(Boolean)}
+                        imageVariant="default"
+                        hotelName={hotel[language]?.name || hotel?.es?.name || ""}
+                        hotelSlug={hotel.slug}
+                        categorySlug={category}
+                      />
+                    ))}
+                  </div>
                 </section>
               )}
 

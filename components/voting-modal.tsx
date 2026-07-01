@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { VoteHeart } from "./vote-heart";
+import { getHotelHearts } from "@/lib/voting-config";
 
 interface VotingModalProps {
   hotelName: string;
@@ -49,15 +50,17 @@ export function VotingModal({ hotelName, hotelSlug, categorySlug }: VotingModalP
     setLoading(true);
 
     try {
+      const hearts = getHotelHearts(categorySlug, hotelName);
       const res = await fetch("/api/votes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim(),
-          hotelSlug,
-          hotelName,
-          categorySlug,
+          hotel_slug: hotelSlug,
+          voter_name: name.trim(),
+          voter_email: email.toLowerCase().trim(),
+          site: "chileadicto",
+          category: categorySlug,
+          hearts,
         }),
       });
 

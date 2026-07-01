@@ -13,12 +13,14 @@ function getHeaders() {
   };
 }
 
-// GET /api/votes/check?email=xxx&site=chileadicto
+// GET /api/votes/check?email=xxx&site=chileadicto&category=norte&hearts=5
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
     const email = url.searchParams.get("email");
     const site = url.searchParams.get("site") || "chileadicto";
+    const category = url.searchParams.get("category");
+    const heartsStr = url.searchParams.get("hearts");
 
     if (!email) {
       return NextResponse.json(
@@ -27,11 +29,20 @@ export async function GET(req: Request) {
       );
     }
 
-    // Buscar si el email ya votó en este sitio
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/votes?voter_email=eq.${encodeURIComponent(email.toLowerCase().trim())}&site=eq.${site}&select=hotel_slug,created_at`,
-      { headers: getHeaders() }
-    );
+    // Buscar votos del email en el sitio
+    let query = `${SUPABASE_URL}/rest/v1/votes?voter_email=eq.${encodeURIComponent(email.toLowerCase().trim())}&site=eq.${site}&select=hotel_slug,category,hearts,created_at`;
+
+    if (category) {
+      query += `&category=eq.${encodeURIComponent(category)}`;
+    }
+    if (heartsStr) {
+      const hearts = parseInt(heartsStr, 10);
+      if (!isNaN(hearts)) {
+        query += `&hearts=eq.${hearts}`;
+      }
+    }
+
+    const res = await fetch(query, { headers: getHeaders() });
 
     if (!res.ok) {
       throw new Error("Error al verificar voto");
@@ -39,15 +50,15 @@ export async function GET(req: Request) {
 
     const votes = await res.json();
 
-    if (votes.length > 0) {
-      return NextResponse.json({
-        has_voted: true,
-        hotel_slug: votes[0].hotel_slug,
-        voted_at: votes[0].created_at,
-      });
-    }
-
-    return NextResponse.json({ has_voted: false });
+    return NextResponse.json({
+      has_voted: votes.length > 0,
+      votes: votes.map((v: any) => ({
+        hotel_slug: v.hotel_slug,
+        category: v.category,
+        hearts: v.hearts,
+        voted_at: v.created_at,
+      })),
+    });
   } catch (err: any) {
     console.error("[GET /api/votes/check]", err);
     return NextResponse.json(

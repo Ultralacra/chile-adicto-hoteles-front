@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/contexts/language-context";
 import { useSiteApi } from "@/hooks/use-site-api";
@@ -74,8 +76,16 @@ export function CategoryNav({
 }: CategoryNavProps) {
   const { language } = useLanguage();
   const { fetchWithSite } = useSiteApi();
+  const router = useRouter();
   const [items, setItems] = useState<typeof fallbackCategories>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleBack = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("nav:direction", "back");
+    }
+    router.back();
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -180,6 +190,25 @@ export function CategoryNav({
         </ul>
       ) : items.length ? (
         <ul className="hidden lg:flex flex-nowrap items-center gap-2 text-sm font-medium whitespace-nowrap">
+          {normalizeSlug(activeCategory) !== "todos" && (
+            <li className="flex items-center gap-2">
+              <button
+                onClick={handleBack}
+                className="hover:opacity-80 transition-opacity"
+                aria-label={language === "es" ? "Volver" : "Back"}
+                title={language === "es" ? "Volver" : "Back"}
+              >
+                <Image
+                  src="/Group 8.png"
+                  alt={language === "es" ? "Volver" : "Back"}
+                  width={100}
+                  height={66}
+                  className="h-11 w-auto"
+                />
+              </button>
+              <span className="text-black">•</span>
+            </li>
+          )}
           {items.map((category, index) => (
             <li key={category.slug} className="flex items-center gap-2">
               {normalizeSlug(category.slug) === "guia-impresa" ? (
