@@ -81,22 +81,22 @@ export function HeroSlider({
   const [desktopLoadedFromDb, setDesktopLoadedFromDb] = useState(false);
   const [mobileLoadedFromDb, setMobileLoadedFromDb] = useState(false);
 
-  // Elegir fuentes en orden de prioridad: props -> API -> defaults
-  // If caller provided per-language arrays, prefer them and resolve to a single
-  // array where each entry can be either a string or an object {es,en}.
+  // Elegir fuentes en orden de prioridad: props -> API (BD) -> defaults
+  // Si la BD respondió (incluso con 0 items), se usa esa respuesta y NO
+  // se cae al fallback de imágenes hardcodeadas (que son de otro sitio).
   const desktopSourceRaw =
     desktopImagesByLang && desktopImagesByLang.length
       ? desktopImagesByLang
       : ((desktopImages && desktopImages.length ? desktopImages : undefined) ??
-        (desktopFromApi && desktopFromApi.length
-          ? desktopFromApi
-          : undefined) ??
+        (desktopLoadedFromDb && desktopFromApi ? desktopFromApi : undefined) ??
+        (desktopFromApi && desktopFromApi.length ? desktopFromApi : undefined) ??
         desktopImagesDefault);
 
   const mobileSourceRaw =
     mobileImagesByLang && mobileImagesByLang.length
       ? mobileImagesByLang
       : ((mobileImages && mobileImages.length ? mobileImages : undefined) ??
+        (mobileLoadedFromDb && mobileFromApi ? mobileFromApi : undefined) ??
         (mobileFromApi && mobileFromApi.length ? mobileFromApi : undefined) ??
         mobileImagesDefault);
 
@@ -169,15 +169,17 @@ export function HeroSlider({
 
         const didLoadFromDb = async () => {
           let used = false;
+          let dbDesktopImages: string[] = [];
+          let dbDesktopHrefs: string[] = [];
           if (needDesktop && sliderKeyDesktop) {
             const { images, hrefs } = await loadSet(sliderKeyDesktop);
             if (cancelled) return true;
-            if (images.length) {
-              setDesktopFromApi(images);
-              setDesktopHrefsFromApi(hrefs);
-              setDesktopLoadedFromDb(true);
-              used = true;
-            }
+            dbDesktopImages = images;
+            dbDesktopHrefs = hrefs;
+            setDesktopFromApi(images);
+            setDesktopHrefsFromApi(hrefs);
+            setDesktopLoadedFromDb(true);
+            used = true;
           }
           if (needMobile && sliderKeyMobile) {
             const { images, hrefs } = await loadSet(sliderKeyMobile);
@@ -185,9 +187,15 @@ export function HeroSlider({
             if (images.length) {
               setMobileFromApi(images);
               setMobileHrefsFromApi(hrefs);
-              setMobileLoadedFromDb(true);
-              used = true;
+            } else if (dbDesktopImages.length) {
+              setMobileFromApi(dbDesktopImages);
+              setMobileHrefsFromApi(dbDesktopHrefs);
+            } else {
+              setMobileFromApi([]);
+              setMobileHrefsFromApi([]);
             }
+            setMobileLoadedFromDb(true);
+            used = true;
           }
           return used;
         };
