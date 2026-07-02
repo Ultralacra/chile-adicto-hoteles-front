@@ -6,8 +6,8 @@ import { CategoryNav } from "@/components/category-nav";
 import Image from "next/image";
 import { useLanguage } from "@/contexts/language-context";
 
-const DESKTOP_BANNER = "/imaganescategorias/banner-home-votacion/BANER HOME.webp";
-const MOBILE_BANNER = "/imaganescategorias/banner-home-votacion/MOVIL-BANER HOME.webp";
+const DESKTOP_BANNER = "/imaganescategorias/banner-pagina-votacion/BANNER VOTACIONES.webp";
+const MOBILE_BANNER = "/imaganescategorias/banner-pagina-votacion/MOVIL - BANNER VOTACIONES.webp";
 
 const categories = [
   { slug: "norte", name: "NORTE DE CHILE", image: "/imaganescategorias/NORTE DE CHILE.webp" },

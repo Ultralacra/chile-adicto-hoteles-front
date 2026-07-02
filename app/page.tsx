@@ -145,7 +145,7 @@ export default function Page() {
 
         <div className="py-2">
           {/* Banner de votacion - desktop */}
-          {/* <div className="hidden md:block w-full">
+          <div className="hidden md:block w-full">
             <a href="/votacion" className="block w-full relative">
               <Image
                 src={DESKTOP_BANNER}
@@ -156,10 +156,10 @@ export default function Page() {
                 priority
               />
             </a>
-          </div> */}
+          </div>
 
           {/* Banner de votacion - mobile */}
-          {/* <div className="md:hidden w-full">
+          <div className="md:hidden w-full">
             <a href="/votacion" className="block w-full relative">
               <Image
                 src={MOBILE_BANNER}
@@ -170,10 +170,10 @@ export default function Page() {
                 priority
               />
             </a>
-          </div> */}
+          </div>
 
           {/* Slider principal */}
-          <div className="w-full">
+          {/* <div className="w-full">
             <HeroSlider
               autoHeight
               objectFit="contain"
@@ -182,7 +182,7 @@ export default function Page() {
               sliderKeyDesktop="home-desktop"
               sliderKeyMobile="home-mobile"
             />
-          </div>
+          </div> */}
 
           {/* Cards section below - full width */}
           <section className="mt-6">
