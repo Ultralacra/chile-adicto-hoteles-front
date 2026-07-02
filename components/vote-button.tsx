@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getHotelHearts } from "@/lib/voting-config";
 
 interface VoteButtonProps {
   hotelName: string;
@@ -40,10 +41,17 @@ export function VoteButton({
     setIsOpen(false);
   };
 
-  // Verificar si el email ya votó
+  // Verificar si el email ya votó en esta categoría + hearts
   const checkEmail = async (emailToCheck: string): Promise<boolean> => {
     try {
-      const url = `/api/votes/check?email=${encodeURIComponent(emailToCheck)}&site=${site}`;
+      const hearts = getHotelHearts(categorySlug || "", hotelSlug);
+      let url = `/api/votes/check?email=${encodeURIComponent(emailToCheck)}&site=${site}`;
+      if (categorySlug) {
+        url += `&category=${encodeURIComponent(categorySlug)}`;
+      }
+      if (hearts !== null) {
+        url += `&hearts=${hearts}`;
+      }
       const res = await fetch(url);
       const data = await res.json();
 
@@ -85,6 +93,12 @@ export function VoteButton({
       }
 
       // Si no ha votado, enviar el voto
+      const hearts = getHotelHearts(categorySlug || "", hotelSlug);
+      if (hearts !== 4 && hearts !== 5) {
+        setError("No se pudo determinar el rating de corazones para este hotel");
+        setLoading(false);
+        return;
+      }
       const res = await fetch("/api/votes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -93,6 +107,8 @@ export function VoteButton({
           voter_name: name.trim(),
           voter_email: email.toLowerCase().trim(),
           site,
+          category: categorySlug,
+          hearts,
         }),
       });
 
@@ -315,9 +331,9 @@ export function VoteButton({
                   Ya votaste
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Este correo ya tiene un voto registrado.
+                  Este correo ya tiene un voto registrado en esta categoría.
                   <br />
-                  <span className="font-medium">Solo puedes votar una vez.</span>
+                  <span className="font-medium">Solo puedes votar una vez por categoría y rating.</span>
                 </p>
                 <button
                   onClick={closeModal}

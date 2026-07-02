@@ -80,7 +80,12 @@ export function VotingHotelCard({
 
     try {
       // Enviar voto (con change_vote si ya confirmó)
-      const hearts = getHotelHearts(categorySlug, hotelName);
+      const hearts = getHotelHearts(categorySlug, hotelSlug);
+      if (hearts !== 4 && hearts !== 5) {
+        setError("No se pudo determinar el rating de corazones para este hotel");
+        setLoading(false);
+        return;
+      }
       const res = await fetch("/api/votes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -118,7 +123,12 @@ export function VotingHotelCard({
     setLoading(true);
 
     try {
-      const hearts = getHotelHearts(categorySlug, hotelName);
+      const hearts = getHotelHearts(categorySlug, hotelSlug);
+      if (hearts !== 4 && hearts !== 5) {
+        setError("No se pudo determinar el rating de corazones para este hotel");
+        setLoading(false);
+        return;
+      }
       const res = await fetch("/api/votes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
