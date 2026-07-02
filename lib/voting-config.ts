@@ -1,150 +1,143 @@
 // Configuración de votación: qué hoteles se muestran en cada categoría con su rating de corazones
-
-export type HotelVoteConfig = {
-  name: string; // Nombre exacto en español para matching
-  hearts: 4 | 5;
-};
+// Los valores son slugs de posts (no nombres)
 
 export type CategoryVoteConfig = {
-  hotels5: string[];
-  hotels4: string[];
+  slugs5: string[];
+  slugs4: string[];
 };
 
 export const VOTING_CATEGORIES: Record<string, CategoryVoteConfig> = {
   norte: {
-    hotels5: [
-      "CASA MOLLE ELQUI",
-      "CASA MOLLE LA PUNTILLA",
-      "NAYARA ALTO ATACAMA",
-      "CUMBRES ATACAMA",
-      "TIERRA ATACAMA",
-      "EXPLORA ATACAMA",
+    slugs5: [
+      "casamolle-elqui",
+      "casamolle-la-puntilla",
+      "nayara-alto-atacama",
+      "hotel-cumbres-san-pedro-de-atacama",
+      "tierra-atacama",
+      "explora-atacama",
     ],
-    hotels4: [
-      "OUR HABITAS ATACAMA",
-      "NOI CASA ATACAMA",
-      "DESERTICA ATACAMA",
-      "VIVELO ELQUI",
+    slugs4: [
+      "noi-casa-atacama",
+      "hotel-our-habitas-atacama",
+      "desertica-atacama",
+      "vivelo-elqui-landscape",
     ],
   },
   sur: {
-    hotels5: [
-      "AWA PUERTO VARAS",
-      "ANTUMALAL PUCON",
-      "AND BEYOND VIRA VIRA",
-      "PARK LAKE LUXURY HOTEL",
-      "HOTEL REFUGIA CHILOÉ",
-      "HOTEL LOBERÍAS DEL SUR",
-      "RESERVA BIOLÓGICA HUILO HUILO",
-      "PUYUHUAPI LODGE & SPA",
-      "NUEVO WYNDHAM PUERTO VARAS PETTRA",
+    slugs5: [
+      "awa-puerto-varas",
+      "antumalal-pucon",
+      "and-beyond-vira-vira",
+      "park-lake-luxury-hotel",
+      "hotel-refugia-chiloe",
+      "hotel-loberias-del-sur",
+      "reserva-biologica-huilo-huilo",
+      "puyuhuapi-lodge-spa",
+      "nuevo-wyndham-puerto-varas-pettra",
     ],
-    hotels4: [
-      "HOTEL & CAVA ESTANCIA RILAN",
-      "RAKAU LODGE",
-      "NI-NEWEN HOTEL & LODGE",
-      "HOTEL PUERTA DEL SUR",
-      "HOTEL PARQUE QUILQUICO",
-      "EL REMANSO DEL PUELO",
-      "CABO DE HORNOS",
-      "HOTEL CABO DE HORNOS",
-      "HOTEL BELLAVISTA PUERTO VARAS",
+    slugs4: [
+      "hotel-cava-estancia-rilan",
+      "rakau-lodge",
+      "ni-newen-hotel-lodge",
+      "hotel-puerta-del-sur",
+      "hotel-parque-quilquico",
+      "el-remanso-del-puelo",
+      "hotel-cabo-de-hornos",
+      "hotel-bellavista-puerto-varas",
     ],
   },
   "torres-del-paine": {
-    hotels5: [
-      "REMOTA PATAGONIA LODGE",
-      "EXPLORA TORRES DEL PAINE",
-      "THE SINGULAR PATAGONIA",
-      "RIO SERRANO HOTEL & SPA",
-      "TIERRA PATAGONIA",
-      "LAS TORRES PATAGONIA",
+    slugs5: [
+      "remota-patagonia-lodge",
+      "explora-torres-del-paine",
+      "hotel-the-singular-patagonia",
+      "rio-serrano-hotel-spa",
+      "hotel-tierra-patagonia",
+      "hotel-las-torres",
     ],
-    hotels4: [
-      "NOI INDIGO PATAGONIA",
-      "KAU RIO SERRANO PATAGONIA",
-      "COSTA AUSTRALIS PUERTO NATALES",
+    slugs4: [
+      "noi-indigo-patagonia",
+      "hotel-kau-rio-serrano",
+      "hotel-costa-australis",
     ],
   },
   centro: {
-    hotels5: [
-      "LAS MAJADAS DE PIRQUE",
-      "NOI PUMA LODGE",
-      "RADISSON BLU ACQUA CONCÓN",
-      "TERMAS DE JAHUEL",
+    slugs5: [
+      "hotel-las-majadas",
+      "noi-puma-lodge",
+      "hotel-radisson-blu-acqua-concon",
+      "termas-de-jahuel-hotel-y-spa",
     ],
-    hotels4: [
-      "TAKA MATANZAS",
-      "CASA ZAPALLAR",
-      "NOI BLEND COLCHAGUA",
-      "ALAIA PUNTA DE LOBOS",
-      "LA LEONERA HOTEL",
-      "PESEBRERA DEL MAULE",
+    slugs4: [
+      "hotel-taka-matanzas",
+      "casa-zapallar",
+      "noi-blend-colchagua",
+      "hotel-alaia-punta-de-lobos",
+      "leonera-hotel",
+      "la-pesebrera-del-maule",
     ],
   },
   santiago: {
-    hotels5: [
-      "NOI VITACURA",
-      "THE SINGULAR SANTIAGO",
-      "CUMBRES SANTIAGO",
-      "HOTEL W SANTIAGO",
-      "HOTEL AC MARRIOT CONSTANERA",
-      "DEBAINES SANTIAGO",
-      "WYNDHAM PETTRA SANTIAGO",
+    slugs5: [
+      "noi-vitacura",
+      "hotel-cumbres-lastarria",
+      "hotel-the-singular-santiago",
+      "w-santiago-un-lugar-para-conectar",
+      "ac-hotel-santiago-cenco-costanera",
+      "debaines-hotel",
+      "hotel-wyndham-santiago-pettra",
     ],
-    hotels4: [
-      "HOTEL LUCIANO K SANTIAGO",
-      "HOTEL CASTILLO ROJO",
-      "HOTEL ALMA CRUZ",
-      "PUEBLO LA DEHESA",
+    slugs4: [
+      "luciano-k-hotel",
+      "hotel-castillo-rojo",
+      "hotel-almacruz",
+      "pueblo-la-dehesa",
     ],
   },
   "isla-de-pascua": {
-    hotels5: ["EXPLORA RAPA NUI", "NAYARA HANGAROA"],
-    hotels4: [],
+    slugs5: [
+      "hotel-explora-rapa-nui-entre-playas-y-volcanes",
+      "hotel-nayara-hangaroa",
+    ],
+    slugs4: [],
   },
   "joyas-unicas": {
-    hotels5: [
-      "PATAGONIA CAMP",
-      "TAWA",
-      "ESTANCIA CERRO GUIDO",
-      "ALTIPLANICO RAPA NUI",
-      "UNAI ATACAMA",
+    slugs5: [
+      "patagonia-camp",
+      "tawa-refugio-puelo",
+      "hotel-estancia-cerro-guido",
+      "hotel-altiplanico-rapa-nui",
+      "unai-atacama-luxury-tents",
     ],
-    hotels4: [],
+    slugs4: [],
   },
   "hoteles-de-nieve": {
-    hotels5: ["TERMAS CHILLAN", "CORRALCO", "PORTILLO"],
-    hotels4: [],
+    slugs5: [
+      "hotel-termas-de-chillan",
+      "corralco-hotel-spa",
+      "hotel-ski-portillo",
+    ],
+    slugs4: [],
   },
   "hoteles-de-vina": {
-    hotels5: ["MATETIC", "VIBO WINE", "SANTA CRUZ", "BOUCHON", "CLOS APALTA RESIDENCE", "CASA REAL"],
-    hotels4: [],
+    slugs5: [
+      "hotel-boutique-la-casona-de-vina-matetic",
+      "vibo-wine-lodge",
+      "hotel-santacruz",
+      "hotel-casa-bouchon",
+      "clos-apalta-residence",
+      "hotel-casa-real",
+    ],
+    slugs4: [],
   },
 };
 
-// Construir mapa de nombre normalizado -> corazones para búsqueda rápida
-function normalizeName(name: string): string {
-  return name
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toUpperCase()
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-export function getHotelHearts(categorySlug: string, hotelName: string): number | null {
+export function getHotelHearts(categorySlug: string, hotelSlug: string): number | null {
   const config = VOTING_CATEGORIES[categorySlug];
   if (!config) return null;
 
-  const normalizedHotel = normalizeName(hotelName);
-
-  if (config.hotels5.some((h) => normalizeName(h) === normalizedHotel)) {
-    return 5;
-  }
-  if (config.hotels4.some((h) => normalizeName(h) === normalizedHotel)) {
-    return 4;
-  }
+  if (config.slugs5.includes(hotelSlug)) return 5;
+  if (config.slugs4.includes(hotelSlug)) return 4;
   return null;
 }
 
@@ -152,8 +145,8 @@ export function isVotingCategory(slug: string): boolean {
   return slug in VOTING_CATEGORIES;
 }
 
-export function getVotingHotelsForCategory(categorySlug: string): string[] {
+export function getVotingSlugsForCategory(categorySlug: string): string[] {
   const config = VOTING_CATEGORIES[categorySlug];
   if (!config) return [];
-  return [...config.hotels5, ...config.hotels4];
+  return [...config.slugs5, ...config.slugs4];
 }

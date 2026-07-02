@@ -13,7 +13,7 @@ import Image from "next/image";
 import {
   isVotingCategory,
   getHotelHearts,
-  getVotingHotelsForCategory,
+  getVotingSlugsForCategory,
 } from "@/lib/voting-config";
 import { VotingHotelCard } from "@/components/voting-hotel-card";
 import { BackButton } from "@/components/back-button";
@@ -73,14 +73,6 @@ const CATEGORY_API_SLUGS: Record<string, string> = {
   "hoteles-de-vina": "viñ",
 };
 
-const normalizeName = (name: string) =>
-  name
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toUpperCase()
-    .replace(/\s+/g, " ")
-    .trim();
-
 type ResolvedParams = { category: string };
 
 export default function VotacionCategoryPage({ params }: { params: any }) {
@@ -121,8 +113,7 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
 
     async function loadVotingHotels() {
       try {
-        const allowedNames = getVotingHotelsForCategory(category);
-        const normalizedAllowed = new Set(allowedNames.map(normalizeName));
+        const allowedSlugs = getVotingSlugsForCategory(category);
 
         const apiSlug = CATEGORY_API_SLUGS[category] || category;
         const res = await fetchWithSite(
@@ -132,32 +123,20 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
         let list = Array.isArray(rows) ? rows : [];
         list = list.filter((p: any) => !isHiddenFrontPost(p));
 
-        let votingHotels = list.filter((h: any) => {
-          const esName = normalizeName(h?.es?.name || "");
-          const enName = normalizeName(h?.en?.name || "");
-          return normalizedAllowed.has(esName) || normalizedAllowed.has(enName);
-        });
-
-        const foundNames = new Set(
-          votingHotels.map((h: any) => normalizeName(h?.es?.name || h?.en?.name || "")),
-        );
-        const missingNames = allowedNames.filter(
-          (name) => !foundNames.has(normalizeName(name)),
+        let votingHotels = list.filter((h: any) =>
+          allowedSlugs.includes(h.slug)
         );
 
-        if (missingNames.length > 0 && !cancelled) {
+        const foundSlugs = new Set(votingHotels.map((h: any) => h.slug));
+        const missingSlugs = allowedSlugs.filter((s) => !foundSlugs.has(s));
+
+        if (missingSlugs.length > 0 && !cancelled) {
           try {
             const allRes = await fetchWithSite("/api/posts");
             const allRows = allRes.ok ? await allRes.json() : [];
             const allList = Array.isArray(allRows) ? allRows : [];
-
-            for (const missing of missingNames) {
-              const normalizedMissing = normalizeName(missing);
-              const found = allList.find((h: any) => {
-                const esName = normalizeName(h?.es?.name || "");
-                const enName = normalizeName(h?.en?.name || "");
-                return esName === normalizedMissing || enName === normalizedMissing;
-              });
+            for (const slug of missingSlugs) {
+              const found = allList.find((h: any) => h.slug === slug);
               if (found && !votingHotels.some((h: any) => h.slug === found.slug)) {
                 votingHotels.push(found);
               }
@@ -175,17 +154,11 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
             .trim();
 
         const h5 = votingHotels
-          .filter((h: any) => {
-            const name = h?.es?.name || h?.en?.name || "";
-            return getHotelHearts(category, name) === 5;
-          })
+          .filter((h: any) => getHotelHearts(category, h.slug) === 5)
           .sort((a: any, b: any) => sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0);
 
         const h4 = votingHotels
-          .filter((h: any) => {
-            const name = h?.es?.name || h?.en?.name || "";
-            return getHotelHearts(category, name) === 4;
-          })
+          .filter((h: any) => getHotelHearts(category, h.slug) === 4)
           .sort((a: any, b: any) => sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0);
 
         if (!cancelled) {
