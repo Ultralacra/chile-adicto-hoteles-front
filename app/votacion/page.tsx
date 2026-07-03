@@ -6,19 +6,57 @@ import { CategoryNav } from "@/components/category-nav";
 import Image from "next/image";
 import { useLanguage } from "@/contexts/language-context";
 
-const DESKTOP_BANNER = "/imaganescategorias/banner-pagina-votacion/BANNER VOTACIONES.webp";
-const MOBILE_BANNER = "/imaganescategorias/banner-pagina-votacion/MOVIL - BANNER VOTACIONES.webp";
+const DESKTOP_BANNER =
+  "/imaganescategorias/banner-pagina-votacion/BANNER VOTACIONES.webp";
+const MOBILE_BANNER =
+  "/imaganescategorias/banner-pagina-votacion/MOVIL - BANNER VOTACIONES.webp";
 
 const categories = [
-  { slug: "norte", name: "NORTE DE CHILE", image: "/imaganescategorias/NORTE DE CHILE.webp" },
-  { slug: "centro", name: "CENTRO DE CHILE", image: "/imaganescategorias/CENTRO DE CHILE.webp" },
-  { slug: "sur", name: "SUR DE CHILE", image: "/imaganescategorias/SUR DE CHILE.webp" },
-  { slug: "santiago", name: "SANTIAGO DE CHILE", image: "/imaganescategorias/SANTIAGO DE CHILE.webp" },
-  { slug: "isla-de-pascua", name: "ISLA DE PASCUA", image: "/imaganescategorias/ISLA DE PASCUA.webp" },
-  { slug: "torres-del-paine", name: "TORRES DEL PAINE", image: "/imaganescategorias/TORRES DEL PAINE.webp" },
-  { slug: "joyas-unicas", name: "JOYAS ÚNICAS", image: "/imaganescategorias/JOYAS UNICAS.webp" },
-  { slug: "hoteles-de-nieve", name: "HOTEL DE NIEVE", image: "/imaganescategorias/DE SKI.webp" },
-  { slug: "hoteles-de-vina", name: "HOTEL DE VIÑA", image: "/imaganescategorias/DE VIÑA.webp" },
+  {
+    slug: "norte",
+    name: "NORTE DE CHILE",
+    image: "/imaganescategorias/NORTE DE CHILE.webp",
+  },
+  {
+    slug: "centro",
+    name: "CENTRO DE CHILE",
+    image: "/imaganescategorias/CENTRO DE CHILE.webp",
+  },
+  {
+    slug: "sur",
+    name: "SUR DE CHILE",
+    image: "/imaganescategorias/SUR DE CHILE.webp",
+  },
+  {
+    slug: "santiago",
+    name: "SANTIAGO DE CHILE",
+    image: "/imaganescategorias/SANTIAGO DE CHILE.webp",
+  },
+  {
+    slug: "isla-de-pascua",
+    name: "ISLA DE PASCUA",
+    image: "/imaganescategorias/ISLA DE PASCUA.webp",
+  },
+  {
+    slug: "torres-del-paine",
+    name: "TORRES DEL PAINE",
+    image: "/imaganescategorias/TORRES DEL PAINE.webp",
+  },
+  {
+    slug: "joyas-unicas",
+    name: "JOYAS ÚNICAS",
+    image: "/imaganescategorias/JOYAS UNICAS.webp",
+  },
+  {
+    slug: "hoteles-de-nieve",
+    name: "HOTEL DE NIEVE",
+    image: "/imaganescategorias/DE SKI.webp",
+  },
+  {
+    slug: "hoteles-de-vina",
+    name: "HOTEL DE VIÑA",
+    image: "/imaganescategorias/DE VIÑA.webp",
+  },
 ];
 
 export default function VotacionPage() {
@@ -35,7 +73,7 @@ export default function VotacionPage() {
 
         <div className="w-full">
           <div className="hidden md:block w-full mb-6">
-            <a href="/votacion" className="block w-full relative">
+            <a /* href="/votacion"  */ className="block w-full relative">
               <Image
                 src={DESKTOP_BANNER}
                 alt="Votación"
@@ -48,7 +86,7 @@ export default function VotacionPage() {
           </div>
 
           <div className="md:hidden w-full mb-6">
-            <a href="/votacion" className="block w-full relative">
+            <a /* href="/votacion"  */ className="block w-full relative">
               <Image
                 src={MOBILE_BANNER}
                 alt="Votación"
