@@ -14,7 +14,7 @@ interface VoteButtonProps {
   description: string;
   image: string;
   images?: string[];
-  imageVariant?: "default" | "tall";
+  imageVariant?: "default" | "tall" | "square";
 }
 
 export function VotingHotelCard({

@@ -245,7 +245,7 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
                           description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
                           image={hotel.featuredImage || hotel.images?.[0] || ""}
                           images={[hotel.featuredImage, ...(hotel.images || [])].filter(Boolean)}
-                          imageVariant="default"
+                          imageVariant={category === "norte" || category === "sur" ? "square" : "default"}
                           hotelName={hotel[language]?.name || hotel?.es?.name || ""}
                           hotelSlug={hotel.slug}
                           categorySlug={category}
@@ -285,15 +285,15 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-4">
                     {hotels4.map((hotel) => (
-                      <VotingHotelCard
-                        key={hotel.slug}
-                        slug={hotel.slug}
-                        name={hotel[language]?.name || hotel.en?.name || hotel.es?.name}
-                        subtitle={hotel[language]?.subtitle || hotel.en?.subtitle || hotel.es?.subtitle}
-                        description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
-                        image={hotel.featuredImage || hotel.images?.[0] || ""}
-                        images={[hotel.featuredImage, ...(hotel.images || [])].filter(Boolean)}
-                        imageVariant="default"
+                        <VotingHotelCard
+                          key={hotel.slug}
+                          slug={hotel.slug}
+                          name={hotel[language]?.name || hotel.en?.name || hotel.es?.name}
+                          subtitle={hotel[language]?.subtitle || hotel.en?.subtitle || hotel.es?.subtitle}
+                          description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
+                          image={hotel.featuredImage || hotel.images?.[0] || ""}
+                          images={[hotel.featuredImage, ...(hotel.images || [])].filter(Boolean)}
+                          imageVariant={category === "norte" || category === "sur" ? "square" : "default"}
                         hotelName={hotel[language]?.name || hotel?.es?.name || ""}
                         hotelSlug={hotel.slug}
                         categorySlug={category}

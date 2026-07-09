@@ -12,7 +12,7 @@ interface HotelCardProps {
   description: string;
   image: string;
   images?: string[];
-  imageVariant?: "default" | "tall";
+  imageVariant?: "default" | "tall" | "square";
   externalUrl?: string;
   voteElement?: ReactNode;
   asDiv?: boolean;
@@ -35,7 +35,9 @@ export function HotelCard({
   voteIconSize = "default",
 }: HotelCardProps) {
   const imageContainerClass =
-    imageVariant === "tall" ? "h-[500px]" : "aspect-[386/264]";
+    imageVariant === "tall" ? "h-[500px]"
+    : imageVariant === "square" ? "aspect-[1/1]"
+    : "aspect-[386/264]";
 
   const allImages =
     images && images.length > 0
@@ -58,7 +60,7 @@ export function HotelCard({
             <img
               src={allImages[0] || "/placeholder.svg"}
               alt={name}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+               className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
             />
           )}
         </div>
@@ -161,7 +163,7 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
               <img
                 src={src || "/placeholder.svg"}
                 alt={`${alt} ${idx + 1}`}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
                 draggable={false}
               />
             </div>
