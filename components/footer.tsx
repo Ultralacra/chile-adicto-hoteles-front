@@ -41,6 +41,7 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
       labelEn: "COLUMBIA EXPLORATIONS",
     },
     { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
+    { slug: "bases-legales", labelEs: "BASES LEGALES", labelEn: "LEGAL BASIS" },
   ];
 
   const fixedMenuOrder = [
@@ -53,6 +54,7 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
     "guia-impresa",
     "prensa",
     "nosotros",
+    "bases-legales",
     "exploraciones",
   ];
 
@@ -123,6 +125,7 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
     if (normalizedSlug === "todos") return "/";
     if (normalizedSlug === "nosotros") return "/nosotros";
     if (normalizedSlug === "guia-impresa") return "/CHAH-2025-baja.pdf";
+    if (normalizedSlug === "bases-legales") return "/bases-legales";
     const prettySlugs = new Set([
       "iconos",
       "ninos",

@@ -31,6 +31,7 @@ const fallbackCategories = [
   //   labelEn: "COLUMBIA EXPLORATIONS",
   // },
   { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
+  { slug: "bases-legales", labelEs: "BASES LEGALES", labelEn: "LEGAL BASIS" },
 ];
 
 const fixedMenuOrder = [
@@ -43,6 +44,7 @@ const fixedMenuOrder = [
   "guia-impresa",
   "prensa",
   "nosotros",
+  "bases-legales",
   // "exploraciones",
 ];
 
@@ -170,6 +172,7 @@ export function CategoryNav({
     if (normalizedSlug === "todos") return "/";
     if (normalizedSlug === "nosotros") return "/nosotros";
     if (normalizedSlug === "guia-impresa") return "/CHAH-2025-baja.pdf";
+    if (normalizedSlug === "bases-legales") return "/bases-legales";
     // Mantener URL bonita si existe rewrite; si no, usar /categoria/<slug>
     return prettySlugs.has(normalizedSlug)
       ? `/${normalizedSlug}`

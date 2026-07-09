@@ -105,6 +105,7 @@ export function MobileFooterContent({
       labelEn: "COLUMBIA EXPLORATIONS",
     },
     { slug: "nosotros", labelEs: "NOSOTROS", labelEn: "ABOUT US" },
+    { slug: "bases-legales", labelEs: "BASES LEGALES", labelEn: "LEGAL BASIS" },
   ];
 
   const fixedMenuOrder = [
@@ -118,6 +119,7 @@ export function MobileFooterContent({
     "guia-impresa",
     "prensa",
     "nosotros",
+    "bases-legales",
     "exploraciones",
   ];
 
@@ -147,6 +149,7 @@ export function MobileFooterContent({
     if (normalizedSlug === "todos") return "/";
     if (normalizedSlug === "nosotros") return "/nosotros";
     if (normalizedSlug === "guia-impresa") return "/CHAH-2025-baja.pdf";
+    if (normalizedSlug === "bases-legales") return "/bases-legales";
     if (normalizedSlug === "restaurantes") return "/restaurantes";
     if (normalizedSlug === "votacion") return "/votacion";
     return prettySlugs.has(normalizedSlug)
