@@ -34,7 +34,7 @@ export default function BasesLegalesPage() {
           <section className="mb-6">
             <h2 className="font-neutra-demi text-lg uppercase mb-2">SEGUNDO. EMPRESA ORGANIZADORA</h2>
             <p>
-              El Concurso es organizado por [COMPLETAR: razón social], sociedad del giro [COMPLETAR], Rol Único Tributario N&deg; [COMPLETAR], representada legalmente por [COMPLETAR: nombre del representante legal], ambos domiciliados en [COMPLETAR: domicilio], comuna de [COMPLETAR], Región [COMPLETAR], Chile.
+              El Concurso es organizado por Patricio Alejandro Miñano Araya, asesorías, servicios e inversiones EIRL, Rut 76.813.320-4, representada legalmente por Patricio Miñano Araya, Rut 10.531.415-9, ambos domiciliados en Padre Letelier 041, Providencia.
             </p>
           </section>
 
