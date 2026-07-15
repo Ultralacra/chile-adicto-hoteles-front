@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSiteApi } from "@/hooks/use-site-api";
+import { getStorageImageUrl } from "@/lib/supabase-storage";
 
 // Reordenado: ICONOS debe ser el primer slide según solicitud.
 // iconos, arquitectura, barrios, mercados, miradores, museos (CULTURA),
@@ -120,6 +121,15 @@ export function HeroSlider({
         })
       : []
   ) as string[];
+
+  const desktopTr = useMemo(
+    () => desktop.map((url) => getStorageImageUrl(url, 1920)),
+    [desktop],
+  );
+  const mobileTr = useMemo(
+    () => mobile.map((url) => getStorageImageUrl(url, 900)),
+    [mobile],
+  );
 
   // Embla for desktop and mobile instances
   const [emblaDesktopRef, emblaDesktopApi] = useEmblaCarousel({ loop: true });
@@ -282,7 +292,7 @@ export function HeroSlider({
         )}
         <div className="embla" ref={emblaDesktopRef as any}>
           <div className="embla__container flex">
-            {desktop.map((image, index) => (
+            {desktopTr.map((image, index) => (
               <div
                 key={`d-${index}`}
                 className="embla__slide min-w-full"
@@ -372,7 +382,7 @@ export function HeroSlider({
         )}
         <div className="embla" ref={emblaMobileRef as any}>
           <div className="embla__container flex">
-            {mobile.map((image, index) => (
+            {mobileTr.map((image, index) => (
               <div
                 key={`m-${index}`}
                 className="embla__slide min-w-full"

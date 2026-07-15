@@ -245,7 +245,7 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
                           description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
                           image={hotel.featuredImage || hotel.images?.[0] || ""}
                           images={[hotel.featuredImage, ...(hotel.images || [])].filter(Boolean)}
-                          imageVariant={category === "norte" || category === "sur" ? "square" : "default"}
+                          imageVariant="default"
                           hotelName={hotel[language]?.name || hotel?.es?.name || ""}
                           hotelSlug={hotel.slug}
                           categorySlug={category}
@@ -293,7 +293,7 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
                           description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
                           image={hotel.featuredImage || hotel.images?.[0] || ""}
                           images={[hotel.featuredImage, ...(hotel.images || [])].filter(Boolean)}
-                          imageVariant={category === "norte" || category === "sur" ? "square" : "default"}
+                          imageVariant="default"
                         hotelName={hotel[language]?.name || hotel?.es?.name || ""}
                         hotelSlug={hotel.slug}
                         categorySlug={category}

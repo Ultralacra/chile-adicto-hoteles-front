@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getStorageImageUrl } from "@/lib/supabase-storage";
 
 interface HotelCardProps {
   slug: string;
@@ -15,6 +17,7 @@ interface HotelCardProps {
   imageVariant?: "default" | "tall" | "square";
   externalUrl?: string;
   voteElement?: ReactNode;
+  onVoteClick?: () => void;
   asDiv?: boolean;
   hideDescription?: boolean;
   voteIconSize?: "default" | "large";
@@ -30,6 +33,7 @@ export function HotelCard({
   imageVariant = "default",
   externalUrl,
   voteElement,
+  onVoteClick,
   asDiv = false,
   hideDescription = false,
   voteIconSize = "default",
@@ -57,10 +61,12 @@ export function HotelCard({
           {hasCarousel ? (
             <CardCarousel images={allImages} alt={name} />
           ) : (
-            <img
-              src={allImages[0] || "/placeholder.svg"}
+            <Image
+              src={getStorageImageUrl(allImages[0], 400) || "/placeholder.svg"}
               alt={name}
-               className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+              fill
+              sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           )}
         </div>
@@ -68,7 +74,14 @@ export function HotelCard({
         {/* Content */}
         <div className="space-y-3 flex-1">
           {/* Heart Icon and Title */}
-          <div className="flex items-start gap-[10px]">
+          <div
+            className="flex items-start gap-[10px]"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              onVoteClick?.();
+            }}
+          >
             <div className="flex-shrink-0">
               {voteElement ? (
                 <div
@@ -110,9 +123,11 @@ export function HotelCard({
         </div>
 
         {/* Elegant divider pushed to bottom so all cards align */}
-        <div className="mt-auto pt-2 pb-5">
-          <div className="mx-auto h-[1px] w-3/4 bg-[#b4b4b8]" />
-        </div>
+        {!hideDescription && (
+          <div className="mt-auto pt-2 pb-5">
+            <div className="mx-auto h-[1px] w-3/4 bg-[#b4b4b8]" />
+          </div>
+        )}
       </article>
   );
 
@@ -160,10 +175,11 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
               key={idx}
               className="relative min-w-full h-full flex-shrink-0"
             >
-              <img
-                src={src || "/placeholder.svg"}
+              <Image
+                src={getStorageImageUrl(src, 400) || "/placeholder.svg"}
                 alt={`${alt} ${idx + 1}`}
-              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
                 draggable={false}
               />
             </div>
@@ -180,9 +196,9 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
           e.stopPropagation();
           emblaApi?.scrollPrev();
         }}
-        className="absolute left-1 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute left-1 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
       >
-        <ChevronLeft className="w-3 h-3" />
+        <ChevronLeft className="w-5 h-5" />
       </button>
       <button
         type="button"
@@ -192,9 +208,9 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
           e.stopPropagation();
           emblaApi?.scrollNext();
         }}
-        className="absolute right-1 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute right-1 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
       >
-        <ChevronRight className="w-3 h-3" />
+        <ChevronRight className="w-5 h-5" />
       </button>
 
       {/* Dots */}

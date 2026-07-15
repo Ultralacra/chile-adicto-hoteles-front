@@ -183,21 +183,20 @@ export function VotingHotelCard({
 
   return (
     <>
-      <div onClick={openModal} className="cursor-pointer">
-        <HotelCard
-          slug={slug}
-          name={name}
-          subtitle={subtitle}
-          description={description}
-          image={image}
-          images={images}
-          imageVariant={imageVariant}
-          voteElement={heartIcon}
-          asDiv
-          hideDescription
-          voteIconSize="large"
-        />
-      </div>
+      <HotelCard
+        slug={slug}
+        name={name}
+        subtitle={subtitle}
+        description={description}
+        image={image}
+        images={images}
+        imageVariant={imageVariant}
+        voteElement={heartIcon}
+        onVoteClick={openModal}
+        asDiv
+        hideDescription
+        voteIconSize="large"
+      />
 
       {/* Modal */}
       {isOpen && (

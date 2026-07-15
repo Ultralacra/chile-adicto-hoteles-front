@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
+import { getStorageImageUrl } from "@/lib/supabase-storage";
 import { useLanguage } from "@/contexts/language-context";
 import { CategoryNav } from "@/components/category-nav";
 import { useSiteApi } from "@/hooks/use-site-api";
@@ -494,7 +495,7 @@ export function HotelDetail({
                       className="relative min-w-full h-full flex-shrink-0 bg-black"
                     >
                       <Image
-                        src={src || "/placeholder.svg"}
+                        src={getStorageImageUrl(src, 1200) || "/placeholder.svg"}
                         alt={`${hotel.name} ${idx + 1}`}
                         fill
                         priority={idx === 0}
@@ -555,7 +556,7 @@ export function HotelDetail({
                       className="relative min-w-full h-full flex-shrink-0"
                     >
                       <Image
-                        src={src || "/placeholder.svg"}
+                        src={getStorageImageUrl(src, 1920) || "/placeholder.svg"}
                         alt={`Imagen ${idx + 1}`}
                         fill
                         draggable={false}
