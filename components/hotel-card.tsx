@@ -179,7 +179,7 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
                 src={getStorageImageUrl(src, 400) || "/placeholder.svg"}
                 alt={`${alt} ${idx + 1}`}
                 fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                className="object-contain transition-transform duration-300 group-hover:scale-105"
                 draggable={false}
               />
             </div>
@@ -196,7 +196,7 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
           e.stopPropagation();
           emblaApi?.scrollPrev();
         }}
-        className="absolute left-1 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute left-1 top-1/2 -translate-y-1/2 z-10 text-white bg-black/40 hover:bg-black/60 backdrop-blur-[2px] p-2 rounded-full transition-opacity"
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
@@ -208,7 +208,7 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
           e.stopPropagation();
           emblaApi?.scrollNext();
         }}
-        className="absolute right-1 top-1/2 -translate-y-1/2 z-10 text-white bg-black/30 hover:bg-black/50 backdrop-blur-[2px] p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute right-1 top-1/2 -translate-y-1/2 z-10 text-white bg-black/40 hover:bg-black/60 backdrop-blur-[2px] p-2 rounded-full transition-opacity"
       >
         <ChevronRight className="w-5 h-5" />
       </button>
