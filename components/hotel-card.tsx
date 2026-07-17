@@ -179,7 +179,7 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
                 src={getStorageImageUrl(src, 400) || "/placeholder.svg"}
                 alt={`${alt} ${idx + 1}`}
                 fill
-                className="object-contain transition-transform duration-300 group-hover:scale-105"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
                 draggable={false}
               />
             </div>

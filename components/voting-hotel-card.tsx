@@ -13,7 +13,6 @@ interface VoteButtonProps {
   subtitle: string;
   description: string;
   image: string;
-  images?: string[];
   imageVariant?: "default" | "tall" | "square";
 }
 
@@ -26,7 +25,6 @@ export function VotingHotelCard({
   subtitle,
   description,
   image,
-  images,
   imageVariant = "default",
 }: VoteButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -189,7 +187,6 @@ export function VotingHotelCard({
         subtitle={subtitle}
         description={description}
         image={image}
-        images={images}
         imageVariant={imageVariant}
         voteElement={heartIcon}
         onVoteClick={openModal}
