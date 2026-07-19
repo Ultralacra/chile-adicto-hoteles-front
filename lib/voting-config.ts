@@ -44,6 +44,8 @@ export const VOTING_CATEGORIES: Record<string, CategoryVoteConfig> = {
       "el-remanso-del-puelo",
       "hotel-cabo-de-hornos",
       "hotel-bellavista-puerto-varas",
+      "hotel-boutique-casa-d-agostino-un-refugio-de-elegancia-italiana-en-el-corazon-de-santiago",
+      "hotel-magnolia-santiago-un-lujo-para-el-centro-de-la-capital",
     ],
   },
   "torres-del-paine": {
