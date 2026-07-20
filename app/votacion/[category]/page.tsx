@@ -3,7 +3,7 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CategoryNav } from "@/components/category-nav";
-import { buildCardExcerpt } from "@/lib/utils";
+import { buildCardExcerpt, normalizeImageUrl } from "@/lib/utils";
 import { isHiddenFrontPost } from "@/lib/post-visibility";
 import { useEffect, useState, use } from "react";
 import { Spinner } from "@/components/ui/spinner";
@@ -67,6 +67,27 @@ const CATEGORY_BANNERS: Record<string, { desktop4?: string; mobile4?: string; de
     mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES JOYAS ÚNICAS.webp",
   },
 };
+
+function deriveVotingImages(hotel: any): { image: string } {
+  const rawImages: string[] = Array.isArray(hotel.images)
+    ? hotel.images.filter(Boolean)
+    : [];
+  const isPortada = (s: string) =>
+    /portada/i.test(normalizeImageUrl(s).replace(/\.[^.]+$/, ""));
+
+  const portada = rawImages.find((s) => isPortada(s));
+  const featured = portada || String(hotel.featuredImage || "").trim() || rawImages[0] || "";
+
+  console.log("[deriveVotingImages]", hotel.slug, {
+    featuredImage_db: hotel.featuredImage,
+    portada_found: portada,
+    finalFeatured: featured,
+  });
+
+  return {
+    image: featured,
+  };
+}
 
 const CATEGORY_API_SLUGS: Record<string, string> = {
   "hoteles-de-nieve": "ski",
@@ -243,8 +264,7 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
                           name={hotel[language]?.name || hotel.en?.name || hotel.es?.name}
                           subtitle={hotel[language]?.subtitle || hotel.en?.subtitle || hotel.es?.subtitle}
                           description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
-                          image={hotel.featuredImage || hotel.images?.[0] || ""}
-                          images={(hotel.images?.length ? hotel.images : [hotel.featuredImage]).filter(Boolean)}
+                          {...deriveVotingImages(hotel)}
                           imageVariant="default"
                           hotelName={hotel[language]?.name || hotel?.es?.name || ""}
                           hotelSlug={hotel.slug}
@@ -291,8 +311,7 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
                           name={hotel[language]?.name || hotel.en?.name || hotel.es?.name}
                           subtitle={hotel[language]?.subtitle || hotel.en?.subtitle || hotel.es?.subtitle}
                           description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
-                          image={hotel.featuredImage || hotel.images?.[0] || ""}
-                          images={(hotel.images?.length ? hotel.images : [hotel.featuredImage]).filter(Boolean)}
+                          {...deriveVotingImages(hotel)}
                           imageVariant="default"
                         hotelName={hotel[language]?.name || hotel?.es?.name || ""}
                         hotelSlug={hotel.slug}

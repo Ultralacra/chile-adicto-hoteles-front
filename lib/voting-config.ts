@@ -33,7 +33,7 @@ export const VOTING_CATEGORIES: Record<string, CategoryVoteConfig> = {
       "hotel-loberias-del-sur",
       "reserva-biologica-huilo-huilo",
       "puyuhuapi-lodge-spa",
-      "nuevo-wyndham-puerto-varas-pettra",
+      "wyndham-pettra-puerto-varas",
     ],
     slugs4: [
       "hotel-cava-estancia-rilan",
