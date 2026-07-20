@@ -73,7 +73,7 @@ export const VOTING_CATEGORIES: Record<string, CategoryVoteConfig> = {
       "casa-zapallar",
       "noi-blend-colchagua",
       "hotel-alaia-punta-de-lobos",
-      "leonera-hotel",
+      "leonera",
       "la-pesebrera-del-maule",
     ],
   },
