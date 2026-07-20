@@ -68,7 +68,7 @@ const CATEGORY_BANNERS: Record<string, { desktop4?: string; mobile4?: string; de
   },
 };
 
-function deriveVotingImages(hotel: any): { image: string } {
+function deriveVotingImages(hotel: any): { image: string; images: string[] } {
   const rawImages: string[] = Array.isArray(hotel.images)
     ? hotel.images.filter(Boolean)
     : [];
@@ -82,10 +82,12 @@ function deriveVotingImages(hotel: any): { image: string } {
     featuredImage_db: hotel.featuredImage,
     portada_found: portada,
     finalFeatured: featured,
+    totalImages: rawImages.length,
   });
 
   return {
     image: featured,
+    images: rawImages,
   };
 }
 
