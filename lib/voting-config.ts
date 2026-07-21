@@ -32,6 +32,7 @@ export const VOTING_CATEGORIES: Record<string, CategoryVoteConfig> = {
       "hotel-refugia-chiloe",
       "hotel-loberias-del-sur",
       "reserva-biologica-huilo-huilo",
+      "puyehue-wellness-spa-resort",
       "puyuhuapi-lodge-spa",
       "wyndham-pettra-puerto-varas",
     ],
