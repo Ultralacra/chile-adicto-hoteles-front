@@ -41,6 +41,7 @@ export const VOTING_CATEGORIES: Record<string, CategoryVoteConfig> = {
       "rakau-lodge",
       "ni-newen-hotel-lodge",
       "hotel-puerta-del-sur",
+      "hotel-puerta-del-sur-el-primer-hotel-santuario-en-la-primera-ciudad-humedal-de-america-latina",
       "hotel-parque-quilquico",
       "el-remanso-del-puelo",
       "hotel-cabo-de-hornos",
