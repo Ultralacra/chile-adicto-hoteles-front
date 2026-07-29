@@ -3,7 +3,7 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CategoryNav } from "@/components/category-nav";
-import { buildCardExcerpt, normalizeImageUrl } from "@/lib/utils";
+import { buildCardExcerpt } from "@/lib/utils";
 import { isHiddenFrontPost } from "@/lib/post-visibility";
 import { useEffect, useState, use } from "react";
 import { Spinner } from "@/components/ui/spinner";
@@ -72,23 +72,11 @@ function deriveVotingImages(hotel: any): { image: string; images: string[] } {
   const rawImages: string[] = Array.isArray(hotel.images)
     ? hotel.images.filter(Boolean)
     : [];
-  const isPortada = (s: string) =>
-    /portada/i.test(normalizeImageUrl(s).replace(/\.[^.]+$/, ""));
-
-  const portada = rawImages.find((s) => isPortada(s));
-  const featured = portada || String(hotel.featuredImage || "").trim() || rawImages[0] || "";
-
-  console.log("[deriveVotingImages]", hotel.slug, {
-    featuredImage_db: hotel.featuredImage,
-    portada_found: portada,
-    finalFeatured: featured,
-    totalImages: rawImages.length,
-  });
-
-  return {
-    image: featured,
-    images: rawImages,
-  };
+  const featured = String(hotel.featuredImage || "").trim() || rawImages[0] || "";
+  const orderedImages = featured
+    ? [featured, ...rawImages.filter((img) => img !== featured)]
+    : rawImages;
+  return { image: featured, images: orderedImages };
 }
 
 const CATEGORY_API_SLUGS: Record<string, string> = {
