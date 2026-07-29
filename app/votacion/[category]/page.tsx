@@ -21,9 +21,9 @@ import { notFound } from "next/navigation";
 
 const CATEGORY_BANNERS: Record<string, { desktop4?: string; mobile4?: string; desktop5: string; mobile5: string }> = {
   norte: {
-    desktop4: "/imaganescategorias/banner-internos-categorias/NORTE 4 CORAZONES.webp",
+    desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-NORTE 4 CORAZONES.webp",
     mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - NORTE 4 CORAZONES.webp",
-    desktop5: "/imaganescategorias/banner-internos-categorias/NORTE 5 CORAZONES.webp",
+    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-NORTE 5 CORAZONES.webp",
     mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - NORTE 5 CORAZONES.webp",
   },
   centro: {
@@ -33,26 +33,26 @@ const CATEGORY_BANNERS: Record<string, { desktop4?: string; mobile4?: string; de
     mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-CENTRO 5 CORAZONES.webp",
   },
   sur: {
-    desktop4: "/imaganescategorias/banner-internos-categorias/SUR 4 CORAZONES.webp",
+    desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-SUR 4 CORAZONES.webp",
     mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - SUR 4 CORAZONES.webp",
-    desktop5: "/imaganescategorias/banner-internos-categorias/SUR 5 CORAZONES.webp",
+    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-SUR 5 CORAZONES.webp",
     mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - SUR 5 CORAZONES.webp",
   },
   santiago: {
     desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-SANTIAGO 4 CORAZONES.webp",
-    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL-SANTIAGO 4 CORAZONES.webp",
+    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - SANTIAGO 4 CORAZONES.webp",
     desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-SANTIAGO 5 CORAZONES.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-SANTIAGO 5 CORAZONES.webp",
+    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - SANTIAGO 5 CORAZONES.webp",
   },
   "torres-del-paine": {
     desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-TORRES DEL PAINE 4 CORAZONES.webp",
-    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL-TORRES DEL PAINE 4 CORAZONES.webp",
+    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - TORRES DEL PAINE 4 CORAZONES.webp",
     desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-TORRES DEL PAINE 5 CORAZONES.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-TORRES DEL PAINE 5 CORAZONES.webp",
+    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - TORRES DEL PAINE 5 CORAZONES.webp",
   },
   "isla-de-pascua": {
     desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-ISLA DE PASCUA.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES ISLA DE PASCUA\u00A0.webp",
+    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES ISLA DE PASCUA.webp",
   },
   "hoteles-de-vina": {
     desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-HOTELES DE VIÑA.webp",
