@@ -62,7 +62,7 @@ export function HotelCard({
             <CardCarousel images={allImages} alt={name} />
           ) : (
             <Image
-              src={getStorageImageUrl(allImages[0], 400) || "/placeholder.svg"}
+              src={getStorageImageUrl(allImages[0], 1200) || "/placeholder.svg"}
               alt={name}
               fill
               sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
@@ -176,7 +176,7 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
               className="relative min-w-full h-full flex-shrink-0"
             >
               <Image
-                src={getStorageImageUrl(src, 400) || "/placeholder.svg"}
+                src={getStorageImageUrl(src, 1200) || "/placeholder.svg"}
                 alt={`${alt} ${idx + 1}`}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
