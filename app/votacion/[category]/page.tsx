@@ -3,7 +3,7 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CategoryNav } from "@/components/category-nav";
-import { buildCardExcerpt } from "@/lib/utils";
+import { buildCardExcerpt, normalizeImageUrl } from "@/lib/utils";
 import { isHiddenFrontPost } from "@/lib/post-visibility";
 import { useEffect, useState, use } from "react";
 import { Spinner } from "@/components/ui/spinner";
@@ -73,9 +73,22 @@ function deriveVotingImages(hotel: any): { image: string; images: string[] } {
     ? hotel.images.filter(Boolean)
     : [];
   const featured = String(hotel.featuredImage || "").trim() || rawImages[0] || "";
-  const orderedImages = featured
-    ? [featured, ...rawImages.filter((img) => img !== featured)]
-    : rawImages;
+  const seen = new Set<string>();
+  const orderedImages = featured ? [featured] : [];
+
+  if (featured) seen.add(normalizeImageUrl(featured));
+
+  // La imagen en posición 0 corresponde a "imagen 1", la portada alternativa
+  // que ya está representada por featuredImage en las tarjetas de votación.
+  const galleryImages = featured && rawImages.length > 0 ? rawImages.slice(1) : rawImages;
+
+  for (const img of galleryImages) {
+    const key = normalizeImageUrl(img);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    orderedImages.push(img);
+  }
+
   return { image: featured, images: orderedImages };
 }
 
