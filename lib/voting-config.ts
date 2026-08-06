@@ -10,7 +10,6 @@ export const VOTING_CATEGORIES: Record<string, CategoryVoteConfig> = {
   norte: {
     slugs5: [
       "casamolle-elqui",
-      "casamolle-la-puntilla",
       "nayara-alto-atacama",
       "hotel-cumbres-san-pedro-de-atacama",
       "tierra-atacama",
