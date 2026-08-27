@@ -8,12 +8,12 @@ export function getStorageImageUrl(
 
   if (!SUPABASE_STORAGE_URL_RE.test(url)) return url;
 
+  if (!width) return url;
+
   const renderUrl = url.replace(
     "/storage/v1/object/public/",
     "/storage/v1/render/image/public/",
   );
-
-  if (!width) return renderUrl;
 
   const separator = renderUrl.includes("?") ? "&" : "?";
   return `${renderUrl}${separator}width=${width}&resize=contain&quality=80`;
