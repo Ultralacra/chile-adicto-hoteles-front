@@ -28,7 +28,11 @@ export function MobileFooterContent({
     show_in_menu?: boolean | null;
   };
 
-  const normalizeSlug = (value: string) => String(value).trim().toLowerCase();
+  const normalizeSlug = (value: string) => {
+    const slug = String(value).trim().toLowerCase();
+    // La BD tiene un registro antiguo con un carácter extra.
+    return slug === "santiagoo" ? "santiago" : slug;
+  };
 
   type ApiCommuneRow = {
     slug: string;
@@ -115,6 +119,7 @@ export function MobileFooterContent({
     "sur",
     "isla-de-pascua",
     "santiago",
+    "torres-del-paine",
     "votacion",
     "guia-impresa",
     "prensa",
@@ -200,7 +205,7 @@ export function MobileFooterContent({
           uniqueBySlug.set("todos", fallbackItems[0]);
         }
 
-        const finalList = fixedMenuOrder
+        const orderedFixedItems = fixedMenuOrder
           .map((slug) => {
             const fromApi = uniqueBySlug.get(slug);
             const fallback = fallbackItems.find((x) => x.slug === slug);
@@ -209,6 +214,12 @@ export function MobileFooterContent({
           .filter((item): item is (typeof fallbackItems)[number] =>
             Boolean(item),
           );
+        // Conservar las categorías nuevas creadas en la BD después del orden histórico.
+        const fixedSlugs = new Set(fixedMenuOrder);
+        const dynamicItems = Array.from(uniqueBySlug.values()).filter(
+          (item) => !fixedSlugs.has(item.slug),
+        );
+        const finalList = [...orderedFixedItems, ...dynamicItems];
 
         if (!cancelled) {
           if (finalList.length) {
