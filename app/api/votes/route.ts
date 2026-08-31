@@ -14,6 +14,15 @@ function getHeaders() {
   };
 }
 
+function getReadHeaders() {
+  return {
+    apikey: SUPABASE_SERVICE_KEY!,
+    Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+    "Content-Type": "application/json",
+    Prefer: "count=exact",
+  };
+}
+
 // POST /api/votes - Crear un voto
 export async function POST(req: Request) {
   try {
@@ -163,21 +172,105 @@ export async function GET(req: Request) {
       return NextResponse.json({ ok: true, counts, total: votes.length });
     }
 
-    // Listar todos los votos (admin)
-    let query = `?site=eq.${site}&order=created_at.desc&limit=1000`;
+    // Leer todos los votos en páginas para no truncar el resumen en 1000 registros.
+    const pageSize = 1000;
+    let baseQuery = `?site=eq.${encodeURIComponent(site)}`;
     if (hotel) {
-      query += `&hotel_slug=eq.${encodeURIComponent(hotel)}`;
+      baseQuery += `&hotel_slug=eq.${encodeURIComponent(hotel)}`;
     }
 
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/votes${query}`, {
-      headers: getHeaders(),
+    const firstRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/votes${baseQuery}&order=created_at.desc&limit=${pageSize}&offset=0`,
+      { headers: getReadHeaders() },
+    );
+    if (!firstRes.ok) throw new Error("Error al listar votos");
+
+    const firstPage = await firstRes.json();
+    const contentRange = firstRes.headers.get("content-range") || "";
+    const totalFromHeader = Number.parseInt(contentRange.split("/")[1] || "", 10);
+    const pages: any[][] = [firstPage];
+    if (Number.isFinite(totalFromHeader)) {
+      const offsets = Array.from(
+        { length: Math.max(0, Math.ceil(totalFromHeader / pageSize) - 1) },
+        (_, index) => (index + 1) * pageSize,
+      );
+      pages.push(
+        ...(await Promise.all(
+          offsets.map(async (offset) => {
+            const pageRes = await fetch(
+              `${SUPABASE_URL}/rest/v1/votes${baseQuery}&order=created_at.desc&limit=${pageSize}&offset=${offset}`,
+              { headers: getReadHeaders() },
+            );
+            if (!pageRes.ok) throw new Error("Error al listar votos");
+            return pageRes.json();
+          }),
+        )),
+      );
+    } else {
+      let offset = pageSize;
+      while (pages[pages.length - 1].length === pageSize) {
+        const pageRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/votes${baseQuery}&order=created_at.desc&limit=${pageSize}&offset=${offset}`,
+          { headers: getReadHeaders() },
+        );
+        if (!pageRes.ok) throw new Error("Error al listar votos");
+        const page = await pageRes.json();
+        pages.push(page);
+        offset += pageSize;
+      }
+    }
+    const votes = pages.flat();
+
+    const counts: Record<string, number> = {};
+    const categoryCounts: Record<string, number> = {};
+    const categoryHotels: Record<string, Record<string, number>> = {};
+
+    for (const vote of votes) {
+      const hotelSlug = String(vote.hotel_slug || "");
+      const category = String(vote.category || "Sin categoría").trim();
+      const hearts = Number(vote.hearts) || 0;
+      const categoryKey = `${category}|${hearts}`;
+
+      counts[hotelSlug] = (counts[hotelSlug] || 0) + 1;
+      categoryCounts[categoryKey] = (categoryCounts[categoryKey] || 0) + 1;
+      categoryHotels[categoryKey] ||= {};
+      categoryHotels[categoryKey][hotelSlug] =
+        (categoryHotels[categoryKey][hotelSlug] || 0) + 1;
+    }
+
+    const hotels = Object.entries(counts)
+      .sort(([, first], [, second]) => second - first)
+      .map(([hotelSlug, count]) => ({ hotelSlug, count }));
+    const categorySummaries = Object.entries(categoryCounts).map(
+      ([key, total]) => {
+        const [category, hearts] = key.split("|");
+        const categoryTopHotels = Object.entries(categoryHotels[key])
+          .sort(([, first], [, second]) => second - first)
+          .map(([hotelSlug, count]) => ({ hotelSlug, count }));
+        return {
+          category,
+          hearts: Number(hearts),
+          total,
+          hotels: categoryTopHotels,
+        };
+      },
+    );
+    const uniqueVoters = new Set(
+      votes
+        .map((vote: any) => String(vote.voter_email || "").trim().toLowerCase())
+        .filter(Boolean),
+    ).size;
+
+    return NextResponse.json({
+      ok: true,
+      votes,
+      total: votes.length,
+      totalHotels: hotels.length,
+      uniqueVoters,
+      categorySummaries,
+      hotels,
+      topHotels: hotels.slice(0, 10),
     });
-
-    if (!res.ok) throw new Error("Error al listar votos");
-
-    const votes = await res.json();
-
-    return NextResponse.json({ ok: true, votes, total: votes.length });
   } catch (err: any) {
     console.error("[GET /api/votes]", err);
     return NextResponse.json(
