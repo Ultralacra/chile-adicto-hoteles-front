@@ -48,8 +48,10 @@ const HOME_RESERVED_POSTS = [
   },
 ];
 
-const DESKTOP_BANNER = "/imaganescategorias/banner-home-votacion/BANER HOME.webp";
-const MOBILE_BANNER = "/imaganescategorias/banner-home-votacion/MOVIL-BANER HOME.webp";
+const DESKTOP_BANNER =
+  "/imaganescategorias/banner-home-votacion/BANER HOME.webp";
+const MOBILE_BANNER =
+  "/imaganescategorias/banner-home-votacion/MOVIL-BANER HOME.webp";
 
 export default function Page() {
   const { language } = useLanguage();
@@ -146,7 +148,12 @@ export default function Page() {
         <div className="py-2">
           {/* Banner de votacion - desktop */}
           <div className="hidden md:block w-full">
-            <a href="/votacion" className="block w-full relative">
+            <a
+              href="https://www.santiagoadicto.cl/resultados"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full relative"
+            >
               <Image
                 src={DESKTOP_BANNER}
                 alt="Votación"
@@ -160,7 +167,12 @@ export default function Page() {
 
           {/* Banner de votacion - mobile */}
           <div className="md:hidden w-full">
-            <a href="/votacion" className="block w-full relative">
+            <a
+              href="https://www.santiagoadicto.cl/resultados"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full relative"
+            >
               <Image
                 src={MOBILE_BANNER}
                 alt="Votación"
