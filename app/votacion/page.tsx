@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer";
 import { CategoryNav } from "@/components/category-nav";
 import Image from "next/image";
 import { useLanguage } from "@/contexts/language-context";
+import { useState } from "react";
 
 const DESKTOP_BANNER =
   "/imaganescategorias/banner-pagina-votacion/BANNER VOTACIONES.webp";
@@ -61,10 +62,39 @@ const categories = [
 
 export default function VotacionPage() {
   const { language } = useLanguage();
+  const [showFinishedModal, setShowFinishedModal] = useState(true);
 
   return (
     <div className="min-h-screen bg-white">
       <Header showHomeSecurityBanner={false} />
+
+      {showFinishedModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="voting-finished-title"
+        >
+          <div className="w-full max-w-md rounded-lg bg-white p-8 text-center shadow-xl">
+            <h2
+              id="voting-finished-title"
+              className="font-neutra-demi text-2xl uppercase text-[#E4032C]"
+            >
+              Evento finalizado
+            </h2>
+            <p className="mt-4 text-gray-700">
+              El periodo de votaciones ha terminado. ¡Gracias por participar!
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowFinishedModal(false)}
+              className="mt-6 rounded bg-[#E4032C] px-8 py-2 font-medium text-white transition-colors hover:bg-[#c00224]"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
 
       <main className="site-inner py-4">
         <div className="hidden lg:block">
