@@ -148,7 +148,7 @@ export default function Page() {
         <div className="py-2">
           {/* Banner de votacion - desktop */}
           <div className="hidden md:block w-full">
-            <div className="block w-full relative">
+            <a href="/resultados" className="block w-full relative">
               <Image
                 src={DESKTOP_BANNER}
                 alt="Votación"
@@ -157,12 +157,12 @@ export default function Page() {
                 className="w-full h-auto"
                 priority
               />
-            </div>
+            </a>
           </div>
 
           {/* Banner de votacion - mobile */}
           <div className="md:hidden w-full">
-            <div className="block w-full relative">
+            <a href="/resultados" className="block w-full relative">
               <Image
                 src={MOBILE_BANNER}
                 alt="Votación"
@@ -171,7 +171,7 @@ export default function Page() {
                 className="w-full h-auto"
                 priority
               />
-            </div>
+            </a>
           </div>
 
           {/* Slider principal */}
