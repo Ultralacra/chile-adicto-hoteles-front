@@ -4,6 +4,15 @@ export const runtime = "nodejs";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const HOTEL_SLUG_ALIASES: Record<string, string> = {
+  "hotel-puerta-del-sur":
+    "hotel-puerta-del-sur-el-primer-hotel-santuario-en-la-primera-ciudad-humedal-de-america-latina",
+};
+
+function canonicalHotelSlug(value: unknown): string {
+  const slug = String(value || "").trim().toLowerCase();
+  return HOTEL_SLUG_ALIASES[slug] || slug;
+}
 
 function getHeaders() {
   return {
@@ -176,11 +185,11 @@ export async function GET(req: Request) {
     const pageSize = 1000;
     let baseQuery = `?site=eq.${encodeURIComponent(site)}`;
     if (hotel) {
-      baseQuery += `&hotel_slug=eq.${encodeURIComponent(hotel)}`;
+      baseQuery += `&hotel_slug=eq.${encodeURIComponent(canonicalHotelSlug(hotel))}`;
     }
 
     const firstRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/votes${baseQuery}&order=created_at.desc&limit=${pageSize}&offset=0`,
+      `${SUPABASE_URL}/rest/v1/votes${baseQuery}&select=hotel_slug,category,hearts,voter_email&limit=${pageSize}&offset=0`,
       { headers: getReadHeaders() },
     );
     if (!firstRes.ok) throw new Error("Error al listar votos");
@@ -198,7 +207,7 @@ export async function GET(req: Request) {
         ...(await Promise.all(
           offsets.map(async (offset) => {
             const pageRes = await fetch(
-              `${SUPABASE_URL}/rest/v1/votes${baseQuery}&order=created_at.desc&limit=${pageSize}&offset=${offset}`,
+              `${SUPABASE_URL}/rest/v1/votes${baseQuery}&select=hotel_slug,category,hearts,voter_email&limit=${pageSize}&offset=${offset}`,
               { headers: getReadHeaders() },
             );
             if (!pageRes.ok) throw new Error("Error al listar votos");
@@ -210,7 +219,7 @@ export async function GET(req: Request) {
       let offset = pageSize;
       while (pages[pages.length - 1].length === pageSize) {
         const pageRes = await fetch(
-          `${SUPABASE_URL}/rest/v1/votes${baseQuery}&order=created_at.desc&limit=${pageSize}&offset=${offset}`,
+          `${SUPABASE_URL}/rest/v1/votes${baseQuery}&select=hotel_slug,category,hearts,voter_email&limit=${pageSize}&offset=${offset}`,
           { headers: getReadHeaders() },
         );
         if (!pageRes.ok) throw new Error("Error al listar votos");
@@ -226,7 +235,7 @@ export async function GET(req: Request) {
     const categoryHotels: Record<string, Record<string, number>> = {};
 
     for (const vote of votes) {
-      const hotelSlug = String(vote.hotel_slug || "");
+      const hotelSlug = canonicalHotelSlug(vote.hotel_slug);
       const category = String(vote.category || "Sin categoría").trim();
       const hearts = Number(vote.hearts) || 0;
       const categoryKey = `${category}|${hearts}`;
