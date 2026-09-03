@@ -31,7 +31,10 @@ export function MobileFooterContent({
   const normalizeSlug = (value: string) => {
     const slug = String(value).trim().toLowerCase();
     // La BD tiene un registro antiguo con un carácter extra.
-    return slug === "santiagoo" ? "santiago" : slug;
+    if (slug === "santiagoo") return "santiago";
+    if (slug === "hoteles-de-nieve") return "hotel-de-nieve";
+    if (slug === "hoteles-de-vina") return "hotel-de-vina";
+    return slug;
   };
 
   type ApiCommuneRow = {
@@ -115,22 +118,18 @@ export function MobileFooterContent({
   const fixedMenuOrder = [
     "todos",
     "norte",
-    "sur",
-    "torres-del-paine",
     "centro",
+    "sur",
     "santiago",
     "isla-de-pascua",
-    "joyas-unicas",
+    "torres-del-paine",
     "hotel-de-nieve",
     "hotel-de-vina",
-    "hoteles-de-nieve",
-    "hoteles-de-vina",
+    "joyas-unicas",
     "votacion",
     "guia-impresa",
     "prensa",
     "nosotros",
-    "bases-legales",
-    "exploraciones",
   ];
 
   const [items, setItems] = useState<typeof fallbackItems>([]);
@@ -198,7 +197,7 @@ export function MobileFooterContent({
             return { slug, labelEs, labelEn };
           })
           // nunca dependemos de que venga "todos" desde la BD
-          .filter((x) => normalizeSlug(x.slug) !== "todos");
+          .filter((x) => normalizeSlug(x.slug) !== "todos" && normalizeSlug(x.slug) !== "exploraciones" && normalizeSlug(x.slug) !== "bases-legales");
 
         const uniqueBySlug = new Map<string, (typeof mapped)[number]>();
         for (const item of mapped) {
@@ -361,6 +360,16 @@ export function MobileFooterContent({
           <LanguageSwitcher dark />
         </div>
       )}
+
+      <div className="mb-8 border-y border-white/30 py-4 text-center">
+        <Link
+          href="/bases-legales"
+          className="font-neutra-demi text-[13px] leading-[18px] font-[600] text-white hover:text-gray-300 transition-colors"
+          onClick={() => onNavigate?.()}
+        >
+          {language === "es" ? "BASES LEGALES" : "LEGAL BASIS"}
+        </Link>
+      </div>
 
       {/* Contact: top divider spans site content width */}
       <div className="w-full px-4 mb-12">

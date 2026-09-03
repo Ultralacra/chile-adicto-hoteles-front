@@ -16,7 +16,12 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
   const [footerCategories, setFooterCategories] = useState<any[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
-  const normalizeSlug = (value: string) => String(value).trim().toLowerCase();
+  const normalizeSlug = (value: string) => {
+    const slug = String(value).trim().toLowerCase();
+    if (slug === "hoteles-de-nieve") return "hotel-de-nieve";
+    if (slug === "hoteles-de-vina") return "hotel-de-vina";
+    return slug;
+  };
 
   const fallbackCategories = [
     { slug: "todos", labelEs: "TODOS", labelEn: "ALL" },
@@ -47,21 +52,17 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
   const fixedMenuOrder = [
     "todos",
     "norte",
-    "sur",
-    "torres-del-paine",
     "centro",
+    "sur",
     "santiago",
     "isla-de-pascua",
-    "joyas-unicas",
+    "torres-del-paine",
     "hotel-de-nieve",
     "hotel-de-vina",
-    "hoteles-de-nieve",
-    "hoteles-de-vina",
+    "joyas-unicas",
     "guia-impresa",
     "prensa",
     "nosotros",
-    "bases-legales",
-    "exploraciones",
   ];
 
   useEffect(() => {
@@ -88,7 +89,8 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
                 r.label_en || fallback?.labelEn || slug,
               ).toUpperCase(),
             };
-          });
+          })
+          .filter((item: any) => item.slug !== "exploraciones" && item.slug !== "bases-legales");
 
         const uniqueBySlug = new Map<string, (typeof mapped)[number]>();
         for (const item of mapped) {
@@ -264,8 +266,18 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
                 />
               </a>
             </div>
+
+            <div className="mt-8 border-t border-white/30 pt-4 text-center">
+              <a
+                href="/bases-legales"
+                className="font-neutra-demi text-[13px] leading-[18px] font-[600] text-white transition-colors hover:text-[#FF0000] uppercase"
+              >
+                {language === "es" ? "BASES LEGALES" : "LEGAL BASIS"}
+              </a>
+            </div>
           </div>
         </div>
+
       </div>
     </footer>
   );

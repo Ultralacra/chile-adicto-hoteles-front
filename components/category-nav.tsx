@@ -37,20 +37,17 @@ const fallbackCategories = [
 const fixedMenuOrder = [
   "todos",
   "norte",
-  "sur",
-  "torres-del-paine",
   "centro",
+  "sur",
   "santiago",
   "isla-de-pascua",
-  "joyas-unicas",
+  "torres-del-paine",
   "hotel-de-nieve",
   "hotel-de-vina",
-  "hoteles-de-nieve",
-  "hoteles-de-vina",
+  "joyas-unicas",
   "guia-impresa",
   "prensa",
   "nosotros",
-  "bases-legales",
   // "exploraciones",
 ];
 
@@ -65,7 +62,10 @@ type ApiCategoryRow = {
 const normalizeSlug = (value: string) => {
   const slug = String(value).trim().toLowerCase();
   // La BD tiene un registro antiguo con un carácter extra.
-  return slug === "santiagoo" ? "santiago" : slug;
+  if (slug === "santiagoo") return "santiago";
+  if (slug === "hoteles-de-nieve") return "hotel-de-nieve";
+  if (slug === "hoteles-de-vina") return "hotel-de-vina";
+  return slug;
 };
 
 const prettySlugs = new Set([
@@ -128,7 +128,8 @@ export function CategoryNav({
                 r.label_en || fallback?.labelEn || slug,
               ).toUpperCase(),
             };
-          });
+          })
+          .filter((item) => item.slug !== "exploraciones" && item.slug !== "bases-legales");
 
         const uniqueBySlug = new Map<string, (typeof mapped)[number]>();
         for (const item of mapped) {
@@ -199,7 +200,7 @@ export function CategoryNav({
     // Hide desktop category nav on small screens; mobile menu provides navigation
     <nav className={compact ? "py-2" : "py-4"}>
       {isLoading ? (
-        <ul className="hidden lg:flex flex-nowrap items-center gap-[6px] text-[10px] font-medium whitespace-nowrap overflow-hidden">
+        <ul className="hidden lg:flex flex-nowrap items-center gap-[6px] text-[11px] font-medium whitespace-nowrap overflow-hidden">
           {Array.from({ length: 10 }).map((_, i) => (
             <li key={i} className="flex items-center gap-[6px]">
               <span className="inline-block h-[19px] w-[62px] rounded bg-black/10 animate-pulse" />
@@ -208,7 +209,7 @@ export function CategoryNav({
           ))}
         </ul>
       ) : items.length ? (
-        <ul className="hidden lg:flex flex-nowrap items-center gap-[6px] text-[10px] font-medium whitespace-nowrap overflow-hidden">
+        <ul className="hidden lg:flex flex-nowrap items-center gap-[6px] text-[11px] font-medium whitespace-nowrap overflow-hidden">
           {normalizeSlug(activeCategory) !== "todos" && (
             <li className="flex shrink-0 items-center gap-[6px]">
               <button
@@ -234,7 +235,7 @@ export function CategoryNav({
                 <a
                   href={hrefFor(category.slug)}
                   download
-                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[10px] leading-[14px] ${
+                    className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[11px] leading-[15px] ${
                     normalizeSlug(activeCategory) ===
                     normalizeSlug(category.slug)
                       ? "text-[var(--color-brand-red)] font-normal"
@@ -248,7 +249,7 @@ export function CategoryNav({
               ) : (
                 <Link
                   href={hrefFor(category.slug)}
-                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[10px] leading-[14px] ${
+                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[11px] leading-[15px] ${
                     normalizeSlug(activeCategory) ===
                     normalizeSlug(category.slug)
                       ? "text-[var(--color-brand-red)] font-normal"
