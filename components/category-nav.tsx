@@ -37,11 +37,16 @@ const fallbackCategories = [
 const fixedMenuOrder = [
   "todos",
   "norte",
-  "centro",
   "sur",
-  "isla-de-pascua",
-  "santiago",
   "torres-del-paine",
+  "centro",
+  "santiago",
+  "isla-de-pascua",
+  "joyas-unicas",
+  "hotel-de-nieve",
+  "hotel-de-vina",
+  "hoteles-de-nieve",
+  "hoteles-de-vina",
   "guia-impresa",
   "prensa",
   "nosotros",
@@ -243,7 +248,7 @@ export function CategoryNav({
               ) : (
                 <Link
                   href={hrefFor(category.slug)}
-                    className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[12px] leading-[16px] ${
+                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[12px] leading-[16px] ${
                     normalizeSlug(activeCategory) ===
                     normalizeSlug(category.slug)
                       ? "text-[var(--color-brand-red)] font-normal"
