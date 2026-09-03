@@ -90,7 +90,10 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
               ).toUpperCase(),
             };
           })
-          .filter((item: any) => item.slug !== "exploraciones" && item.slug !== "bases-legales");
+          .filter(
+            (item: any) =>
+              item.slug !== "exploraciones" && item.slug !== "bases-legales",
+          );
 
         const uniqueBySlug = new Map<string, (typeof mapped)[number]>();
         for (const item of mapped) {
@@ -191,6 +194,9 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
                   </a>
                 ))
               : null}
+            <span className="font-neutra-demi text-[15px] leading-[20px] font-[600] text-white uppercase">
+              PREMIOS 2026
+            </span>
           </nav>
 
           {/* Right: Quote at top, email and logos at bottom in same row */}
@@ -277,7 +283,6 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
             </div>
           </div>
         </div>
-
       </div>
     </footer>
   );

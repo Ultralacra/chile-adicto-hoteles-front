@@ -197,7 +197,12 @@ export function MobileFooterContent({
             return { slug, labelEs, labelEn };
           })
           // nunca dependemos de que venga "todos" desde la BD
-          .filter((x) => normalizeSlug(x.slug) !== "todos" && normalizeSlug(x.slug) !== "exploraciones" && normalizeSlug(x.slug) !== "bases-legales");
+          .filter(
+            (x) =>
+              normalizeSlug(x.slug) !== "todos" &&
+              normalizeSlug(x.slug) !== "exploraciones" &&
+              normalizeSlug(x.slug) !== "bases-legales",
+          );
 
         const uniqueBySlug = new Map<string, (typeof mapped)[number]>();
         for (const item of mapped) {
@@ -347,6 +352,11 @@ export function MobileFooterContent({
                   )}
                 </li>
               ))}
+              <li>
+                <span className="font-neutra-demi text-[14px] leading-[19px] font-[600] text-white uppercase">
+                  PREMIOS 2026
+                </span>
+              </li>
             </ul>
           )}
 

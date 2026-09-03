@@ -129,7 +129,10 @@ export function CategoryNav({
               ).toUpperCase(),
             };
           })
-          .filter((item) => item.slug !== "exploraciones" && item.slug !== "bases-legales");
+          .filter(
+            (item) =>
+              item.slug !== "exploraciones" && item.slug !== "bases-legales",
+          );
 
         const uniqueBySlug = new Map<string, (typeof mapped)[number]>();
         for (const item of mapped) {
@@ -235,7 +238,7 @@ export function CategoryNav({
                 <a
                   href={hrefFor(category.slug)}
                   download
-                    className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[11px] leading-[15px] ${
+                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[11px] leading-[15px] ${
                     normalizeSlug(activeCategory) ===
                     normalizeSlug(category.slug)
                       ? "text-[var(--color-brand-red)] font-normal"
@@ -266,6 +269,12 @@ export function CategoryNav({
               )}
             </li>
           ))}
+          <li className="flex shrink-0 items-center gap-[6px] text-black">
+            <span>•</span>
+            <span className="font-neutra tracking-normal text-[11px] leading-[15px]">
+              PREMIOS 2026
+            </span>
+          </li>
         </ul>
       ) : null}
     </nav>
