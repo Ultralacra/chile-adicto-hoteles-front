@@ -199,18 +199,18 @@ export function CategoryNav({
     // Hide desktop category nav on small screens; mobile menu provides navigation
     <nav className={compact ? "py-2" : "py-4"}>
       {isLoading ? (
-        <ul className="hidden lg:flex flex-nowrap items-center gap-1 text-[10px] font-medium whitespace-nowrap overflow-x-auto">
+        <ul className="hidden lg:flex flex-nowrap items-center gap-[6px] text-[10px] font-medium whitespace-nowrap overflow-hidden">
           {Array.from({ length: 10 }).map((_, i) => (
-            <li key={i} className="flex items-center gap-1">
+            <li key={i} className="flex items-center gap-[6px]">
               <span className="inline-block h-[19px] w-[62px] rounded bg-black/10 animate-pulse" />
               {i < 9 && <span className="text-black">•</span>}
             </li>
           ))}
         </ul>
       ) : items.length ? (
-        <ul className="hidden lg:flex flex-nowrap items-center gap-1 text-[10px] font-medium whitespace-nowrap overflow-x-auto">
+        <ul className="hidden lg:flex flex-nowrap items-center gap-[6px] text-[10px] font-medium whitespace-nowrap overflow-hidden">
           {normalizeSlug(activeCategory) !== "todos" && (
-            <li className="flex items-center gap-1">
+            <li className="flex shrink-0 items-center gap-[6px]">
               <button
                 onClick={handleBack}
                 className="hover:opacity-80 transition-opacity"
@@ -222,19 +222,19 @@ export function CategoryNav({
                   alt={language === "es" ? "Volver" : "Back"}
                   width={100}
                   height={66}
-                  className="h-11 w-auto"
+                  className="h-9 w-auto"
                 />
               </button>
               <span className="text-black">•</span>
             </li>
           )}
           {items.map((category, index) => (
-            <li key={category.slug} className="flex items-center gap-1">
+            <li key={category.slug} className="flex items-center gap-[6px]">
               {normalizeSlug(category.slug) === "guia-impresa" ? (
                 <a
                   href={hrefFor(category.slug)}
                   download
-                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[10px] leading-[14px] ${
+                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[10px] leading-[14px] ${
                     normalizeSlug(activeCategory) ===
                     normalizeSlug(category.slug)
                       ? "text-[var(--color-brand-red)] font-normal"
@@ -248,7 +248,7 @@ export function CategoryNav({
               ) : (
                 <Link
                   href={hrefFor(category.slug)}
-                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[10px] leading-[14px] ${
+                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[10px] leading-[14px] ${
                     normalizeSlug(activeCategory) ===
                     normalizeSlug(category.slug)
                       ? "text-[var(--color-brand-red)] font-normal"
