@@ -93,7 +93,7 @@ export function CategoryNav({
   const [isLoading, setIsLoading] = useState(true);
   const menuFontSize = useMemo(() => {
     const visibleItemCount = items.length + 1;
-    return Math.max(8, 11 - Math.max(0, visibleItemCount - 14) * 0.35);
+    return Math.max(9, 12 - Math.max(0, visibleItemCount - 14) * 0.35);
   }, [items.length]);
 
   const handleBack = () => {
@@ -208,7 +208,7 @@ export function CategoryNav({
     <nav className={compact ? "py-2" : "py-4"}>
       {isLoading ? (
         <ul
-          className="hidden lg:flex w-full flex-nowrap items-center justify-between gap-x-[10px] text-[length:var(--category-nav-font-size)] font-medium whitespace-nowrap"
+          className="hidden lg:flex w-full flex-nowrap items-center gap-x-[6px] text-[length:var(--category-nav-font-size)] font-medium whitespace-nowrap"
           style={
             {
               "--category-nav-font-size": `${menuFontSize}px`,
@@ -224,7 +224,7 @@ export function CategoryNav({
         </ul>
       ) : items.length ? (
         <ul
-          className="hidden lg:flex w-full flex-nowrap items-center justify-between gap-x-[10px] text-[length:var(--category-nav-font-size)] font-medium whitespace-nowrap"
+          className="hidden lg:flex w-full flex-nowrap items-center gap-x-[6px] text-[length:var(--category-nav-font-size)] font-medium whitespace-nowrap"
           style={
             {
               "--category-nav-font-size": `${menuFontSize}px`,
