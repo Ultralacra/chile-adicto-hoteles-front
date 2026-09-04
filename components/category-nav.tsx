@@ -91,6 +91,10 @@ export function CategoryNav({
   const router = useRouter();
   const [items, setItems] = useState<typeof fallbackCategories>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const menuFontSize = useMemo(() => {
+    const visibleItemCount = items.length + 1;
+    return Math.max(8, 11 - Math.max(0, visibleItemCount - 14) * 0.35);
+  }, [items.length]);
 
   const handleBack = () => {
     if (typeof window !== "undefined") {
@@ -203,7 +207,14 @@ export function CategoryNav({
     // Hide desktop category nav on small screens; mobile menu provides navigation
     <nav className={compact ? "py-2" : "py-4"}>
       {isLoading ? (
-        <ul className="hidden lg:flex flex-nowrap items-center gap-[6px] text-[11px] font-medium whitespace-nowrap overflow-hidden">
+        <ul
+          className="hidden lg:flex w-full flex-nowrap items-center justify-between gap-x-[10px] text-[length:var(--category-nav-font-size)] font-medium whitespace-nowrap"
+          style={
+            {
+              "--category-nav-font-size": `${menuFontSize}px`,
+            } as React.CSSProperties
+          }
+        >
           {Array.from({ length: 10 }).map((_, i) => (
             <li key={i} className="flex items-center gap-[6px]">
               <span className="inline-block h-[19px] w-[62px] rounded bg-black/10 animate-pulse" />
@@ -212,7 +223,14 @@ export function CategoryNav({
           ))}
         </ul>
       ) : items.length ? (
-        <ul className="hidden lg:flex flex-nowrap items-center gap-[6px] text-[11px] font-medium whitespace-nowrap overflow-hidden">
+        <ul
+          className="hidden lg:flex w-full flex-nowrap items-center justify-between gap-x-[10px] text-[length:var(--category-nav-font-size)] font-medium whitespace-nowrap"
+          style={
+            {
+              "--category-nav-font-size": `${menuFontSize}px`,
+            } as React.CSSProperties
+          }
+        >
           {normalizeSlug(activeCategory) !== "todos" && (
             <li className="flex shrink-0 items-center gap-[6px]">
               <button
@@ -233,12 +251,15 @@ export function CategoryNav({
             </li>
           )}
           {items.map((category, index) => (
-            <li key={category.slug} className="flex items-center gap-[6px]">
+            <li
+              key={category.slug}
+              className="flex shrink-0 items-center gap-[6px] whitespace-nowrap"
+            >
               {normalizeSlug(category.slug) === "guia-impresa" ? (
                 <a
                   href={hrefFor(category.slug)}
                   download
-                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[11px] leading-[15px] ${
+                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal leading-[15px] ${
                     normalizeSlug(activeCategory) ===
                     normalizeSlug(category.slug)
                       ? "text-[var(--color-brand-red)] font-normal"
@@ -252,7 +273,7 @@ export function CategoryNav({
               ) : (
                 <Link
                   href={hrefFor(category.slug)}
-                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal text-[11px] leading-[15px] ${
+                  className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal leading-[15px] ${
                     normalizeSlug(activeCategory) ===
                     normalizeSlug(category.slug)
                       ? "text-[var(--color-brand-red)] font-normal"
@@ -269,9 +290,9 @@ export function CategoryNav({
               )}
             </li>
           ))}
-          <li className="flex shrink-0 items-center gap-[6px] text-black">
+          <li className="flex shrink-0 items-center gap-[6px] whitespace-nowrap text-black">
             <span>•</span>
-            <span className="font-neutra tracking-normal text-[11px] leading-[15px]">
+            <span className="font-neutra tracking-normal leading-[15px]">
               PREMIOS 2026
             </span>
           </li>
