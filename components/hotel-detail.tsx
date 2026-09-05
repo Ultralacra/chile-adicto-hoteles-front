@@ -86,6 +86,12 @@ export function HotelDetail({
     ? hotel.categories.map((c) => toSlug(String(c || ""))).includes("cafes")
     : false;
 
+  const isRestaurantPost = Array.isArray(hotel?.categories)
+    ? hotel.categories
+        .map((c) => toSlug(String(c || "")))
+        .includes("restaurantes")
+    : false;
+
   const isExploracionesTnfPost = Array.isArray(hotel?.categories)
     ? hotel.categories
         .map((c) => toSlug(String(c || "")))
@@ -399,47 +405,49 @@ export function HotelDetail({
   return (
     <>
       {/* Submenú comunas (solo restaurantes) */}
-      <div className="site-inner py-2">
-        <div className="hidden lg:block">
-          {(() => {
-            const cats = hotel?.categories || [];
-            const up = (cats || []).map((c) => String(c).toUpperCase());
-            const isRestaurant =
-              up.includes("RESTAURANTES") || up.includes("RESTAURANTS");
-            if (!isRestaurant) return null;
-            return (
-              <nav className="py-4">
-                <ul className="hidden lg:flex flex-nowrap items-center gap-2 text-sm font-medium whitespace-nowrap">
-                  <li className="flex items-center gap-2">
-                    <a
-                      href="/restaurantes"
-                      className="font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[15px] leading-[20px] text-black"
-                    >
-                      {t("VOLVER", "BACK")}
-                    </a>
-                    <span className="text-black">•</span>
-                  </li>
-                  {restaurantCommunes.map((c, index) => {
-                    return (
-                      <li key={c.slug} className="flex items-center gap-2">
-                        <a
-                          href={`/restaurantes?comuna=${c.slug}`}
-                          className="font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[15px] leading-[20px] text-black"
-                        >
-                          {String(c.label).toUpperCase()}
-                        </a>
-                        {index < restaurantCommunes.length - 1 && (
-                          <span className="text-black">•</span>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </nav>
-            );
-          })()}
+      {isRestaurantPost && (
+        <div className="site-inner py-2">
+          <div className="hidden lg:block">
+            {(() => {
+              const cats = hotel?.categories || [];
+              const up = (cats || []).map((c) => String(c).toUpperCase());
+              const isRestaurant =
+                up.includes("RESTAURANTES") || up.includes("RESTAURANTS");
+              if (!isRestaurant) return null;
+              return (
+                <nav className="py-4">
+                  <ul className="hidden lg:flex flex-nowrap items-center gap-2 text-sm font-medium whitespace-nowrap">
+                    <li className="flex items-center gap-2">
+                      <a
+                        href="/restaurantes"
+                        className="font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[15px] leading-[20px] text-black"
+                      >
+                        {t("VOLVER", "BACK")}
+                      </a>
+                      <span className="text-black">•</span>
+                    </li>
+                    {restaurantCommunes.map((c, index) => {
+                      return (
+                        <li key={c.slug} className="flex items-center gap-2">
+                          <a
+                            href={`/restaurantes?comuna=${c.slug}`}
+                            className="font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-wide text-[15px] leading-[20px] text-black"
+                          >
+                            {String(c.label).toUpperCase()}
+                          </a>
+                          {index < restaurantCommunes.length - 1 && (
+                            <span className="text-black">•</span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </nav>
+              );
+            })()}
+          </div>
         </div>
-      </div>
+      )}
 
       <main className="site-inner pt-0 pb-4">
         {/* <div className="px-4 py-4"><BackButton /></div> */}
@@ -495,7 +503,9 @@ export function HotelDetail({
                       className="relative min-w-full h-full flex-shrink-0 bg-black"
                     >
                       <Image
-                        src={getStorageImageUrl(src, 1200) || "/placeholder.svg"}
+                        src={
+                          getStorageImageUrl(src, 1200) || "/placeholder.svg"
+                        }
                         alt={`${hotel.name} ${idx + 1}`}
                         fill
                         priority={idx === 0}
@@ -556,7 +566,9 @@ export function HotelDetail({
                       className="relative min-w-full h-full flex-shrink-0"
                     >
                       <Image
-                        src={getStorageImageUrl(src, 1920) || "/placeholder.svg"}
+                        src={
+                          getStorageImageUrl(src, 1920) || "/placeholder.svg"
+                        }
                         alt={`Imagen ${idx + 1}`}
                         fill
                         draggable={false}

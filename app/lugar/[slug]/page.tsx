@@ -8,12 +8,21 @@ import { HotelDetail } from "@/components/hotel-detail";
 import { normalizeImageUrl } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import { useEffect, use, useState } from "react";
+import Image from "next/image";
 import { Spinner } from "@/components/ui/spinner";
 import { notFound } from "next/navigation";
 import { useSiteApi } from "@/hooks/use-site-api";
 import { isHiddenFrontPost } from "@/lib/post-visibility";
+import { getHotelHearts, getVotingSlugsForCategory } from "@/lib/voting-config";
 
 type ResolvedParams = { slug: string };
+
+type WinnerPostBanner = {
+  desktop: string;
+  mobile: string;
+  rank: number;
+  hearts: 4 | 5;
+};
 
 function cleanRichDescriptionHtml(html: string): string {
   return html
@@ -57,6 +66,8 @@ export default function LugarPage(props: any) {
   }, [resolvedParams?.slug]);
 
   const [arquitecturaEntry, setArquitecturaEntry] = useState<any | null>(null);
+  const [winnerPostBanner, setWinnerPostBanner] =
+    useState<WinnerPostBanner | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     let cancelled = false;
@@ -78,6 +89,162 @@ export default function LugarPage(props: any) {
       cancelled = true;
     };
   }, [resolvedParams?.slug, fetchWithSite]);
+
+  useEffect(() => {
+    if (!arquitecturaEntry || resolvedParams?.slug !== arquitecturaEntry.slug) {
+      return;
+    }
+
+    const category = String(
+      arquitecturaEntry.categories?.[0] ||
+        arquitecturaEntry.es?.category ||
+        arquitecturaEntry.en?.category ||
+        "",
+    )
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+    const votingCategory = [
+      "norte",
+      "centro",
+      "sur",
+      "santiago",
+      "isla-de-pascua",
+      "torres-del-paine",
+      "joyas-unicas",
+      "hoteles-de-nieve",
+      "hoteles-de-vina",
+    ].find((candidate) =>
+      getVotingSlugsForCategory(candidate).includes(arquitecturaEntry.slug),
+    );
+    const bannerCategorySlug = votingCategory || category;
+
+    const bannerCategory = bannerCategorySlug.includes("norte")
+      ? { folder: "NORTE", prefix: "norte-de-chile", slug: "norte" }
+      : bannerCategorySlug.includes("centro")
+        ? { folder: "CENTRO", prefix: "centro-de-chile", slug: "centro" }
+        : bannerCategorySlug.includes("sur")
+          ? { folder: "SUR", prefix: "sur-de-chile", slug: "sur" }
+          : bannerCategorySlug.includes("santiago")
+            ? {
+                folder: "SANTIAGO",
+                prefix: "santiago-de-chile",
+                slug: "santiago",
+              }
+            : bannerCategorySlug.includes("isla-de-pascua")
+              ? {
+                  folder: "ISLA DE PASCUA",
+                  prefix: "isla-de-pascua",
+                  slug: "isla-de-pascua",
+                  noHeartsSuffix: true,
+                  maxRank: 2,
+                }
+              : bannerCategorySlug.includes("joyas-unicas")
+                ? {
+                    folder: "JOYAS UNICAS",
+                    prefix: "joyas-unicas",
+                    slug: "joyas-unicas",
+                    noHeartsSuffix: true,
+                  }
+                : bannerCategorySlug.includes("hoteles-de-nieve")
+                  ? {
+                      folder: "DE NIEVE",
+                      prefix: "hoteles-de-nieve",
+                      slug: "hoteles-de-nieve",
+                      noHeartsSuffix: true,
+                    }
+                  : bannerCategorySlug.includes("hoteles-de-vina")
+                    ? {
+                        folder: "DE VIÑAS",
+                        prefix: "hoteles-de-vinas",
+                        slug: "hoteles-de-vina",
+                        noHeartsSuffix: true,
+                      }
+                    : bannerCategorySlug.includes("torres-del-paine")
+                      ? {
+                          folder: "TORRES DEL PAINE",
+                          prefix: "torres-del-paine",
+                          slug: "torres-del-paine",
+                        }
+                      : null;
+
+    if (!bannerCategory) {
+      setWinnerPostBanner(null);
+      return;
+    }
+
+    let cancelled = false;
+    const loadWinnerBanner = async () => {
+      try {
+        const [postsRes, votesRes] = await Promise.all([
+          fetchWithSite(`/api/posts?categorySlug=${bannerCategory.slug}`),
+          fetchWithSite("/api/votes?site=chileadicto"),
+        ]);
+        let posts = postsRes.ok ? await postsRes.json() : [];
+        const votes = votesRes.ok ? await votesRes.json() : null;
+        const allowedSlugs = getVotingSlugsForCategory(bannerCategory.slug);
+
+        // Algunos hoteles ganadores tienen una categoría editorial distinta
+        // a la categoría de votación; usar todos los posts evita rankings parciales.
+        const allPostsRes = await fetchWithSite("/api/posts");
+        const allPosts = allPostsRes.ok ? await allPostsRes.json() : [];
+        if (Array.isArray(allPosts) && allPosts.length > 0) posts = allPosts;
+
+        const voteCounts = new Map<string, number>(
+          Array.isArray(votes?.hotels)
+            ? votes.hotels.map((entry: any) => [
+                String(entry.hotelSlug),
+                Number(entry.count) || 0,
+              ])
+            : [],
+        );
+        const currentHearts = getHotelHearts(
+          bannerCategory.slug,
+          arquitecturaEntry.slug,
+        );
+        const rankedHotels = (Array.isArray(posts) ? posts : [])
+          .filter(
+            (post: any) =>
+              allowedSlugs.includes(post.slug) &&
+              getHotelHearts(bannerCategory.slug, post.slug) === currentHearts,
+          )
+          .sort(
+            (first: any, second: any) =>
+              (voteCounts.get(second.slug) || 0) -
+                (voteCounts.get(first.slug) || 0) ||
+              String(first.slug).localeCompare(String(second.slug)),
+          );
+        const rank =
+          rankedHotels.findIndex(
+            (post: any) => post.slug === arquitecturaEntry.slug,
+          ) + 1;
+
+        const heartsSuffix = bannerCategory.noHeartsSuffix
+          ? ""
+          : `_${currentHearts}-corazones`;
+        const maxRank = bannerCategory.maxRank || 3;
+
+        if (!cancelled && rank >= 1 && rank <= maxRank) {
+          setWinnerPostBanner({
+            rank,
+            hearts: currentHearts,
+            desktop: `/banner-resultados/${bannerCategory.folder}/DESKTOP/${bannerCategory.prefix}_top${rank}${heartsSuffix}_desktop.webp`,
+            mobile: `/banner-resultados/${bannerCategory.folder}/MOVIL/${bannerCategory.prefix}_top${rank}${heartsSuffix}_movil.webp`,
+          });
+        }
+      } catch {
+        if (!cancelled) setWinnerPostBanner(null);
+      }
+    };
+
+    loadWinnerBanner();
+    return () => {
+      cancelled = true;
+    };
+  }, [arquitecturaEntry, fetchWithSite, resolvedParams?.slug]);
 
   if (loading) {
     return (
@@ -408,6 +575,23 @@ export default function LugarPage(props: any) {
       {!isRestaurantPost && (
         <div className="mx-auto px-4 py-2 max-w-[1200px] hidden lg:block">
           <CategoryNav activeCategory={activeCategorySlug} compact />
+        </div>
+      )}
+      {winnerPostBanner && (
+        <div className="site-inner mb-4 overflow-hidden">
+          <picture className="block w-full">
+            <source
+              media="(max-width: 767px)"
+              srcSet={winnerPostBanner.mobile}
+            />
+            <Image
+              src={winnerPostBanner.desktop}
+              alt={`Hotel ganador número ${winnerPostBanner.rank} de Norte de Chile, categoría ${winnerPostBanner.hearts} corazones`}
+              width={1920}
+              height={500}
+              className="block h-auto w-full"
+            />
+          </picture>
         </div>
       )}
       <HotelDetail hotel={hotel as any} />

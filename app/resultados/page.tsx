@@ -59,7 +59,10 @@ function OverallRow({
   maxVotes: number;
 }) {
   return (
-    <li className="overall-row">
+    <li
+      className="overall-row"
+      id={index === 0 ? "hotel-mas-votado" : undefined}
+    >
       <span className={`overall-rank rank-${index + 1}`}>{index + 1}</span>
       <div className="overall-detail">
         <div className="overall-name-line">
@@ -225,7 +228,7 @@ function ResultadosContent() {
               </>
             )}
           </section>
-          <section className="overall-section">
+          <section className="overall-section" id="top-15">
             <div className="section-intro">
               <p className="results-kicker">
                 Ranking general <span className="live-dot">● EN VIVO</span>
@@ -253,7 +256,7 @@ function ResultadosContent() {
               <div className="results-state">Aún no hay votos registrados.</div>
             )}
           </section>
-          <section className="categories-section">
+          <section className="categories-section" id="resultados-por-categoria">
             <div className="section-intro categories-intro">
               <p className="results-kicker">Resultados por categoría</p>
               <h2>Los favoritos de cada destino</h2>

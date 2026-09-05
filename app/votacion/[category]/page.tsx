@@ -3,7 +3,7 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CategoryNav } from "@/components/category-nav";
-import { buildCardExcerpt, normalizeImageUrl } from "@/lib/utils";
+import { normalizeImageUrl } from "@/lib/utils";
 import { isHiddenFrontPost } from "@/lib/post-visibility";
 import { useEffect, useState, use } from "react";
 import { Spinner } from "@/components/ui/spinner";
@@ -15,64 +15,27 @@ import {
   getHotelHearts,
   getVotingSlugsForCategory,
 } from "@/lib/voting-config";
-import { VotingHotelCard } from "@/components/voting-hotel-card";
-import { BackButton } from "@/components/back-button";
+import { HotelCard } from "@/components/hotel-card";
 import { notFound } from "next/navigation";
 
-const CATEGORY_BANNERS: Record<string, { desktop4?: string; mobile4?: string; desktop5: string; mobile5: string }> = {
-  norte: {
-    desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-NORTE 4 CORAZONES.webp",
-    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - NORTE 4 CORAZONES.webp",
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-NORTE 5 CORAZONES.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - NORTE 5 CORAZONES.webp",
-  },
-  centro: {
-    desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-CENTRO 4 CORAZONES.webp",
-    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL-CENTRO 4 CORAZONES.webp",
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-CENTRO 5 CORAZONES.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-CENTRO 5 CORAZONES.webp",
-  },
-  sur: {
-    desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-SUR 4 CORAZONES.webp",
-    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - SUR 4 CORAZONES.webp",
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-SUR 5 CORAZONES.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - SUR 5 CORAZONES.webp",
-  },
-  santiago: {
-    desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-SANTIAGO 4 CORAZONES.webp",
-    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - SANTIAGO 4 CORAZONES.webp",
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-SANTIAGO 5 CORAZONES.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - SANTIAGO 5 CORAZONES.webp",
-  },
-  "torres-del-paine": {
-    desktop4: "/imaganescategorias/banner-internos-categorias/DESKTOP-TORRES DEL PAINE 4 CORAZONES.webp",
-    mobile4: "/imaganescategorias/banner-internos-categorias/MOVIL - TORRES DEL PAINE 4 CORAZONES.webp",
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-TORRES DEL PAINE 5 CORAZONES.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL - TORRES DEL PAINE 5 CORAZONES.webp",
-  },
-  "isla-de-pascua": {
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-ISLA DE PASCUA.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES ISLA DE PASCUA.webp",
-  },
-  "hoteles-de-vina": {
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-HOTELES DE VIÑA.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES DE VIÑA.webp",
-  },
-  "hoteles-de-nieve": {
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-HOTELES DE NIEVE.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES DE NIEVE.webp",
-  },
-  "joyas-unicas": {
-    desktop5: "/imaganescategorias/banner-internos-categorias/DESKTOP-JOYAS UNICAS.webp",
-    mobile5: "/imaganescategorias/banner-internos-categorias/MOVIL-HOTELES JOYAS ÚNICAS.webp",
-  },
+const CATEGORY_NAMES: Record<string, string> = {
+  norte: "NORTE DE CHILE",
+  centro: "CENTRO DE CHILE",
+  sur: "SUR DE CHILE",
+  santiago: "SANTIAGO DE CHILE",
+  "torres-del-paine": "TORRES DEL PAINE",
+  "isla-de-pascua": "ISLA DE PASCUA",
+  "hoteles-de-vina": "HOTELES DE VIÑA",
+  "hoteles-de-nieve": "HOTELES DE NIEVE",
+  "joyas-unicas": "JOYAS ÚNICAS",
 };
 
 function deriveVotingImages(hotel: any): { image: string; images: string[] } {
   const rawImages: string[] = Array.isArray(hotel.images)
     ? hotel.images.filter(Boolean)
     : [];
-  const featured = String(hotel.featuredImage || "").trim() || rawImages[0] || "";
+  const featured =
+    String(hotel.featuredImage || "").trim() || rawImages[0] || "";
   const seen = new Set<string>();
   const orderedImages = featured ? [featured] : [];
 
@@ -80,7 +43,8 @@ function deriveVotingImages(hotel: any): { image: string; images: string[] } {
 
   // La imagen en posición 0 corresponde a "imagen 1", la portada alternativa
   // que ya está representada por featuredImage en las tarjetas de votación.
-  const galleryImages = featured && rawImages.length > 0 ? rawImages.slice(1) : rawImages;
+  const galleryImages =
+    featured && rawImages.length > 0 ? rawImages.slice(1) : rawImages;
 
   for (const img of galleryImages) {
     const key = normalizeImageUrl(img);
@@ -98,6 +62,133 @@ const CATEGORY_API_SLUGS: Record<string, string> = {
 };
 
 type ResolvedParams = { category: string };
+
+function WinnerRank({ rank }: { rank: number }) {
+  const rankNumber = String(rank).padStart(2, "0");
+
+  return (
+    <img
+      src={`/banner-resultados/CORAZONES/corazon_${rankNumber}.webp`}
+      alt={`Puesto ${rank}`}
+      className="h-[72px] w-[60px] object-contain"
+    />
+  );
+}
+
+function WinnersBanner({
+  category,
+  hearts,
+}: {
+  category: string;
+  hearts: 4 | 5;
+}) {
+  const bannerConfig = {
+    norte: {
+      folder: "NORTE",
+      prefix: "norte-de-chile",
+      label: "Norte de Chile",
+    },
+    centro: {
+      folder: "CENTRO",
+      prefix: "centro-de-chile",
+      label: "Centro de Chile",
+    },
+    sur: {
+      folder: "SUR",
+      prefix: "sur-de-chile",
+      label: "Sur de Chile",
+    },
+    santiago: {
+      folder: "SANTIAGO",
+      prefix: "santiago-de-chile",
+      label: "Santiago de Chile",
+    },
+    "torres-del-paine": {
+      folder: "TORRES DEL PAINE",
+      prefix: "torres-del-paine",
+      label: "Torres del Paine",
+    },
+    "isla-de-pascua": {
+      folder: "ISLA DE PASCUA",
+      prefix: "isla-de-pascua",
+      label: "Isla de Pascua",
+      noHeartsSuffix: true,
+    },
+    "joyas-unicas": {
+      folder: "JOYAS UNICAS",
+      prefix: "joyas-unicas",
+      label: "Joyas Únicas",
+      noHeartsSuffix: true,
+    },
+    "hoteles-de-nieve": {
+      folder: "DE NIEVE",
+      prefix: "hoteles-de-nieve",
+      label: "Hoteles de Nieve",
+      noHeartsSuffix: true,
+    },
+    "hoteles-de-vina": {
+      folder: "DE VIÑAS",
+      prefix: "hoteles-de-vinas",
+      label: "Hoteles de Viñas",
+      noHeartsSuffix: true,
+    },
+  }[category];
+
+  const heartsSuffix = bannerConfig?.noHeartsSuffix
+    ? ""
+    : `_${hearts}-corazones`;
+  const categoryBanner =
+    bannerConfig && hearts === 5
+      ? {
+          desktop: `/banner-resultados/${bannerConfig.folder}/DESKTOP/${bannerConfig.prefix}_ganadores${heartsSuffix}_desktop.webp`,
+          mobile: `/banner-resultados/${bannerConfig.folder}/MOVIL/${bannerConfig.prefix}_ganadores${heartsSuffix}_movil.webp`,
+        }
+      : {
+          desktop: `/banner-resultados/${bannerConfig?.folder}/DESKTOP/${bannerConfig?.prefix}_ganadores${heartsSuffix}_desktop.webp`,
+          mobile: `/banner-resultados/${bannerConfig?.folder}/MOVIL/${bannerConfig?.prefix}_ganadores${heartsSuffix}_movil.webp`,
+        };
+
+  if (categoryBanner && bannerConfig) {
+    return (
+      <picture className="block w-full overflow-hidden">
+        <source media="(max-width: 767px)" srcSet={categoryBanner.mobile} />
+        <Image
+          src={categoryBanner.desktop}
+          alt={`Ganadores ${bannerConfig.label}, categoría ${hearts} corazones`}
+          width={1920}
+          height={500}
+          className="block h-auto w-full"
+        />
+      </picture>
+    );
+  }
+
+  return (
+    <header className="voting-winners-banner">
+      <div className="voting-winners-banner__title">
+        <span aria-hidden="true" className="voting-winners-banner__laurel">
+          ❦
+        </span>
+        <p>
+          <span>
+            GANADORES {CATEGORY_NAMES[category] || category.toUpperCase()}
+          </span>
+          <span>CATEGORÍA {hearts} CORAZONES</span>
+        </p>
+        <span aria-hidden="true" className="voting-winners-banner__laurel">
+          ❦
+        </span>
+      </div>
+      <Image
+        src="/logo-footer-blanco.svg"
+        alt="Chile Adicto Hoteles Premios"
+        width={646}
+        height={182}
+        className="voting-winners-banner__logo"
+      />
+    </header>
+  );
+}
 
 export default function VotacionCategoryPage({ params }: { params: any }) {
   const resolvedParams = use(params as any) as ResolvedParams;
@@ -140,15 +231,19 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
         const allowedSlugs = getVotingSlugsForCategory(category);
 
         const apiSlug = CATEGORY_API_SLUGS[category] || category;
-        const res = await fetchWithSite(
-          `/api/posts?categorySlug=${encodeURIComponent(apiSlug)}`,
-        );
+        const [res, votesRes] = await Promise.all([
+          fetchWithSite(
+            `/api/posts?categorySlug=${encodeURIComponent(apiSlug)}`,
+          ),
+          fetchWithSite("/api/votes?site=chileadicto"),
+        ]);
         const rows = res.ok ? await res.json() : [];
+        const voteSummary = votesRes.ok ? await votesRes.json() : null;
         let list = Array.isArray(rows) ? rows : [];
         list = list.filter((p: any) => !isHiddenFrontPost(p));
 
         let votingHotels = list.filter((h: any) =>
-          allowedSlugs.includes(h.slug)
+          allowedSlugs.includes(h.slug),
         );
 
         const foundSlugs = new Set(votingHotels.map((h: any) => h.slug));
@@ -161,7 +256,10 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
             const allList = Array.isArray(allRows) ? allRows : [];
             for (const slug of missingSlugs) {
               const found = allList.find((h: any) => h.slug === slug);
-              if (found && !votingHotels.some((h: any) => h.slug === found.slug)) {
+              if (
+                found &&
+                !votingHotels.some((h: any) => h.slug === found.slug)
+              ) {
                 votingHotels.push(found);
               }
             }
@@ -177,13 +275,28 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
             .toUpperCase()
             .trim();
 
+        const votesByHotel = new Map<string, number>(
+          Array.isArray(voteSummary?.hotels)
+            ? voteSummary.hotels.map((entry: any): [string, number] => [
+                String(entry.hotelSlug),
+                Number(entry.count) || 0,
+              ])
+            : [],
+        );
+        const byVotes = (first: any, second: any) =>
+          (votesByHotel.get(second.slug) || 0) -
+            (votesByHotel.get(first.slug) || 0) ||
+          sortKey(first).localeCompare(sortKey(second));
+
         const h5 = votingHotels
           .filter((h: any) => getHotelHearts(category, h.slug) === 5)
-          .sort((a: any, b: any) => sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0);
+          .sort(byVotes)
+          .slice(0, 3);
 
         const h4 = votingHotels
           .filter((h: any) => getHotelHearts(category, h.slug) === 4)
-          .sort((a: any, b: any) => sortKey(a) < sortKey(b) ? -1 : sortKey(a) > sortKey(b) ? 1 : 0);
+          .sort(byVotes)
+          .slice(0, 3);
 
         if (!cancelled) {
           setHotels5(h5);
@@ -209,8 +322,6 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
     return notFound();
   }
 
-  const banner = CATEGORY_BANNERS[category];
-
   return (
     <div className="min-h-screen bg-white">
       <Header showHomeSecurityBanner={false} />
@@ -219,8 +330,6 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
         <div className="hidden lg:block">
           <CategoryNav activeCategory="votacion" />
         </div>
-
-        {/* <BackButton /> */}
 
         <div className="py-2">
           {loading ? (
@@ -232,93 +341,63 @@ export default function VotacionCategoryPage({ params }: { params: any }) {
           ) : (
             <>
               {/* Sección 5 corazones */}
-              {banner && (
+              {hotels5.length > 0 && (
                 <section className="mb-8">
-                  {banner.desktop5 && (
-                    <div className="hidden md:block w-full">
-                      <Image
-                        src={banner.desktop5}
-                        alt={`${category} 5 estrellas`}
-                        width={1920}
-                        height={400}
-                        className="w-full h-auto"
-                        priority
+                  <WinnersBanner category={category} hearts={5} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-4">
+                    {hotels5.map((hotel, index) => (
+                      <HotelCard
+                        key={hotel.slug}
+                        slug={hotel.slug}
+                        name={
+                          hotel[language]?.name ||
+                          hotel.en?.name ||
+                          hotel.es?.name
+                        }
+                        subtitle={
+                          hotel[language]?.subtitle ||
+                          hotel.en?.subtitle ||
+                          hotel.es?.subtitle
+                        }
+                        description=""
+                        {...deriveVotingImages(hotel)}
+                        imageVariant="default"
+                        voteElement={<WinnerRank rank={index + 1} />}
+                        voteIconSize="large"
+                        votePosition="right"
+                        hideDescription
                       />
-                    </div>
-                  )}
-                  {banner.mobile5 && (
-                    <div className="md:hidden w-full">
-                      <Image
-                        src={banner.mobile5}
-                        alt={`${category} 5 estrellas`}
-                        width={750}
-                        height={400}
-                        className="w-full h-auto"
-                        priority
-                      />
-                    </div>
-                  )}
-                  {hotels5.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-4">
-                      {hotels5.map((hotel) => (
-                        <VotingHotelCard
-                          key={hotel.slug}
-                          slug={hotel.slug}
-                          name={hotel[language]?.name || hotel.en?.name || hotel.es?.name}
-                          subtitle={hotel[language]?.subtitle || hotel.en?.subtitle || hotel.es?.subtitle}
-                          description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
-                          {...deriveVotingImages(hotel)}
-                          imageVariant="default"
-                          hotelName={hotel[language]?.name || hotel?.es?.name || ""}
-                          hotelSlug={hotel.slug}
-                          categorySlug={category}
-                        />
-                      ))}
-                    </div>
-                  )}
+                    ))}
+                  </div>
                 </section>
               )}
 
               {/* Sección 4 corazones */}
-              {hotels4.length > 0 && banner && (banner.desktop4 || banner.mobile4) && (
+              {hotels4.length > 0 && (
                 <section>
-                  {banner.desktop4 && (
-                    <div className="hidden md:block w-full">
-                      <Image
-                        src={banner.desktop4}
-                        alt={`${category} 4 estrellas`}
-                        width={1920}
-                        height={400}
-                        className="w-full h-auto"
-                        priority
-                      />
-                    </div>
-                  )}
-                  {banner.mobile4 && (
-                    <div className="md:hidden w-full">
-                      <Image
-                        src={banner.mobile4}
-                        alt={`${category} 4 estrellas`}
-                        width={750}
-                        height={400}
-                        className="w-full h-auto"
-                        priority
-                      />
-                    </div>
-                  )}
+                  <WinnersBanner category={category} hearts={4} />
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-4">
-                    {hotels4.map((hotel) => (
-                        <VotingHotelCard
-                          key={hotel.slug}
-                          slug={hotel.slug}
-                          name={hotel[language]?.name || hotel.en?.name || hotel.es?.name}
-                          subtitle={hotel[language]?.subtitle || hotel.en?.subtitle || hotel.es?.subtitle}
-                          description={buildCardExcerpt(hotel[language]?.description || hotel.en?.description || hotel.es?.description || [])}
-                          {...deriveVotingImages(hotel)}
-                          imageVariant="default"
-                        hotelName={hotel[language]?.name || hotel?.es?.name || ""}
-                        hotelSlug={hotel.slug}
-                        categorySlug={category}
+                    {hotels4.map((hotel, index) => (
+                      <HotelCard
+                        key={hotel.slug}
+                        slug={hotel.slug}
+                        name={
+                          hotel[language]?.name ||
+                          hotel.en?.name ||
+                          hotel.es?.name
+                        }
+                        subtitle={
+                          hotel[language]?.subtitle ||
+                          hotel.en?.subtitle ||
+                          hotel.es?.subtitle
+                        }
+                        description=""
+                        {...deriveVotingImages(hotel)}
+                        imageVariant="default"
+                        voteElement={<WinnerRank rank={index + 1} />}
+                        voteIconSize="large"
+                        votePosition="right"
+                        hideDescription
                       />
                     ))}
                   </div>

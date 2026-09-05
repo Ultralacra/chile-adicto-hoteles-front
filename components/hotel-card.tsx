@@ -21,6 +21,7 @@ interface HotelCardProps {
   asDiv?: boolean;
   hideDescription?: boolean;
   voteIconSize?: "default" | "large";
+  votePosition?: "left" | "right";
 }
 
 export function HotelCard({
@@ -37,18 +38,17 @@ export function HotelCard({
   asDiv = false,
   hideDescription = false,
   voteIconSize = "default",
+  votePosition = "left",
 }: HotelCardProps) {
   const imageContainerClass =
-    imageVariant === "tall" ? "h-[500px]"
-    : imageVariant === "square" ? "aspect-[1/1]"
-    : "aspect-[386/264]";
+    imageVariant === "tall"
+      ? "h-[500px]"
+      : imageVariant === "square"
+        ? "aspect-[1/1]"
+        : "aspect-[386/264]";
 
   const allImages =
-    images && images.length > 0
-      ? images.filter(Boolean)
-      : image
-        ? [image]
-        : [];
+    images && images.length > 0 ? images.filter(Boolean) : image ? [image] : [];
   const hasCarousel = allImages.length > 1;
 
   const href = externalUrl || `/${slug}`;
@@ -56,79 +56,90 @@ export function HotelCard({
 
   const content = (
     <article className="group cursor-pointer flex flex-col h-full gap-3">
-        {/* Image Container */}
-        <div className={`relative ${imageContainerClass} overflow-hidden`}>
-          {hasCarousel ? (
-            <CardCarousel images={allImages} alt={name} />
-          ) : (
-            <Image
-              src={getStorageImageUrl(allImages[0], 1200) || "/placeholder.svg"}
-              alt={name}
-              fill
-              sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="space-y-3 flex-1">
-          {/* Heart Icon and Title */}
-          <div
-            className="flex items-start gap-[10px]"
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              onVoteClick?.();
-            }}
-          >
-            <div className="flex-shrink-0">
-              {voteElement ? (
-                <div
-                  className="flex items-center justify-center"
-                  style={{ width: voteIconSize === "large" ? 60 : 50, height: voteIconSize === "large" ? 72 : 60 }}
-                >
-                  {voteElement}
-                </div>
-              ) : (
-                <div
-                  className="flex items-center justify-center"
-                  style={{ width: voteIconSize === "large" ? 49 : 41, height: voteIconSize === "large" ? 60 : 50 }}
-                >
-                  <img
-                    src="/favicon.svg"
-                    alt="icon"
-                    style={{ width: voteIconSize === "large" ? 49 : 41, height: voteIconSize === "large" ? 60 : 50 }}
-                  />
-                </div>
-              )}
-            </div>
-
-            <div className="flex-1">
-              <h2 className="font-neutra text-[15px] font-normal text-black leading-[19px] mb-0 first-line:font-[600]">
-                {name}
-              </h2>
-              <p className="font-neutra text-[15px] font-normal text-black uppercase leading-[19px]">
-                {subtitle}
-              </p>
-            </div>
-          </div>
-
-          {/* Description */}
-          {!hideDescription && (
-            <p className="font-neutra text-[15px] text-black leading-[22px] font-normal line-clamp-5 min-h-[110px]">
-              {description}
-            </p>
-          )}
-        </div>
-
-        {/* Elegant divider pushed to bottom so all cards align */}
-        {!hideDescription && (
-          <div className="mt-auto pt-2 pb-5">
-            <div className="mx-auto h-[1px] w-3/4 bg-[#b4b4b8]" />
-          </div>
+      {/* Image Container */}
+      <div className={`relative ${imageContainerClass} overflow-hidden`}>
+        {hasCarousel ? (
+          <CardCarousel images={allImages} alt={name} />
+        ) : (
+          <Image
+            src={getStorageImageUrl(allImages[0], 1200) || "/placeholder.svg"}
+            alt={name}
+            fill
+            sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
         )}
-      </article>
+      </div>
+
+      {/* Content */}
+      <div className="space-y-3 flex-1">
+        {/* Heart Icon and Title */}
+        <div
+          className="flex items-start gap-[10px]"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onVoteClick?.();
+          }}
+        >
+          <div
+            className={`flex-shrink-0 ${votePosition === "right" ? "order-2 ml-auto mr-4" : ""}`}
+          >
+            {voteElement ? (
+              <div
+                className="flex items-center justify-center"
+                style={{
+                  width: voteIconSize === "large" ? 60 : 50,
+                  height: voteIconSize === "large" ? 72 : 60,
+                }}
+              >
+                {voteElement}
+              </div>
+            ) : (
+              <div
+                className="flex items-center justify-center"
+                style={{
+                  width: voteIconSize === "large" ? 49 : 41,
+                  height: voteIconSize === "large" ? 60 : 50,
+                }}
+              >
+                <img
+                  src="/favicon.svg"
+                  alt="icon"
+                  style={{
+                    width: voteIconSize === "large" ? 49 : 41,
+                    height: voteIconSize === "large" ? 60 : 50,
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1">
+            <h2 className="font-neutra text-[15px] font-normal text-black leading-[19px] mb-0 first-line:font-[600]">
+              {name}
+            </h2>
+            <p className="font-neutra text-[15px] font-normal text-black uppercase leading-[19px]">
+              {subtitle}
+            </p>
+          </div>
+        </div>
+
+        {/* Description */}
+        {!hideDescription && (
+          <p className="font-neutra text-[15px] text-black leading-[22px] font-normal line-clamp-5 min-h-[110px]">
+            {description}
+          </p>
+        )}
+      </div>
+
+      {/* Elegant divider pushed to bottom so all cards align */}
+      {!hideDescription && (
+        <div className="mt-auto pt-2 pb-5">
+          <div className="mx-auto h-[1px] w-3/4 bg-[#b4b4b8]" />
+        </div>
+      )}
+    </article>
   );
 
   if (asDiv) {
@@ -153,7 +164,10 @@ export function HotelCard({
 }
 
 function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, watchDrag: false });
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    watchDrag: false,
+  });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
@@ -171,10 +185,7 @@ function CardCarousel({ images, alt }: { images: string[]; alt: string }) {
       <div ref={emblaRef} className="h-full overflow-hidden">
         <div className="flex h-full">
           {images.map((src, idx) => (
-            <div
-              key={idx}
-              className="relative min-w-full h-full flex-shrink-0"
-            >
+            <div key={idx} className="relative min-w-full h-full flex-shrink-0">
               <Image
                 src={getStorageImageUrl(src, 1200) || "/placeholder.svg"}
                 alt={`${alt} ${idx + 1}`}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje Especial</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: #38bdf8;
+        }
+
+        .input-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #38bdf8;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background: #0284c7;
+            color: #fff;
+        }
+
+        .error {
+            color: #f87171;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Mensaje secreto */
+        #secret-content {
+            display: none;
+            max-width: 500px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .message {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f43f5e;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+        }
+
+        .signature {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            letter-spacing: 2px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-card" class="card">
+        <h2>Acceso Restringido</h2>
+        <form id="login-form">
+            <div class="input-group">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" placeholder="Ingresa tu usuario" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            <button type="submit">Ingresar</button>
+            <p id="error-msg" class="error">Usuario o contraseña incorrectos</p>
+        </form>
+    </div>
+
+    <div id="secret-content" class="card">
+        <div class="message">RUTSI TE QUIERO MUCHO</div>
+        <div class="signature">ATT: ULTRA LACRA</div>
+    </div>
+
+    <script>
+        // Configura aquí tus credenciales
+        const CREDENTIALS = {
+            user: "rutsi",
+            pass: "1234"
+        };
+
+        const loginForm = document.getElementById('login-form');
+        const loginCard = document.getElementById('login-card');
+        const secretContent = document.getElementById('secret-content');
+        const errorMsg = document.getElementById('error-msg');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const userInput = document.getElementById('username').value.trim();
+            const passInput = document.getElementById('password').value.trim();
+
+            if (userInput === CREDENTIALS.user && passInput === CREDENTIALS.pass) {
+                loginCard.style.display = 'none';
+                secretContent.style.display = 'block';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
