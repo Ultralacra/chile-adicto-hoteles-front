@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 
 const MAIN_BANNER =
   "/banner-resultados/CATEGORIAS/categorias_banner-principal.webp";
+const MOBILE_MAIN_BANNER =
+  "/banner-resultados/CATEGORIAS/categorias_banner-principal_movil.webp";
 
 const resultLinks = [
   {
@@ -107,16 +109,30 @@ export default function VotacionPage() {
 
         <div className="w-full">
           <div className="w-full mb-6">
-            <a href="/votacion" className="block w-full relative">
-              <Image
-                src={MAIN_BANNER}
-                alt="Revisa los ganadores en las categorías"
-                width={1920}
-                height={240}
-                className="w-full h-auto"
-                priority
-              />
-            </a>
+            <div className="hidden md:block">
+              <a href="/votacion" className="block w-full relative">
+                <Image
+                  src={MAIN_BANNER}
+                  alt="Revisa los ganadores en las categorías"
+                  width={1920}
+                  height={240}
+                  className="w-full h-auto"
+                  priority
+                />
+              </a>
+            </div>
+            <div className="md:hidden">
+              <a href="/votacion" className="block w-full relative">
+                <Image
+                  src={MOBILE_MAIN_BANNER}
+                  alt="Revisa los ganadores en las categorías"
+                  width={1536}
+                  height={864}
+                  className="w-full h-auto"
+                  priority
+                />
+              </a>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
