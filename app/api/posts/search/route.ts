@@ -40,7 +40,9 @@ export async function GET(req: Request) {
 
   const select = "slug,featured_image,translations:post_translations(lang,name)";
 
-  const basePath = `/posts?select=${encodeURIComponent(select)}&site=eq.${siteId}&order=slug.asc&limit=${limit}`;
+  // Traer un conjunto amplio antes de filtrar evita perder coincidencias
+  // cuando los primeros registros ordenados por slug no contienen la búsqueda.
+  const basePath = `/posts?select=${encodeURIComponent(select)}&site=eq.${siteId}&order=slug.asc&limit=500`;
 
   const result = await anonRest(basePath);
   if (!result) return NextResponse.json({ items: [] }, { status: 200 });

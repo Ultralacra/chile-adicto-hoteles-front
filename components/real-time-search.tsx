@@ -8,6 +8,7 @@ interface SearchResult {
   slug: string;
   featuredImage: string | null;
   name_es: string;
+  name_en: string;
 }
 
 export function RealTimeSearch({ className }: { className?: string }) {
@@ -29,7 +30,7 @@ export function RealTimeSearch({ className }: { className?: string }) {
     }
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/posts/search?q=${encodeURIComponent(q)}&limit=20`);
+      const res = await fetch(`/api/posts/search?q=${encodeURIComponent(q)}&limit=50`);
       const data = await res.json();
       setResults(data.items || []);
     } catch {
@@ -90,7 +91,7 @@ export function RealTimeSearch({ className }: { className?: string }) {
     setQuery("");
     setResults([]);
     setSelectedIndex(-1);
-    router.push(`/${result.slug}`);
+    router.push(`/lugar/${result.slug}`);
   };
 
   const clearSearch = () => {
@@ -161,6 +162,7 @@ export function RealTimeSearch({ className }: { className?: string }) {
                     aria-selected={i === selectedIndex}
                   >
                     {r.featuredImage && (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={r.featuredImage}
                         alt=""
@@ -168,7 +170,7 @@ export function RealTimeSearch({ className }: { className?: string }) {
                       />
                     )}
                     <span className="text-sm font-medium line-clamp-1">
-                      {r.name_es || r.slug}
+                      {r.name_es || r.name_en || r.slug}
                     </span>
                   </button>
                 </li>
