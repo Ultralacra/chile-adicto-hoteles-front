@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useLanguage } from "@/contexts/language-context";
 import { useSiteApi } from "@/hooks/use-site-api";
-import Image from "next/image";
 import { HeroSlider } from "@/components/hero-slider";
 
 const HOME_RESERVED_POSTS = [
@@ -46,12 +45,23 @@ const HOME_RESERVED_POSTS = [
     },
     image: "/portadas/PORTADA-HOTEL-BOUTIQUE.png",
   },
+  {
+    slug: "votacion",
+    es: {
+      name: "Resultados de votación",
+      subtitle: "Top 15 y ranking por categoría",
+      description:
+        "Revisa aquí el Top 15 de los hoteles más votados, los 3 primeros lugares en cada categoría y sub categoría, la cantidad de votos por hotel, el número total de votos y de personas que votaron. Todo lo que necesitas saber esta acá",
+    },
+    en: {
+      name: "Voting results",
+      subtitle: "Top 15 and ranking by category",
+      description:
+        "Check here the Top 15 most voted hotels, the top 3 in each category and subcategory, the number of votes per hotel, the total number of votes and the number of people who voted. Everything you need to know is here.",
+    },
+    image: "/imaganescategorias/banner-home-votacion/BANER HOME.webp",
+  },
 ];
-
-const DESKTOP_BANNER =
-  "/imaganescategorias/banner-home-votacion/BANER HOME.webp";
-const MOBILE_BANNER =
-  "/imaganescategorias/banner-home-votacion/MOVIL-BANER HOME.webp";
 
 export default function Page() {
   const { language } = useLanguage();
@@ -146,45 +156,17 @@ export default function Page() {
         </div>
 
         <div className="py-2">
-          {/* Banner de votacion - desktop */}
-          <div className="hidden md:block w-full">
-            <a href="/votacion" className="block w-full relative">
-              <Image
-                src={DESKTOP_BANNER}
-                alt="Votación"
-                width={1920}
-                height={800}
-                className="w-full h-auto"
-                priority
-              />
-            </a>
-          </div>
-
-          {/* Banner de votacion - mobile */}
-          <div className="md:hidden w-full">
-            <a href="/votacion" className="block w-full relative">
-              <Image
-                src={MOBILE_BANNER}
-                alt="Votación"
-                width={750}
-                height={1000}
-                className="w-full h-auto"
-                priority
-              />
-            </a>
-          </div>
-
-          {/* Slider principal */}
-          {/* <div className="w-full">
+          <div className="w-full">
             <HeroSlider
               autoHeight
               objectFit="contain"
               objectPosition="center"
               preferApiHrefs
+              language={language}
               sliderKeyDesktop="home-desktop"
               sliderKeyMobile="home-mobile"
             />
-          </div> */}
+          </div>
 
           {/* Cards section below - full width */}
           <section className="mt-6">

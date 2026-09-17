@@ -3,6 +3,7 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CategoryNav } from "@/components/category-nav";
+import { SorteoWinnerModal } from "@/components/sorteo-winner-modal";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -79,6 +80,7 @@ const categories = [
 
 export default function VotacionPage() {
   const [winnerHref, setWinnerHref] = useState("/resultados/hotel-mas-votado");
+  const [isSorteoOpen, setIsSorteoOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -174,18 +176,24 @@ export default function VotacionPage() {
                 </a>
               ))}
             </div>
-            <div className="relative block overflow-hidden aspect-[8/1]">
+            <button
+              type="button"
+              onClick={() => setIsSorteoOpen(true)}
+              className="group relative block w-full overflow-hidden aspect-[8/1] cursor-pointer text-left"
+              aria-label="Conoce al ganador del sorteo"
+            >
               <Image
                 src="/banner-resultados/CATEGORIAS/categoria_sorteo-ganador.webp"
                 alt="Conoce al ganador del sorteo y al hotel al que se va"
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
-            </div>
+            </button>
           </section>
         </div>
       </main>
 
+      <SorteoWinnerModal open={isSorteoOpen} onOpenChange={setIsSorteoOpen} />
       <Footer activeCategory="votacion" />
     </div>
   );

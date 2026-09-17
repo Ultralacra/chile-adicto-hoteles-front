@@ -292,9 +292,16 @@ export function CategoryNav({
           ))}
           <li className="flex shrink-0 items-center gap-[6px] whitespace-nowrap text-black">
             <span>•</span>
-            <span className="font-neutra tracking-normal leading-[15px]">
+            <Link
+              href="/votacion"
+              className={`font-neutra hover:text-[var(--color-brand-red)] transition-colors tracking-normal leading-[15px] ${
+                normalizeSlug(activeCategory) === "votacion"
+                  ? "text-[var(--color-brand-red)] font-normal"
+                  : "text-black font-normal"
+              }`}
+            >
               PREMIOS 2026
-            </span>
+            </Link>
           </li>
         </ul>
       ) : null}

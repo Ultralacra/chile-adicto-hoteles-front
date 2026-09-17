@@ -353,9 +353,13 @@ export function MobileFooterContent({
                 </li>
               ))}
               <li>
-                <span className="font-neutra-demi text-[14px] leading-[19px] font-[600] text-white uppercase">
+                <Link
+                  href="/votacion"
+                  className="font-neutra-demi text-[14px] leading-[19px] font-[600] text-white hover:text-gray-300 transition-colors uppercase"
+                  onClick={() => onNavigate?.()}
+                >
                   PREMIOS 2026
-                </span>
+                </Link>
               </li>
             </ul>
           )}

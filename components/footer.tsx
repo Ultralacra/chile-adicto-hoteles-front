@@ -194,9 +194,16 @@ export function Footer({ activeCategory = "todos" }: FooterProps) {
                   </a>
                 ))
               : null}
-            <span className="font-neutra-demi text-[15px] leading-[20px] font-[600] text-white uppercase">
+            <a
+              href="/votacion"
+              className={`font-neutra-demi text-[15px] leading-[20px] font-[600] transition-colors duration-200 ease-in-out hover:text-[#FF0000] uppercase ${
+                normalizeSlug(activeCategory) === "votacion"
+                  ? "text-[#FF0000]"
+                  : "text-white"
+              }`}
+            >
               PREMIOS 2026
-            </span>
+            </a>
           </nav>
 
           {/* Right: Quote at top, email and logos at bottom in same row */}
