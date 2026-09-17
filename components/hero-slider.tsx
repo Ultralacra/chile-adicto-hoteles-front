@@ -82,24 +82,39 @@ export function HeroSlider({
   const [desktopLoadedFromDb, setDesktopLoadedFromDb] = useState(false);
   const [mobileLoadedFromDb, setMobileLoadedFromDb] = useState(false);
 
+  const hasDesktopProps = Boolean(
+    (desktopImagesByLang && desktopImagesByLang.length) ||
+      (desktopImages && desktopImages.length),
+  );
+  const hasMobileProps = Boolean(
+    (mobileImagesByLang && mobileImagesByLang.length) ||
+      (mobileImages && mobileImages.length),
+  );
+  const waitingDesktop =
+    Boolean(sliderKeyDesktop) && !hasDesktopProps && !desktopLoadedFromDb;
+  const waitingMobile =
+    Boolean(sliderKeyMobile) && !hasMobileProps && !mobileLoadedFromDb;
+
   // Elegir fuentes en orden de prioridad: props -> API (BD) -> defaults
-  // Si la BD respondió (incluso con 0 items), se usa esa respuesta y NO
-  // se cae al fallback de imágenes hardcodeadas (que son de otro sitio).
-  const desktopSourceRaw =
-    desktopImagesByLang && desktopImagesByLang.length
+  // Si hay keys de slider, no mostrar las imágenes hardcodeadas de otro sitio
+  // mientras llega la API (evita el flash del home).
+  const desktopSourceRaw = waitingDesktop
+    ? []
+    : desktopImagesByLang && desktopImagesByLang.length
       ? desktopImagesByLang
       : ((desktopImages && desktopImages.length ? desktopImages : undefined) ??
         (desktopLoadedFromDb && desktopFromApi ? desktopFromApi : undefined) ??
         (desktopFromApi && desktopFromApi.length ? desktopFromApi : undefined) ??
-        desktopImagesDefault);
+        (sliderKeyDesktop ? [] : desktopImagesDefault));
 
-  const mobileSourceRaw =
-    mobileImagesByLang && mobileImagesByLang.length
+  const mobileSourceRaw = waitingMobile
+    ? []
+    : mobileImagesByLang && mobileImagesByLang.length
       ? mobileImagesByLang
       : ((mobileImages && mobileImages.length ? mobileImages : undefined) ??
         (mobileLoadedFromDb && mobileFromApi ? mobileFromApi : undefined) ??
         (mobileFromApi && mobileFromApi.length ? mobileFromApi : undefined) ??
-        mobileImagesDefault);
+        (sliderKeyMobile ? [] : mobileImagesDefault));
 
   // Resolve raw source into array of strings depending on `language`.
   const desktop = (
@@ -140,10 +155,6 @@ export function HeroSlider({
     let cancelled = false;
     async function loadFromApi() {
       try {
-        // Reset del origen en cada carga (para no dejar flags antiguos)
-        setDesktopLoadedFromDb(false);
-        setMobileLoadedFromDb(false);
-
         // Si ya nos pasaron props, no hacemos fetch innecesario
         const needDesktop = !(desktopImages && desktopImages.length);
         const needMobile = !(mobileImages && mobileImages.length);
@@ -268,6 +279,19 @@ export function HeroSlider({
 
   return (
     <div className="relative w-full overflow-hidden">
+      {(waitingDesktop || waitingMobile) &&
+        desktopTr.length === 0 &&
+        mobileTr.length === 0 && (
+          <div
+            className="w-full bg-[#f4f4f4]"
+            style={{
+              minHeight: autoHeight ? undefined : `${desktopHeight}px`,
+              aspectRatio: autoHeight ? "16 / 6" : undefined,
+            }}
+            aria-hidden="true"
+          />
+        )}
+
       {/* Desktop Embla */}
       <div className="hidden md:block relative">
         {desktop.length > 1 && (
