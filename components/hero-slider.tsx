@@ -160,6 +160,17 @@ export function HeroSlider({
         const needMobile = !(mobileImages && mobileImages.length);
         if (!needDesktop && !needMobile) return;
 
+        if (needDesktop && sliderKeyDesktop) {
+          setDesktopLoadedFromDb(false);
+          setDesktopFromApi(null);
+          setDesktopHrefsFromApi(null);
+        }
+        if (needMobile && sliderKeyMobile) {
+          setMobileLoadedFromDb(false);
+          setMobileFromApi(null);
+          setMobileHrefsFromApi(null);
+        }
+
         // 1) Preferir sliders desde BD (si se indicó key)
         const loadSet = async (key: string) => {
           const res = await fetchWithSite(

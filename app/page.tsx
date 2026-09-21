@@ -163,8 +163,12 @@ export default function Page() {
               objectPosition="center"
               preferApiHrefs
               language={language}
-              sliderKeyDesktop="home-desktop"
-              sliderKeyMobile="home-mobile"
+              sliderKeyDesktop={
+                language === "en" ? "HOME INGLES DESKTOP" : "home-desktop"
+              }
+              sliderKeyMobile={
+                language === "en" ? "HOME MOVIL INGLES" : "home-mobile"
+              }
             />
           </div>
 
