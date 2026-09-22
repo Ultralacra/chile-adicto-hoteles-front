@@ -167,7 +167,9 @@ export default function Page() {
                 language === "en" ? "HOME INGLES DESKTOP" : "home-desktop"
               }
               sliderKeyMobile={
-                language === "en" ? "HOME MOVIL INGLES" : "home-mobile"
+                language === "en"
+                  ? "HOME MOVIL INGLES"
+                  : "HOME MOVIL ESPAÑOL"
               }
             />
           </div>
