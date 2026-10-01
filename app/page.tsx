@@ -27,7 +27,7 @@ const HOME_RESERVED_POSTS = [
       description:
         "Getting away, surrounded by nature, with plenty of explorations to enjoy, and then, after a full day of outings, returning to a lodge with every comfort and excellent cuisine to recharge for the next day. If that sounds like your plan, here are 3 top alternatives.",
     },
-    image: "/portadas/PORTADA-HOTEL-LODGES.png",
+    image: "/portadas/PORTADA-HOTEL-LODGES.webp",
   },
   {
     slug: "categoria/boutique",
@@ -43,7 +43,7 @@ const HOME_RESERVED_POSTS = [
       description:
         "There is nothing better than staying at a boutique hotel, where service is personalized and every detail is carefully considered, while also standing out for its architecture, design, and decor. Here are 3 extraordinary examples of the concept to help you plan your next getaway.",
     },
-    image: "/portadas/PORTADA-HOTEL-BOUTIQUE.png",
+    image: "/portadas/PORTADA-HOTEL-BOUTIQUE.webp",
   },
   {
     slug: "votacion",

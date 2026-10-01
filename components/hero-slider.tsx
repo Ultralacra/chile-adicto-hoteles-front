@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSiteApi } from "@/hooks/use-site-api";
@@ -327,68 +328,62 @@ export function HeroSlider({
         )}
         <div className="embla" ref={emblaDesktopRef as any}>
           <div className="embla__container flex">
-            {desktopTr.map((image, index) => (
-              <div
-                key={`d-${index}`}
-                className="embla__slide min-w-full"
-                style={
-                  autoHeight ? undefined : { height: `${desktopHeight}px` }
-                }
-              >
-                {hrefForIndex(index, "desktop") ? (
-                  <Link
-                    href={hrefForIndex(index, "desktop")}
-                    className={`block w-full ${
-                      autoHeight ? "h-auto" : "h-full"
-                    }`}
-                  >
-                    <img
-                      src={image || "/placeholder.svg"}
-                      alt={`Slide ${index + 1}`}
-                      referrerPolicy="no-referrer"
-                      loading="eager"
-                      className={
-                        autoHeight
-                          ? "block w-full h-auto"
-                          : `w-full h-full ${
-                              objectFit === "contain"
-                                ? "object-contain"
-                                : "object-cover"
-                            } ${
-                              objectPosition === "top"
-                                ? "object-top"
-                                : objectPosition === "bottom"
-                                  ? "object-bottom"
-                                  : "object-center"
-                            }`
-                      }
-                    />
-                  </Link>
-                ) : (
-                  <img
-                    src={image || "/placeholder.svg"}
-                    alt={`Slide ${index + 1}`}
-                    referrerPolicy="no-referrer"
-                    loading="eager"
-                    className={
-                      autoHeight
-                        ? "block w-full h-auto"
-                        : `w-full h-full ${
-                            objectFit === "contain"
-                              ? "object-contain"
-                              : "object-cover"
-                          } ${
-                            objectPosition === "top"
-                              ? "object-top"
-                              : objectPosition === "bottom"
-                                ? "object-bottom"
-                                : "object-center"
-                          }`
-                    }
-                  />
-                )}
-              </div>
-            ))}
+            {desktopTr.map((image, index) => {
+              const href = hrefForIndex(index, "desktop");
+              const slide = autoHeight ? (
+                // autoHeight: img nativo para no reservar aspect-ratio incorrecto
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={image || "/placeholder.svg"}
+                  alt={`Slide ${index + 1}`}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  className="block w-full h-auto"
+                />
+              ) : (
+                <Image
+                  src={image || "/placeholder.svg"}
+                  alt={`Slide ${index + 1}`}
+                  fill
+                  sizes="(max-width: 767px) 100vw, 1200px"
+                  priority={index === 0}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  className={`${
+                    objectFit === "contain" ? "object-contain" : "object-cover"
+                  } ${
+                    objectPosition === "top"
+                      ? "object-top"
+                      : objectPosition === "bottom"
+                        ? "object-bottom"
+                        : "object-center"
+                  }`}
+                />
+              );
+              return (
+                <div
+                  key={`d-${index}`}
+                  className={`embla__slide min-w-full ${
+                    autoHeight ? "" : "relative"
+                  }`}
+                  style={
+                    autoHeight ? undefined : { height: `${desktopHeight}px` }
+                  }
+                >
+                  {href ? (
+                    <Link
+                      href={href}
+                      className={`block w-full ${
+                        autoHeight ? "h-auto" : "relative h-full"
+                      }`}
+                    >
+                      {slide}
+                    </Link>
+                  ) : (
+                    slide
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -417,66 +412,61 @@ export function HeroSlider({
         )}
         <div className="embla" ref={emblaMobileRef as any}>
           <div className="embla__container flex">
-            {mobileTr.map((image, index) => (
-              <div
-                key={`m-${index}`}
-                className="embla__slide min-w-full"
-                style={autoHeight ? undefined : { height: `${mobileHeight}px` }}
-              >
-                {hrefForIndex(index, "mobile") ? (
-                  <Link
-                    href={hrefForIndex(index, "mobile")}
-                    className={`block w-full ${
-                      autoHeight ? "h-auto" : "h-full"
-                    }`}
-                  >
-                    <img
-                      src={image || "/placeholder.svg"}
-                      alt={`Slide ${index + 1}`}
-                      referrerPolicy="no-referrer"
-                      loading="eager"
-                      className={
-                        autoHeight
-                          ? "block w-full h-auto"
-                          : `w-full h-full ${
-                              objectFit === "contain"
-                                ? "object-contain"
-                                : "object-cover"
-                            } ${
-                              objectPosition === "top"
-                                ? "object-top"
-                                : objectPosition === "bottom"
-                                  ? "object-bottom"
-                                  : "object-center"
-                            }`
-                      }
-                    />
-                  </Link>
-                ) : (
-                  <img
-                    src={image || "/placeholder.svg"}
-                    alt={`Slide ${index + 1}`}
-                    referrerPolicy="no-referrer"
-                    loading="eager"
-                    className={
-                      autoHeight
-                        ? "block w-full h-auto"
-                        : `w-full h-full ${
-                            objectFit === "contain"
-                              ? "object-contain"
-                              : "object-cover"
-                          } ${
-                            objectPosition === "top"
-                              ? "object-top"
-                              : objectPosition === "bottom"
-                                ? "object-bottom"
-                                : "object-center"
-                          }`
-                    }
-                  />
-                )}
-              </div>
-            ))}
+            {mobileTr.map((image, index) => {
+              const href = hrefForIndex(index, "mobile");
+              const slide = autoHeight ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={image || "/placeholder.svg"}
+                  alt={`Slide ${index + 1}`}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  className="block w-full h-auto"
+                />
+              ) : (
+                <Image
+                  src={image || "/placeholder.svg"}
+                  alt={`Slide ${index + 1}`}
+                  fill
+                  sizes="100vw"
+                  priority={index === 0}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  className={`${
+                    objectFit === "contain" ? "object-contain" : "object-cover"
+                  } ${
+                    objectPosition === "top"
+                      ? "object-top"
+                      : objectPosition === "bottom"
+                        ? "object-bottom"
+                        : "object-center"
+                  }`}
+                />
+              );
+              return (
+                <div
+                  key={`m-${index}`}
+                  className={`embla__slide min-w-full ${
+                    autoHeight ? "" : "relative"
+                  }`}
+                  style={
+                    autoHeight ? undefined : { height: `${mobileHeight}px` }
+                  }
+                >
+                  {href ? (
+                    <Link
+                      href={href}
+                      className={`block w-full ${
+                        autoHeight ? "h-auto" : "relative h-full"
+                      }`}
+                    >
+                      {slide}
+                    </Link>
+                  ) : (
+                    slide
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
