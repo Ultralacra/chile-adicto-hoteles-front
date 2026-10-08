@@ -194,6 +194,10 @@ export default function CategoryPage({ params }: { params: any }) {
       "https://www.ed.cl/archivo/viajes/patagonia-imprescindible-nueve-alojamientos-para-vivir-el-extremo-sur-en-su-estado-mas-puro/",
     "patricio-minano-en-money-talks-seis-de-los-mejores-hoteles-que-ofrece-la-patagonia-chilena":
       "https://www.latercera.com/videopodcast/money-talks/guide-desk-los-seis-mejores-hoteles-que-ofrece-la-patagonia-chilena/",
+    "premios-chile-adicto-hoteles":
+      "https://www.ed.cl/archivo/viajes/los-10-mejores-hoteles-de-chile-elegidos-por-el-publico/",
+    "gran-nota-en-la-tercera-sabado-por-lanzamiento-de-los-premios-chile-adicto-hoteles-2026":
+      "https://www.latercera.com/opinion/noticia/la-hoteleria-chilena-ya-tiene-su-vitrina-y-ahora-sus-premios/",
   };
 
   // Comunas dinámicas para restaurantes (derivadas de direcciones/locations y overrides)
