@@ -198,6 +198,8 @@ export default function CategoryPage({ params }: { params: any }) {
       "https://www.ed.cl/archivo/viajes/los-10-mejores-hoteles-de-chile-elegidos-por-el-publico/",
     "gran-nota-en-la-tercera-sabado-por-lanzamiento-de-los-premios-chile-adicto-hoteles-2026":
       "https://www.latercera.com/opinion/noticia/la-hoteleria-chilena-ya-tiene-su-vitrina-y-ahora-sus-premios/",
+    "chile-adicto-hoteles":
+      "https://www.traveler.es/articulos/valle-del-puelo-en-la-patagonia-norte-chilena/",
   };
 
   // Comunas dinámicas para restaurantes (derivadas de direcciones/locations y overrides)
@@ -1053,7 +1055,9 @@ export default function CategoryPage({ params }: { params: any }) {
                       slug={hotel.slug}
                       name={hotel[language].name}
                       subtitle={hotel[language].subtitle}
-                      description={buildCardExcerpt(hotel[language].description)}
+                      description={buildCardExcerpt(
+                        hotel[language].description,
+                      )}
                       image={hotel.featuredImage || hotel.images?.[0] || ""}
                       imageVariant={
                         slug === "monumentos-nacionales" || slug === "cafes"
